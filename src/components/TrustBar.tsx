@@ -31,7 +31,11 @@ interface FactionChipProps {
 export function FactionChip({ faction }: FactionChipProps) {
   return (
     <div className="flex items-center gap-2 text-white shrink-0 cursor-pointer group">
-      <span className="text-base">{faction.icon}</span>
+      <img
+        src={faction.image}
+        alt={faction.short}
+        className="w-7 h-7 rounded-full object-cover border border-stone-600"
+      />
       <div>
         <div className="flex items-center gap-1">
           <span className="text-xs font-bold group-hover:text-stone-200 transition-colors">

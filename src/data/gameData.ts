@@ -1,5 +1,10 @@
 // Shared game data types and static demo data
 import citizen02 from "@/images/citizen_02.jpg";
+import factionGreen from "@/images/factions/green.jpg";
+import factionBusiness from "@/images/factions/business.jpg";
+import factionCitizens from "@/images/factions/citizens.jpg";
+import factionWorkers from "@/images/factions/workers.jpg";
+import factionConservatives from "@/images/factions/conservatives.jpg";
 
 export interface Metric {
   key: string;
@@ -12,6 +17,7 @@ export interface Metric {
 export interface Faction {
   short: string;
   icon: string;
+  image: string;
   trust: number;
   seats: number;
 }
@@ -39,11 +45,11 @@ export const METRICS: Metric[] = [
 ];
 
 export const FACTIONS: Faction[] = [
-  { short: 'GRÜN', icon: '🌿', trust: 62, seats: 8 },
-  { short: 'WIRT', icon: '💼', trust: 45, seats: 9 },
-  { short: 'BÜRG', icon: '🏘️', trust: 71, seats: 10 },
-  { short: 'HAND', icon: '🔧', trust: 38, seats: 7 },
-  { short: 'KONS', icon: '🏛️', trust: 29, seats: 6 },
+  { short: 'GRÜNE',       icon: '🌿', image: factionGreen,         trust: 62, seats: 8  },
+  { short: 'HANDEL A.G.', icon: '💼', image: factionBusiness,      trust: 45, seats: 9  },
+  { short: 'BÜRGER',      icon: '🏘️', image: factionCitizens,      trust: 71, seats: 10 },
+  { short: 'UWP',         icon: '🔧', image: factionWorkers,        trust: 38, seats: 7  },
+  { short: 'Die Nation',  icon: '🏛️', image: factionConservatives,  trust: 29, seats: 6  },
 ];
 
 export const PENDING_DECISION: PendingDecision = {
