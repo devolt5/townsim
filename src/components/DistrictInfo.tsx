@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import type { District } from "@/game/CityScene";
+import type { District } from "@/data/gameData";
 
 interface DistrictInfoProps {
   district: District | null;
@@ -22,12 +22,17 @@ export function DistrictInfo({ district }: DistrictInfoProps) {
 
   return (
     <Card className="border-stone-200">
-      <CardHeader className="pb-2 pt-4 px-4">
-        <CardTitle className="text-base text-stone-800">
+      <CardHeader className="pb-0 pt-0 px-0">
+        <img
+          src={district.image}
+          alt={district.name}
+          className="w-full h-32 object-cover rounded-t-lg"
+        />
+        <CardTitle className="text-base text-stone-800 px-4 pt-3">
           {district.name}
         </CardTitle>
       </CardHeader>
-      <CardContent className="px-4 pb-4">
+      <CardContent className="px-4 pb-4 pt-1">
         <p className="text-sm text-stone-600">{district.description}</p>
       </CardContent>
     </Card>

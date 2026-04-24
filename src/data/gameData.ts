@@ -1,5 +1,11 @@
 // Shared game data types and static demo data
 import citizen02 from "@/images/citizen_02.jpg";
+import districtNorth from "@/images/districts/north.jpg";
+import districtTownCenter from "@/images/districts/town_center.jpg";
+import districtBusiness from "@/images/districts/business_district.jpg";
+import districtSouth from "@/images/districts/south.jpg";
+import districtIndustrial from "@/images/districts/industrial.jpg";
+import districtGreen from "@/images/districts/green_district.jpg";
 import factionGreen from "@/images/factions/green.jpg";
 import factionBusiness from "@/images/factions/business.jpg";
 import factionCitizens from "@/images/factions/citizens.jpg";
@@ -65,3 +71,59 @@ export const PENDING_DECISION: PendingDecision = {
 };
 
 export const OPEN_PROMISES: Promise[] = [];
+
+export interface District {
+  name: string;
+  description: string;
+  image: string;
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  color: number;
+}
+
+export const DISTRICTS: District[] = [
+  {
+    name: 'Wohngebiet Nord',
+    description: 'Mehrfamilienhäuser, Schulen und Spielplätze. Hohe Bevölkerungsdichte.',
+    image: districtNorth,
+    x: 0, y: 0, w: 140, h: 165,
+    color: 0x8bc48a,
+  },
+  {
+    name: 'Innenstadt',
+    description: 'Haupteinkaufszone, Rathaus und öffentliche Plätze. Herzstück der Stadt.',
+    image: districtTownCenter,
+    x: 155, y: 0, w: 140, h: 165,
+    color: 0xd4a853,
+  },
+  {
+    name: 'Gewerbegebiet',
+    description: 'Büros, Einzelhandel und Logistik. Größter Arbeitgeber der Stadt.',
+    image: districtBusiness,
+    x: 310, y: 0, w: 150, h: 165,
+    color: 0x7a9cc4,
+  },
+  {
+    name: 'Wohngebiet Süd',
+    description: 'Einfamilienhäuser und ruhige Wohnlage. Beliebtes Familienquartier.',
+    image: districtSouth,
+    x: 0, y: 180, w: 140, h: 160,
+    color: 0xa8d4a0,
+  },
+  {
+    name: 'Industriegebiet',
+    description: 'Produktion, Handwerksbetriebe und Lagerung. Wirtschaftsmotor der Region.',
+    image: districtIndustrial,
+    x: 155, y: 180, w: 140, h: 160,
+    color: 0xb08060,
+  },
+  {
+    name: 'Grüne Lunge',
+    description: 'Parks, Kleingärten und Naturschutzgebiet. Lunge der Stadt.',
+    image: districtGreen,
+    x: 310, y: 180, w: 150, h: 160,
+    color: 0x5a9e5a,
+  },
+];

@@ -36,13 +36,16 @@ export function LeftPanel({ selectedDistrict }: LeftPanelProps) {
         <Tabs defaultValue="stadtbild" className="flex flex-col h-full">
           <SidebarHeader className="p-0 shrink-0">
             <TabsList className="w-full rounded-none border-b border-stone-200 bg-stone-100 justify-start px-1 h-10">
-              <TabsTrigger value="stadtbild" className="text-xs">
+              <TabsTrigger value="stadtbild" className="text-xs cursor-pointer">
                 Stadtbild
               </TabsTrigger>
-              <TabsTrigger value="ereignisse" className="text-xs">
+              <TabsTrigger
+                value="ereignisse"
+                className="text-xs cursor-pointer"
+              >
                 Ereignisse
               </TabsTrigger>
-              <TabsTrigger value="bilanz" className="text-xs">
+              <TabsTrigger value="bilanz" className="text-xs cursor-pointer">
                 Jahresbilanz
               </TabsTrigger>
             </TabsList>

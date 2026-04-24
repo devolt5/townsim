@@ -1,53 +1,8 @@
 import { Scene, GameObjects } from 'phaser';
+import { type District, DISTRICTS } from '@/data/gameData';
 
-export interface District {
-  name: string;
-  description: string;
-  x: number;
-  y: number;
-  w: number;
-  h: number;
-  color: number;
-}
-
-export const DISTRICTS: District[] = [
-  {
-    name: 'Wohngebiet Nord',
-    description: 'Mehrfamilienhäuser, Schulen und Spielplätze. Hohe Bevölkerungsdichte.',
-    x: 0, y: 0, w: 140, h: 165,
-    color: 0x8bc48a,
-  },
-  {
-    name: 'Innenstadt',
-    description: 'Haupteinkaufszone, Rathaus und öffentliche Plätze. Herzstück der Stadt.',
-    x: 155, y: 0, w: 140, h: 165,
-    color: 0xd4a853,
-  },
-  {
-    name: 'Gewerbegebiet',
-    description: 'Büros, Einzelhandel und Logistik. Größter Arbeitgeber der Stadt.',
-    x: 310, y: 0, w: 150, h: 165,
-    color: 0x7a9cc4,
-  },
-  {
-    name: 'Wohngebiet Süd',
-    description: 'Einfamilienhäuser und ruhige Wohnlage. Beliebtes Familienquartier.',
-    x: 0, y: 180, w: 140, h: 160,
-    color: 0xa8d4a0,
-  },
-  {
-    name: 'Industriegebiet',
-    description: 'Produktion, Handwerksbetriebe und Lagerung. Wirtschaftsmotor der Region.',
-    x: 155, y: 180, w: 140, h: 160,
-    color: 0xb08060,
-  },
-  {
-    name: 'Grünanlage',
-    description: 'Parks, Kleingärten und Naturschutzgebiet. Lunge der Stadt.',
-    x: 310, y: 180, w: 150, h: 160,
-    color: 0x5a9e5a,
-  },
-];
+export type { District };
+export { DISTRICTS };
 
 // Minimal structural type for the Phaser pointer — avoids a namespace import
 type PhaserPointer = { x: number; y: number; leftButtonDown(): boolean };
