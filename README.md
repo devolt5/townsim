@@ -1,73 +1,21 @@
-# React + TypeScript + Vite
+# 🏛️ TownSim: Serious Politics
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+TownSim is a browser-based political simulation and **Serious Game** that puts you in the mayor's seat of "Neustadt," a fictional German city with 80,000 citizens. Your goal is to navigate the complex world of local politics, balancing competing interests across a four-year legislative term.
 
-Currently, two official plugins are available:
+> [!IMPORTANT]
+> The game is **currently available in German only** (Sprache: Deutsch).
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+### 🎮 What to Expect
 
-## React Compiler
+* **⚖️ Tough Choices:** Navigate decision cards where no perfect solution exists. Every "Yes" for one group is a "No" for another.
+* **📊 Dynamic Metrics:** Balance four core pillars: **Stadthaushalt** (Budget), **Bürgerzufriedenheit** (Satisfaction), **Nachhaltigkeit** (Sustainability), and **Wirtschaft** (Economy).
+* **🤝 Faction Management:** Work with 5 distinct political factions—from the Green List to the Business Forum. Organize majorities and manage your "Political Capital."
+* **📜 Promises & Trust:** The game remembers what you promised. Keeping your word builds trust; breaking it leads to political isolation.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 🎓 A Serious Learning Experience
 
-## Expanding the ESLint configuration
+Unlike traditional city builders, TownSim focuses on the **human and political side of governance**. It is designed to illustrate why political compromises are difficult and necessary. You will face unpredictable events—from extreme weather 🌊 to economic shifts 📈—that challenge your strategy and ethics.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### 🗳️ Re-election & Reflection
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+At the end of your term, you face the voters. Whether you are re-elected or voted out, TownSim providing a detailed **reflection screen** that analyzes your tenure, highlighting successes and pointing out where promises were left behind. It’s not just about winning; it’s about understanding the trade-offs of democracy.
