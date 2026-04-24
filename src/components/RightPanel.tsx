@@ -4,7 +4,7 @@ import { PromiseTracker } from "@/components/PromiseTracker";
 
 export function RightPanel() {
   return (
-    <aside className="w-80 shrink-0 border-l border-stone-200 bg-stone-50 flex flex-col overflow-hidden">
+    <aside className="h-full border-l border-stone-200 bg-stone-50 flex flex-col overflow-hidden">
       <Tabs
         defaultValue="antrag"
         className="flex flex-col flex-1 overflow-hidden"

@@ -8,7 +8,7 @@ interface LeftPanelProps {
 
 export function LeftPanel({ selectedDistrict }: LeftPanelProps) {
   return (
-    <aside className="w-72 shrink-0 border-r border-stone-200 bg-stone-50 flex flex-col overflow-hidden">
+    <aside className="h-full border-r border-stone-200 bg-stone-50 flex flex-col overflow-hidden">
       <Tabs
         defaultValue="stadtbild"
         className="flex flex-col flex-1 overflow-hidden"
