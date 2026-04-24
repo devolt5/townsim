@@ -18,17 +18,26 @@ export function PendingDecision() {
   return (
     <Card className="border-amber-200 bg-amber-50/50">
       <CardHeader className="pb-2 pt-4 px-4">
-        <div className="flex items-center gap-2">
-          <Badge
-            variant="outline"
-            className="text-amber-700 border-amber-400 bg-amber-100 text-xs"
-          >
-            📋 Antrag
-          </Badge>
+        <div className="flex items-start gap-3">
+          {decision.image && (
+            <img
+              src={decision.image}
+              alt={decision.imageAlt ?? "Antragsteller"}
+              className="w-12 h-12 rounded-full object-cover shrink-0 border-2 border-amber-200 shadow-sm"
+            />
+          )}
+          <div className="flex flex-col gap-1 min-w-0">
+            <Badge
+              variant="outline"
+              className="text-amber-700 border-amber-400 bg-amber-100 text-xs w-fit"
+            >
+              📋 Antrag
+            </Badge>
+            <CardTitle className="text-sm text-stone-800">
+              {decision.title}
+            </CardTitle>
+          </div>
         </div>
-        <CardTitle className="text-sm text-stone-800 mt-1">
-          {decision.title}
-        </CardTitle>
       </CardHeader>
       <CardContent className="px-4 pb-4 space-y-4">
         <p className="text-xs text-stone-600">{decision.text}</p>

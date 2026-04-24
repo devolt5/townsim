@@ -1,4 +1,5 @@
 // Shared game data types and static demo data
+import citizen02 from "@/images/citizen_02.jpg";
 
 export interface Metric {
   key: string;
@@ -18,6 +19,8 @@ export interface Faction {
 export interface PendingDecision {
   title: string;
   text: string;
+  image?: string;
+  imageAlt?: string;
   options: { label: string; variant: 'accept' | 'reject' | 'negotiate' }[];
 }
 
@@ -46,6 +49,8 @@ export const FACTIONS: Faction[] = [
 export const PENDING_DECISION: PendingDecision = {
   title: 'Ausbau des Radwegenetzes',
   text: 'Die Grüne Liste beantragt den Bau von 15 km neuer Radwege. Kosten: 2,4 Mio €. Betroffen sind Innenstadt und beide Wohngebiete.',
+  image: citizen02,
+  imageAlt: 'Bürger',
   options: [
     { label: '✓ Zustimmen',  variant: 'accept' },
     { label: '✗ Ablehnen',   variant: 'reject' },
