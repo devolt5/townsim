@@ -13,23 +13,44 @@ import "./App.css";
 function App() {
   const containerRef = useRef<HTMLDivElement>(null);
   const gameRef = useRef<Game | null>(null);
-  const [selectedDistrict, setSelectedDistrict] = useState<District | null>(null);
+  const [selectedDistrict, setSelectedDistrict] = useState<District | null>(
+    null,
+  );
 
   useEffect(() => {
-    if (!containerRef.current) return;
-    const scene = new CityScene();
-    scene.setSelectCallback(setSelectedDistrict);
-    const game = new Game({
-      type: AUTO,
-      width: 460,
-      height: 340,
-      backgroundColor: "#dfd9c4",
-      parent: containerRef.current,
-      scene,
+    const container = containerRef.current;
+    if (!container) return;
+
+    let game: Game | null = null;
+
+    const observer = new ResizeObserver((entries) => {
+      const entry = entries[0];
+      if (!entry) return;
+      const { width: w, height: h } = entry.contentRect;
+      if (w <= 0 || h <= 0) return;
+
+      if (!game) {
+        const scene = new CityScene();
+        scene.setSelectCallback(setSelectedDistrict);
+        game = new Game({
+          type: AUTO,
+          width: w,
+          height: h,
+          backgroundColor: "#dfd9c4",
+          parent: container,
+          scene,
+        });
+        gameRef.current = game;
+      } else {
+        game.scale.resize(w, h);
+      }
     });
-    gameRef.current = game;
+
+    observer.observe(container);
+
     return () => {
-      game.destroy(true);
+      observer.disconnect();
+      game?.destroy(true);
       gameRef.current = null;
     };
   }, []);
@@ -50,8 +71,8 @@ function App() {
         </SidebarProvider>
 
         {/* Phaser canvas — grows to fill remaining space */}
-        <main className="flex-1 bg-stone-200 flex items-center justify-center overflow-hidden">
-          <div ref={containerRef} className="shadow-xl rounded overflow-hidden" />
+        <main className="flex-1 bg-stone-200 overflow-hidden">
+          <div ref={containerRef} className="w-full h-full" />
         </main>
 
         {/* Right sidebar context */}
