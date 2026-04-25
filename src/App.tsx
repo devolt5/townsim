@@ -63,7 +63,7 @@ function App() {
       <div className="flex flex-1 overflow-hidden">
         {/* Left sidebar context */}
         <SidebarProvider
-          defaultOpen
+          defaultOpen={window.innerWidth >= 768}
           style={{ "--sidebar-width": "18rem" } as CSSProperties}
           className="h-full"
         >
@@ -71,13 +71,13 @@ function App() {
         </SidebarProvider>
 
         {/* Phaser canvas — grows to fill remaining space */}
-        <main className="flex-1 bg-stone-200 overflow-hidden">
+        <main className="flex-1 bg-stone-200 overflow-hidden min-w-0">
           <div ref={containerRef} className="w-full h-full" />
         </main>
 
         {/* Right sidebar context */}
         <SidebarProvider
-          defaultOpen
+          defaultOpen={window.innerWidth >= 768}
           style={{ "--sidebar-width": "20rem" } as CSSProperties}
           className="h-full"
         >

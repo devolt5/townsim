@@ -6,7 +6,7 @@ interface MetricBarProps {
 
 export function MetricBar({ metric }: MetricBarProps) {
   return (
-    <div className="flex items-center gap-1.5 min-w-36">
+    <div className="flex items-center gap-1.5 min-w-28 sm:min-w-36 shrink-0">
       <span className="text-base leading-none">{metric.icon}</span>
       <div className="flex-1 min-w-0">
         <div className="flex justify-between text-xs text-stone-300 mb-0.5">
