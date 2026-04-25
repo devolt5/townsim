@@ -1,0 +1,18 @@
+<svg viewBox="0 0 200 250" xmlns="http://www.w3.org/2000/svg">
+  <polygon points="75,85 115,80 125,130 105,160 80,150 65,115" fill="none" stroke="black"
+    stroke-width="1" />
+
+  <polygon points="115,80 125,25 95,10 60,25 75,85" fill="none" stroke="black" stroke-width="1" />
+
+  <polygon points="125,130 170,140 185,90 160,35 125,25 115,80" fill="none" stroke="black"
+    stroke-width="1" />
+
+  <polygon points="105,160 125,185 155,200 185,165 170,140 125,130" fill="none" stroke="black"
+    stroke-width="1" />
+
+  <polygon points="80,150 50,180 75,225 95,245 130,225 155,200 125,185 105,160" fill="none"
+    stroke="black" stroke-width="1" />
+
+  <polygon points="75,85 60,25 20,80 15,130 30,165 50,180 80,150 65,115" fill="none" stroke="black"
+    stroke-width="1" />
+</svg>

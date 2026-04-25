@@ -137,3 +137,79 @@ Phaser kommuniziert mit React ausschließlich über **Callbacks** (kein direkter
 - **Modals sparsam** — nur für echte Unterbrechungen, nicht für Routineinfos
 - **Canvas bleibt immer sichtbar** — der Spieler verliert nie den Bezug zur Stadtkarte
 - **Mobile-Kompatibilität** vorerst nicht im Fokus — Zielplattform ist Desktop-Browser
+
+## 10. UI & Visuelles Design
+
+### Designreferenzen
+
+- **Crusader Kings III / Victoria 3** (Paradox Interactive): Referenz für Stil der Fraktionsportraits, Beziehungsanzeigen, Event-Popups, Entscheidungsdialoge. Charaktergetrieben, historisches Feeling, klare Hierarchie in Informationsdarstellung.
+- **Sim City (klassisch)**: Referenz für die Stadtansicht von oben — statischer als ein echtes Sim City, aber ähnliche Top-Down-Perspektive als Hauptansicht.
+
+### Layout-Konzept
+
+```
+┌──────────────────────────────────────────────────────────┐
+│  HEADER: Stadtname | Jahr/Runde | 4 Metriken als Balken  │
+├──────────────────┬───────────────────────────────────────┤
+│                  │                                       │
+│   STADTANSICHT   │         AKTIVES PANEL                 │
+│   (Top-Down,     │   (Entscheidungskarte / Event /       │
+│    2D Karte)     │    Verhandlungsdialog / Jahresbilanz) │
+│                  │                                       │
+├──────────────────┴───────────────────────────────────────┤
+│  FOOTER: Fraktionsleiste (5 Icons + Vertrauensanzeige)   │
+└──────────────────────────────────────────────────────────┘
+```
+
+### Stadtansicht (Phase 1 → Phase 2)
+
+- **Phase 1**: Statisches SVG oder Raster-Bild der Stadt, Stadtteile anklickbar, zeigen lokale Daten
+- **Phase 2 (Phaser)**: Animierte Tilemap, Stadtveränderungen sichtbar (neues Gewerbegebiet erscheint, Radwege wachsen), Tag/Nacht-Zyklus optional
+
+### Event- & Entscheidungsfenster (CK3-Stil)
+
+```
+┌─────────────────────────────────┐
+│  [Portrait/Icon]  ANTRAGSTITEL  │
+│  ─────────────────────────────  │
+│  Kontexttext in 2–3 Sätzen.     │
+│  Alltagssprache, kein Jargon.   │
+│                                 │
+│  ○ Option A   [Effekte]         │
+│  ○ Option B   [Effekte]         │
+│  ○ Option C   [Effekte]         │
+│  ○ Verhandeln                   │
+│                                 │
+│              [Entscheiden]      │
+└─────────────────────────────────┘
+```
+
+### Fraktionsleiste (Fußzeile)
+
+Für jede Fraktion:
+
+- Kleines Icon / Fraktionsfarbe
+- Vertrauensbalken (0–100)
+- Aktuelles Stimmungs-Emoji
+- Anzahl Sitze
+- Klick → öffnet Fraktions-Detailpanel mit offenen Versprechen
+
+---
+
+## 11. Designprinzipien
+
+### Was bewusst enthalten ist
+
+- ✅ Echte Konsequenzen — keine symbolischen Ja/Nein-Klicks ohne Wirkung
+- ✅ Nachverfolgbare Versprechen — das Spiel erinnert sich
+- ✅ Systemische Abhängigkeiten — Metriken beeinflussen sich gegenseitig
+- ✅ Mehrere legitime Lösungen — keine eindeutig "richtige" Antwort
+- ✅ Reflexionsmoment nach Abwahl
+
+### Was bewusst weggelassen wird
+
+- ❌ Gesetzestexte — nur Alltagssprache
+- ❌ Zahlenfriedhöfe — max. 4 Metriken gleichzeitig sichtbar
+- ❌ Micromanagement — keine Parzellen-Planung
+- ❌ Tutorial-Overload — Jahr 1 ist bewusst ruhig, Mechaniken werden schrittweise eingeführt
+- ❌ Moralische Wertung — das Spiel kommentiert keine Entscheidung als "falsch"
