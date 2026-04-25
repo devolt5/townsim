@@ -1,5 +1,6 @@
 import { Scene, GameObjects, Geom } from 'phaser';
 import { type District, DISTRICTS } from '@/data/gameData';
+import backgroundUrl from '@/images/background2.jpg';
 
 // ── Geometry helpers ──────────────────────────────────────────────────────────
 function centroid(pts: { x: number; y: number }[]): { x: number; y: number } {
@@ -63,7 +64,23 @@ export class CityScene extends Scene {
     this.selectCallback = cb;
   }
 
+  preload() {
+    this.load.image('background', backgroundUrl);
+  }
+
   create() {
+    // ── Tiled background: 9×9 grid centered on world origin ──────────
+    const src = this.textures.get('background').getSourceImage() as HTMLImageElement;
+    const tileW = src.naturalWidth  || src.width;
+    const tileH = src.naturalHeight || src.height;
+    const totalW = tileW * 9;
+    const totalH = tileH * 9;
+    this.add
+      .tileSprite(-totalW / 2, -totalH / 2, totalW, totalH, 'background')
+      .setOrigin(0, 0);
+
+    // ── Center camera on world origin ─────────────────────────────────
+    this.cameras.main.centerOn(0, 0);
     this.baseGraphics = this.add.graphics();
     this.drawBase();
 

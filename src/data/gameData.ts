@@ -88,8 +88,8 @@ export const DISTRICTS: District[] = [
     image: districtNorth,
     color: 0x8bc48a,
     points: [
-      { x: 288, y: 200 }, { x: 312, y:  62 }, { x: 238, y:  25 },
-      { x: 150, y:  62 }, { x: 188, y: 212 },
+      { x:  38, y: -119 }, { x:  62, y: -257 }, { x: -12, y: -294 },
+      { x: -100, y: -257 }, { x: -62, y: -107 },
     ],
   },
   {
@@ -98,8 +98,8 @@ export const DISTRICTS: District[] = [
     image: districtTownCenter,
     color: 0xd4a853,
     points: [
-      { x: 188, y: 212 }, { x: 288, y: 200 }, { x: 312, y: 325 },
-      { x: 262, y: 400 }, { x: 200, y: 375 }, { x: 162, y: 288 },
+      { x: -62, y: -107 }, { x:  38, y: -119 }, { x:  62, y:   6 },
+      { x:  12, y:  81 },  { x: -50, y:  56 },  { x: -88, y: -31 },
     ],
   },
   {
@@ -108,8 +108,8 @@ export const DISTRICTS: District[] = [
     image: districtBusiness,
     color: 0x7a9cc4,
     points: [
-      { x: 312, y: 325 }, { x: 425, y: 350 }, { x: 462, y: 225 },
-      { x: 400, y:  88 }, { x: 312, y:  62 }, { x: 288, y: 200 },
+      { x:  62, y:   6 }, { x: 175, y:  31 }, { x: 212, y: -94 },
+      { x: 150, y: -231 }, { x:  62, y: -257 }, { x:  38, y: -119 },
     ],
   },
   {
@@ -118,8 +118,8 @@ export const DISTRICTS: District[] = [
     image: districtIndustrial,
     color: 0xb08060,
     points: [
-      { x: 262, y: 400 }, { x: 312, y: 462 }, { x: 388, y: 500 },
-      { x: 462, y: 412 }, { x: 425, y: 350 }, { x: 312, y: 325 },
+      { x:  12, y:  81 }, { x:  62, y: 143 }, { x: 138, y: 181 },
+      { x: 212, y:  93 }, { x: 175, y:  31 }, { x:  62, y:   6 },
     ],
   },
   {
@@ -128,9 +128,9 @@ export const DISTRICTS: District[] = [
     image: districtSouth,
     color: 0xa8d4a0,
     points: [
-      { x: 200, y: 375 }, { x: 125, y: 450 }, { x: 188, y: 562 },
-      { x: 238, y: 612 }, { x: 325, y: 562 }, { x: 388, y: 500 },
-      { x: 312, y: 462 }, { x: 262, y: 400 },
+      { x: -50, y:  56 }, { x: -125, y: 131 }, { x: -62, y: 243 },
+      { x: -12, y: 293 }, { x:  75, y: 243 },  { x: 138, y: 181 },
+      { x:  62, y: 143 }, { x:  12, y:  81 },
     ],
   },
   {
@@ -139,9 +139,9 @@ export const DISTRICTS: District[] = [
     image: districtGreen,
     color: 0x5a9e5a,
     points: [
-      { x: 188, y: 212 }, { x: 150, y:  62 }, { x:  50, y: 200 },
-      { x:  38, y: 325 }, { x:  75, y: 412 }, { x: 125, y: 450 },
-      { x: 200, y: 375 }, { x: 162, y: 288 },
+      { x: -62, y: -107 }, { x: -100, y: -257 }, { x: -200, y: -119 },
+      { x: -212, y:   6 }, { x: -175, y:  93 },  { x: -125, y: 131 },
+      { x:  -50, y:  56 }, { x:  -88, y: -31 },
     ],
   },
 ];
