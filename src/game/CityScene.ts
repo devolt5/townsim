@@ -224,7 +224,7 @@ export class CityScene extends Scene {
     const g = this.baseGraphics;
 
     DISTRICTS.forEach(d => {
-      g.fillStyle(d.color, 1);
+      g.fillStyle(d.color, 0.5);
       polyPath(g, d.points);
       g.fillPath();
       g.lineStyle(2, 0x3a3028, 0.6);
