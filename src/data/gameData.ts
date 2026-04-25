@@ -76,10 +76,8 @@ export interface District {
   name: string;
   description: string;
   image: string;
-  x: number;
-  y: number;
-  w: number;
-  h: number;
+  /** Polygon vertices in world space (scaled ×2.5 from the SVG concept layout) */
+  points: { x: number; y: number }[];
   color: number;
 }
 
@@ -88,42 +86,62 @@ export const DISTRICTS: District[] = [
     name: 'Wohngebiet Nord',
     description: 'Mehrfamilienhäuser, Schulen und Spielplätze. Hohe Bevölkerungsdichte.',
     image: districtNorth,
-    x: 0, y: 0, w: 140, h: 165,
     color: 0x8bc48a,
+    points: [
+      { x: 288, y: 200 }, { x: 312, y:  62 }, { x: 238, y:  25 },
+      { x: 150, y:  62 }, { x: 188, y: 212 },
+    ],
   },
   {
     name: 'Innenstadt',
     description: 'Haupteinkaufszone, Rathaus und öffentliche Plätze. Herzstück der Stadt.',
     image: districtTownCenter,
-    x: 155, y: 0, w: 140, h: 165,
     color: 0xd4a853,
+    points: [
+      { x: 188, y: 212 }, { x: 288, y: 200 }, { x: 312, y: 325 },
+      { x: 262, y: 400 }, { x: 200, y: 375 }, { x: 162, y: 288 },
+    ],
   },
   {
     name: 'Gewerbegebiet',
     description: 'Büros, Einzelhandel und Logistik. Größter Arbeitgeber der Stadt.',
     image: districtBusiness,
-    x: 310, y: 0, w: 150, h: 165,
     color: 0x7a9cc4,
-  },
-  {
-    name: 'Wohngebiet Süd',
-    description: 'Einfamilienhäuser und ruhige Wohnlage. Beliebtes Familienquartier.',
-    image: districtSouth,
-    x: 0, y: 180, w: 140, h: 160,
-    color: 0xa8d4a0,
+    points: [
+      { x: 312, y: 325 }, { x: 425, y: 350 }, { x: 462, y: 225 },
+      { x: 400, y:  88 }, { x: 312, y:  62 }, { x: 288, y: 200 },
+    ],
   },
   {
     name: 'Industriegebiet',
     description: 'Produktion, Handwerksbetriebe und Lagerung. Wirtschaftsmotor der Region.',
     image: districtIndustrial,
-    x: 155, y: 180, w: 140, h: 160,
     color: 0xb08060,
+    points: [
+      { x: 262, y: 400 }, { x: 312, y: 462 }, { x: 388, y: 500 },
+      { x: 462, y: 412 }, { x: 425, y: 350 }, { x: 312, y: 325 },
+    ],
+  },
+  {
+    name: 'Wohngebiet Süd',
+    description: 'Einfamilienhäuser und ruhige Wohnlage. Beliebtes Familienquartier.',
+    image: districtSouth,
+    color: 0xa8d4a0,
+    points: [
+      { x: 200, y: 375 }, { x: 125, y: 450 }, { x: 188, y: 562 },
+      { x: 238, y: 612 }, { x: 325, y: 562 }, { x: 388, y: 500 },
+      { x: 312, y: 462 }, { x: 262, y: 400 },
+    ],
   },
   {
     name: 'Grüne Lunge',
     description: 'Parks, Kleingärten und Naturschutzgebiet. Lunge der Stadt.',
     image: districtGreen,
-    x: 310, y: 180, w: 150, h: 160,
     color: 0x5a9e5a,
+    points: [
+      { x: 188, y: 212 }, { x: 150, y:  62 }, { x:  50, y: 200 },
+      { x:  38, y: 325 }, { x:  75, y: 412 }, { x: 125, y: 450 },
+      { x: 200, y: 375 }, { x: 162, y: 288 },
+    ],
   },
 ];

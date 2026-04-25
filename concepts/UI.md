@@ -145,27 +145,6 @@ Phaser kommuniziert mit React ausschließlich über **Callbacks** (kein direkter
 - **Crusader Kings III / Victoria 3** (Paradox Interactive): Referenz für Stil der Fraktionsportraits, Beziehungsanzeigen, Event-Popups, Entscheidungsdialoge. Charaktergetrieben, historisches Feeling, klare Hierarchie in Informationsdarstellung.
 - **Sim City (klassisch)**: Referenz für die Stadtansicht von oben — statischer als ein echtes Sim City, aber ähnliche Top-Down-Perspektive als Hauptansicht.
 
-### Layout-Konzept
-
-```
-┌──────────────────────────────────────────────────────────┐
-│  HEADER: Stadtname | Jahr/Runde | 4 Metriken als Balken  │
-├──────────────────┬───────────────────────────────────────┤
-│                  │                                       │
-│   STADTANSICHT   │         AKTIVES PANEL                 │
-│   (Top-Down,     │   (Entscheidungskarte / Event /       │
-│    2D Karte)     │    Verhandlungsdialog / Jahresbilanz) │
-│                  │                                       │
-├──────────────────┴───────────────────────────────────────┤
-│  FOOTER: Fraktionsleiste (5 Icons + Vertrauensanzeige)   │
-└──────────────────────────────────────────────────────────┘
-```
-
-### Stadtansicht (Phase 1 → Phase 2)
-
-- **Phase 1**: Statisches SVG oder Raster-Bild der Stadt, Stadtteile anklickbar, zeigen lokale Daten
-- **Phase 2 (Phaser)**: Animierte Tilemap, Stadtveränderungen sichtbar (neues Gewerbegebiet erscheint, Radwege wachsen), Tag/Nacht-Zyklus optional
-
 ### Event- & Entscheidungsfenster (CK3-Stil)
 
 ```

@@ -1,5 +1,34 @@
-import { Scene, GameObjects } from 'phaser';
+import { Scene, GameObjects, Geom } from 'phaser';
 import { type District, DISTRICTS } from '@/data/gameData';
+
+// ── Geometry helpers ──────────────────────────────────────────────────────────
+function centroid(pts: { x: number; y: number }[]): { x: number; y: number } {
+  const n = pts.length;
+  return {
+    x: pts.reduce((s, p) => s + p.x, 0) / n,
+    y: pts.reduce((s, p) => s + p.y, 0) / n,
+  };
+}
+
+function bboxOf(pts: { x: number; y: number }[]) {
+  const xs = pts.map(p => p.x);
+  const ys = pts.map(p => p.y);
+  return {
+    minX: Math.min(...xs), maxX: Math.max(...xs),
+    minY: Math.min(...ys), maxY: Math.max(...ys),
+  };
+}
+
+/** Trace a closed polygon path on a Graphics object. */
+function polyPath(
+  g: { beginPath(): void; moveTo(x: number, y: number): void; lineTo(x: number, y: number): void; closePath(): void },
+  pts: { x: number; y: number }[],
+) {
+  g.beginPath();
+  g.moveTo(pts[0].x, pts[0].y);
+  for (let i = 1; i < pts.length; i++) g.lineTo(pts[i].x, pts[i].y);
+  g.closePath();
+}
 
 export type { District };
 export { DISTRICTS };
@@ -43,16 +72,31 @@ export class CityScene extends Scene {
     this.setupCameraControls();
 
     DISTRICTS.forEach(d => {
-      const zone = this.add
-        .zone(d.x + d.w / 2, d.y + d.h / 2, d.w, d.h)
-        .setInteractive({ useHandCursor: true });
+      // Build a bounding box so the zone rectangle covers the polygon
+      const box  = bboxOf(d.points);
+      const cx   = (box.minX + box.maxX) / 2;
+      const cy   = (box.minY + box.maxY) / 2;
+      const bw   = box.maxX - box.minX;
+      const bh   = box.maxY - box.minY;
 
+      // Local polygon (coordinates relative to zone center)
+      const localPoly = new Geom.Polygon(
+        d.points.flatMap(p => [p.x - cx, p.y - cy]),
+      );
+
+      const zone = this.add
+        .zone(cx, cy, bw, bh)
+        .setInteractive(localPoly, Geom.Polygon.Contains);
+      zone.input!.cursor = 'pointer';
+
+      // Label at visual centroid
+      const c = centroid(d.points);
       this.add
-        .text(d.x + d.w / 2, d.y + d.h / 2, d.name, {
+        .text(c.x, c.y, d.name, {
           fontSize: '11px',
           color: '#1a1a1a',
           fontStyle: 'bold',
-          wordWrap: { width: d.w - 12 },
+          wordWrap: { width: bw - 12 },
           align: 'center',
           stroke: '#ffffff',
           strokeThickness: 3,
@@ -63,8 +107,8 @@ export class CityScene extends Scene {
         if (this.selectedName !== d.name) {
           this.highlightGraphics.clear();
           this.highlightGraphics.lineStyle(3, 0xffffff, 0.8);
-          this.highlightGraphics.strokeRect(d.x + 2, d.y + 2, d.w - 4, d.h - 4);
-          // Redraw selected highlight on top if one is already selected
+          polyPath(this.highlightGraphics, d.points);
+          this.highlightGraphics.strokePath();
           if (this.selectedName) {
             const sel = DISTRICTS.find(x => x.name === this.selectedName);
             if (sel) this.drawSelectedHighlight(sel);
@@ -160,36 +204,25 @@ export class CityScene extends Scene {
   private drawBase() {
     const g = this.baseGraphics;
 
-    // Roads
-    g.fillStyle(0xb0a898, 1);
-    g.fillRect(140, 0, 15, 340);   // vertical road west
-    g.fillRect(295, 0, 15, 340);   // vertical road east
-    g.fillRect(0, 165, 460, 15);   // horizontal road
-
-    // Road lines (dashed center)
-    g.lineStyle(1, 0xd0c8be, 0.6);
-    g.lineBetween(147, 0, 147, 165);
-    g.lineBetween(147, 180, 147, 340);
-    g.lineBetween(302, 0, 302, 165);
-    g.lineBetween(302, 180, 302, 340);
-    g.lineBetween(0, 172, 140, 172);
-    g.lineBetween(155, 172, 295, 172);
-    g.lineBetween(310, 172, 460, 172);
-
-    // Districts
     DISTRICTS.forEach(d => {
       g.fillStyle(d.color, 1);
-      g.fillRect(d.x, d.y, d.w, d.h);
-      g.lineStyle(1, 0x4a4035, 0.5);
-      g.strokeRect(d.x, d.y, d.w, d.h);
+      polyPath(g, d.points);
+      g.fillPath();
+      g.lineStyle(2, 0x3a3028, 0.6);
+      polyPath(g, d.points);
+      g.strokePath();
     });
   }
 
   private drawSelectedHighlight(d: District) {
     const g = this.highlightGraphics;
-    g.lineStyle(3, 0x000000, 0.5);
-    g.strokeRect(d.x + 3, d.y + 3, d.w - 6, d.h - 6);
+    // Outer dark halo
+    g.lineStyle(5, 0x000000, 0.4);
+    polyPath(g, d.points);
+    g.strokePath();
+    // Inner bright ring
     g.lineStyle(3, 0xffffff, 1);
-    g.strokeRect(d.x + 1, d.y + 1, d.w - 2, d.h - 2);
+    polyPath(g, d.points);
+    g.strokePath();
   }
 }
