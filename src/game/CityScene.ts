@@ -96,9 +96,11 @@ export class CityScene extends Scene {
       const bw   = box.maxX - box.minX;
       const bh   = box.maxY - box.minY;
 
-      // Local polygon (coordinates relative to zone center)
+      // Local polygon (coordinates relative to zone top-left, i.e. local origin)
+      // Phaser's hit-test converts world→local as: lx = wx - x + displayOriginX
+      // where displayOriginX = bw * 0.5 for origin=0.5, so local(0,0) = world(minX,minY).
       const localPoly = new Geom.Polygon(
-        d.points.flatMap(p => [p.x - cx, p.y - cy]),
+        d.points.flatMap(p => [p.x - box.minX, p.y - box.minY]),
       );
 
       const zone = this.add
