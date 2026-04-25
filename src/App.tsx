@@ -8,7 +8,6 @@ import { Header } from "@/components/Header";
 import { LeftPanel } from "@/components/LeftPanel";
 import { RightPanel } from "@/components/RightPanel";
 import { Footer } from "@/components/Footer";
-import { GameDialog } from "@/components/GameDialog";
 import "./App.css";
 
 function App() {
@@ -17,8 +16,6 @@ function App() {
   const [selectedDistrict, setSelectedDistrict] = useState<District | null>(
     null,
   );
-  const [showTutorial, setShowTutorial] = useState(true);
-
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
@@ -88,7 +85,6 @@ function App() {
       </div>
 
       <Footer />
-      <GameDialog open={showTutorial} onClose={() => setShowTutorial(false)} />
     </div>
   );
 }
