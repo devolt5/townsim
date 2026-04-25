@@ -5,7 +5,7 @@ TownSim is a browser-based political simulation and **Serious Game** that puts y
 > [!IMPORTANT]
 > The game is **currently available in German only** (Sprache: Deutsch).
 
-🚀 [Direkt im Browser spielen](https://devolt5.github.io/townsim/)
+🚀 [Click here to play in the browser](https://devolt5.github.io/townsim/)
 
 ![TownSim Teaser](Teaser.jpg)
 
