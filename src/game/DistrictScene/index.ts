@@ -1,9 +1,9 @@
 import { Scene } from "phaser";
+import type { DistrictData } from "@/data/districtTypes";
 import { GRID_COLS, GRID_ROWS, TILE_H, TILE_IDS, TILE_W } from "./constants";
 import { diamondPoints, tileKey, tileToWorld, worldToTile } from "./coordHelpers";
 import { HoverSystem } from "./HoverSystem";
 import { MouseSystem } from "./MouseSystem";
-import { BUILDING_DEFS, CITY_MAP } from "./mapData";
 import type { BuildingDef, DistrictSceneCallbacks, TileState } from "./types";
 
 export class DistrictScene extends Scene {
@@ -22,6 +22,7 @@ export class DistrictScene extends Scene {
   private mouse!: MouseSystem;
   private hoveredTile: { col: number; row: number } | undefined;
 
+  private districtData!: DistrictData;
   private callbacks: DistrictSceneCallbacks = {};
 
   constructor() {
@@ -36,9 +37,18 @@ export class DistrictScene extends Scene {
     this.callbacks = callbacks;
   }
 
+  /** Receives district data from game.scene.start(key, data). */
+  init(data: { districtData: DistrictData }): void {
+    this.districtData = data.districtData;
+    // Reset runtime state on scene restart
+    this.tileMap.clear();
+    this.buildingSprites.clear();
+    this.buildingAnchors.clear();
+  }
+
   /** Place a building on the grid at runtime (mayor confirms placement). */
   placeBuilding(col: number, row: number, buildingId: string): void {
-    const def = Object.values(BUILDING_DEFS).find((d) => d.id === buildingId);
+    const def = Object.values(this.districtData.buildingDefs).find((d) => d.id === buildingId);
     if (!def) return;
 
     const [fw, fh] = def.footprint ?? [1, 1];
@@ -62,7 +72,7 @@ export class DistrictScene extends Scene {
     this.generatePlaceholderTexture("ground_empty",    0x8fbc8f);
     this.generatePlaceholderTexture("ground_placeable", 0xf5c842);
 
-    for (const def of Object.values(BUILDING_DEFS)) {
+    for (const def of Object.values(this.districtData.buildingDefs)) {
       if (def.assetUrl) {
         this.load.image(def.textureKey, def.assetUrl);
       }
@@ -78,6 +88,7 @@ export class DistrictScene extends Scene {
       this.tileMap,
       this.buildingSprites,
       this.buildingAnchors,
+      this.districtData.buildingDefs,
     );
 
     this.mouse = new MouseSystem(this.cameras.main, this.input);
@@ -100,7 +111,7 @@ export class DistrictScene extends Scene {
   private initTileMap(): void {
     for (let row = 0; row < GRID_ROWS; row++) {
       for (let col = 0; col < GRID_COLS; col++) {
-        const cell = CITY_MAP[row][col];
+        const cell = this.districtData.map[row][col];
         if (cell === "occ") continue; // filled by anchor tile's footprint loop
 
         if (cell === TILE_IDS.EMPTY) {
@@ -108,7 +119,7 @@ export class DistrictScene extends Scene {
         } else if (cell === TILE_IDS.PLACEABLE) {
           this.tileMap.set(tileKey(col, row), { type: "empty", placeable: true });
         } else if (cell > 0) {
-          const def = BUILDING_DEFS[cell];
+          const def = this.districtData.buildingDefs[cell];
           if (!def) continue;
           const [fw, fh] = def.footprint ?? [1, 1];
           for (let dr = 0; dr < fh; dr++) {
@@ -150,7 +161,7 @@ export class DistrictScene extends Scene {
       for (let col = 0; col < GRID_COLS; col++) {
         const state = this.tileMap.get(tileKey(col, row));
         if (state?.type === "building" && state.anchor) {
-          const def = Object.values(BUILDING_DEFS).find((d) => d.id === state.buildingId);
+          const def = Object.values(this.districtData.buildingDefs).find((d) => d.id === state.buildingId);
           if (def) this.drawBuilding(col, row, def);
         }
       }

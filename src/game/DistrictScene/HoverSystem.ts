@@ -1,6 +1,5 @@
-import { BUILDING_DEFS } from "./mapData";
 import { diamondPoints, tileKey, tileToWorld } from "./coordHelpers";
-import type { TileState } from "./types";
+import type { BuildingDef, TileState } from "./types";
 
 /**
  * Encapsulates all hover-related visual logic:
@@ -16,17 +15,20 @@ export class HoverSystem {
   private readonly tileMap: Map<string, TileState>;
   private readonly buildingSprites: Map<string, Phaser.GameObjects.Sprite>;
   private readonly buildingAnchors: Map<string, { col: number; row: number }>;
+  private readonly buildingDefs: Record<number, BuildingDef>;
 
   constructor(
     highlightLayer: Phaser.GameObjects.Graphics,
     tileMap: Map<string, TileState>,
     buildingSprites: Map<string, Phaser.GameObjects.Sprite>,
     buildingAnchors: Map<string, { col: number; row: number }>,
+    buildingDefs: Record<number, BuildingDef>,
   ) {
     this.highlightLayer   = highlightLayer;
     this.tileMap          = tileMap;
     this.buildingSprites  = buildingSprites;
     this.buildingAnchors  = buildingAnchors;
+    this.buildingDefs     = buildingDefs;
   }
 
   // -------------------------------------------------------------------------
@@ -86,7 +88,7 @@ export class HoverSystem {
 
   private applyBuildingHighlight(buildingId: string): void {
     const anchor = this.buildingAnchors.get(buildingId);
-    const def = Object.values(BUILDING_DEFS).find((d) => d.id === buildingId);
+    const def = Object.values(this.buildingDefs).find((d) => d.id === buildingId);
     if (!anchor || !def) return;
 
     const [fw, fh] = def.footprint ?? [1, 1];

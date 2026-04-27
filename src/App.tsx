@@ -1,7 +1,11 @@
 import type { CSSProperties } from "react";
 import { useEffect, useRef, useState } from "react";
 import { Game, AUTO } from "phaser";
+import { CityScene } from "@/game/CityScene";
+import type { District } from "@/game/CityScene";
 import { DistrictScene } from "@/game/DistrictScene";
+import type { DistrictData } from "@/data/districtTypes";
+import { northDistrict } from "@/data/disctricts/north";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { Header } from "@/components/Header";
 import { LeftPanel } from "@/components/LeftPanel";
@@ -9,13 +13,32 @@ import { RightPanel } from "@/components/RightPanel";
 import { Footer } from "@/components/Footer";
 import "./App.css";
 
+/**
+ * All available districts.
+ * To add a new district: create its data file and append it here.
+ */
+const ALL_DISTRICTS: DistrictData[] = [
+  northDistrict,
+  // southDistrict,
+  // townCenterDistrict,
+];
+
+/** Lookup by CityScene district name. */
+function findDistrictData(citySceneName: string): DistrictData | undefined {
+  return ALL_DISTRICTS.find((d) => d.citySceneName === citySceneName);
+}
+
 function App() {
   const containerRef = useRef<HTMLDivElement>(null);
   const gameRef = useRef<Game | null>(null);
+  const [selectedDistrict, setSelectedDistrict] = useState<District | null>(
+    null,
+  );
   const [selectedBuildingId, setSelectedBuildingId] = useState<string | null>(
     null,
   );
   void selectedBuildingId; // will be used when GameDialog integration is wired up
+
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
@@ -29,19 +52,33 @@ function App() {
       if (w <= 0 || h <= 0) return;
 
       if (!game) {
-        const scene = new DistrictScene();
-        scene.setCallbacks({
+        const cityScene = new CityScene();
+        const districtScene = new DistrictScene();
+
+        districtScene.setCallbacks({
           onBuildingClick: (buildingId) => setSelectedBuildingId(buildingId),
           onPlaceBuilding: (col, row) =>
             console.log("Place building at", col, row),
         });
+
+        cityScene.setSelectCallback((district) => {
+          setSelectedDistrict(district);
+          const districtData = district
+            ? findDistrictData(district.name)
+            : undefined;
+          if (districtData && gameRef.current) {
+            gameRef.current.scene.stop("CityScene");
+            gameRef.current.scene.start("DistrictScene", { districtData });
+          }
+        });
+
         game = new Game({
           type: AUTO,
           width: w,
           height: h,
           backgroundColor: "#dfd9c4",
           parent: container,
-          scene,
+          scene: [cityScene, districtScene],
         });
         gameRef.current = game;
       } else {
@@ -60,7 +97,14 @@ function App() {
 
   return (
     <div className="flex flex-col h-screen bg-stone-100 text-stone-900 select-none overflow-hidden">
-      <Header />
+      <Header
+        onCityOverview={() => {
+          if (!gameRef.current) return;
+          gameRef.current.scene.stop("DistrictScene");
+          gameRef.current.scene.start("CityScene");
+          setSelectedDistrict(null);
+        }}
+      />
 
       {/* Middle: left sidebar + phaser canvas + right sidebar */}
       <div className="flex flex-1 overflow-hidden">
@@ -70,7 +114,7 @@ function App() {
           style={{ "--sidebar-width": "18rem" } as CSSProperties}
           className="h-full"
         >
-          <LeftPanel selectedDistrict={null} />
+          <LeftPanel selectedDistrict={selectedDistrict} />
         </SidebarProvider>
 
         {/* Phaser canvas — grows to fill remaining space */}

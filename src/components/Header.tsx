@@ -10,7 +10,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-export function Header() {
+export function Header({ onCityOverview }: { onCityOverview?: () => void }) {
   const [showTutorial, setShowTutorial] = useState(false);
   const [tooltipOpen, setTooltipOpen] = useState(true);
 
@@ -45,6 +45,14 @@ export function Header() {
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
+          {onCityOverview && (
+            <button
+              onClick={onCityOverview}
+              className="cursor-pointer text-xs text-stone-300 hover:text-white border border-stone-600 hover:border-stone-400 rounded px-2 py-1 transition-colors"
+            >
+              🗺 Stadtübersicht
+            </button>
+          )}
         </div>
         <div className="flex gap-4 flex-1 overflow-x-auto flex-nowrap justify-end scrollbar-none">
           {METRICS.map((m) => (
