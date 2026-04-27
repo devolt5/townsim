@@ -1,8 +1,7 @@
 import type { CSSProperties } from "react";
 import { useEffect, useRef, useState } from "react";
 import { Game, AUTO } from "phaser";
-import { CityScene } from "@/game/CityScene";
-import type { District } from "@/game/CityScene";
+import { DistrictScene } from "@/game/DistrictScene";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { Header } from "@/components/Header";
 import { LeftPanel } from "@/components/LeftPanel";
@@ -13,9 +12,10 @@ import "./App.css";
 function App() {
   const containerRef = useRef<HTMLDivElement>(null);
   const gameRef = useRef<Game | null>(null);
-  const [selectedDistrict, setSelectedDistrict] = useState<District | null>(
+  const [selectedBuildingId, setSelectedBuildingId] = useState<string | null>(
     null,
   );
+  void selectedBuildingId; // will be used when GameDialog integration is wired up
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
@@ -29,8 +29,12 @@ function App() {
       if (w <= 0 || h <= 0) return;
 
       if (!game) {
-        const scene = new CityScene();
-        scene.setSelectCallback(setSelectedDistrict);
+        const scene = new DistrictScene();
+        scene.setCallbacks({
+          onBuildingClick: (buildingId) => setSelectedBuildingId(buildingId),
+          onPlaceBuilding: (col, row) =>
+            console.log("Place building at", col, row),
+        });
         game = new Game({
           type: AUTO,
           width: w,
@@ -66,7 +70,7 @@ function App() {
           style={{ "--sidebar-width": "18rem" } as CSSProperties}
           className="h-full"
         >
-          <LeftPanel selectedDistrict={selectedDistrict} />
+          <LeftPanel selectedDistrict={null} />
         </SidebarProvider>
 
         {/* Phaser canvas — grows to fill remaining space */}
