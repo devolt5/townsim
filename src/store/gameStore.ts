@@ -144,7 +144,9 @@ export const useGameStore = create<GameState>()(
       setMetricValue: (key, value) =>
         set((s) => ({
           metrics: s.metrics.map((m) =>
-            m.key === key ? { ...m, value: Math.max(0, Math.min(100, value)) } : m,
+            m.key === key
+              ? { ...m, value: Math.max(0, Math.min(100, value)) }
+              : m,
           ),
         })),
 
@@ -192,8 +194,7 @@ export const useGameStore = create<GameState>()(
           openPromises: s.openPromises.filter((p) => p.id !== id),
         })),
 
-      setPendingDecision: (decision) =>
-        set({ pendingDecision: decision }),
+      setPendingDecision: (decision) => set({ pendingDecision: decision }),
 
       resolveDecision: (chosenOption) =>
         set((s) => {
@@ -212,9 +213,12 @@ export const useGameStore = create<GameState>()(
       advanceTurn: () =>
         set((s) => {
           const { year, quarter, phase } = s.turn;
-          if (phase < 3) return { turn: { year, quarter, phase: (phase + 1) as 1 | 2 | 3 } };
-          if (quarter < 4) return { turn: { year, quarter: quarter + 1, phase: 1 } };
-          if (year < 5) return { turn: { year: year + 1, quarter: 1, phase: 1 } };
+          if (phase < 3)
+            return { turn: { year, quarter, phase: (phase + 1) as 1 | 2 | 3 } };
+          if (quarter < 4)
+            return { turn: { year, quarter: quarter + 1, phase: 1 } };
+          if (year < 5)
+            return { turn: { year: year + 1, quarter: 1, phase: 1 } };
           // Year 5 Q4 Phase 3 — game over (Wahlnacht); stay at final state
           return {};
         }),

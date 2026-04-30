@@ -1,11 +1,11 @@
 import { Separator } from "@/components/ui/separator";
 import { FactionChip } from "@/components/TrustBar";
-import { FACTIONS } from "@/data/gameData";
-
-const TOTAL_SEATS = FACTIONS.reduce((sum, f) => sum + f.seats, 0);
-const MAJORITY = Math.ceil(TOTAL_SEATS / 2) + 1;
+import { useGameStore } from "@/store/gameStore";
 
 export function Footer() {
+  const factions = useGameStore((s) => s.factions);
+  const TOTAL_SEATS = factions.reduce((sum, f) => sum + f.seats, 0);
+  const MAJORITY = Math.ceil(TOTAL_SEATS / 2) + 1;
   return (
     <footer className="bg-stone-800 px-4 py-2 flex items-center gap-4 border-t border-stone-700 shrink-0 min-h-13">
       <span className="text-stone-500 text-xs font-bold uppercase tracking-wider shrink-0">
@@ -13,7 +13,7 @@ export function Footer() {
       </span>
       <Separator orientation="vertical" className="h-6 bg-stone-600 shrink-0" />
       <div className="flex items-center gap-5 flex-1 overflow-x-auto flex-nowrap scrollbar-none">
-        {FACTIONS.map((f) => (
+        {factions.map((f) => (
           <FactionChip key={f.short} faction={f} />
         ))}
       </div>

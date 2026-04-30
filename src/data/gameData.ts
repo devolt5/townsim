@@ -11,21 +11,6 @@ import factionCitizens from "@/images/factions/citizens.jpg";
 import factionWorkers from "@/images/factions/workers.jpg";
 import factionConservatives from "@/images/factions/conservatives.jpg";
 
-export interface BasicGameData {
-  cityName: string;
-  playerName: string;
-}
-
-export let BASIC_GAME_DATA: BasicGameData = {
-  cityName: "Neustadt",
-  playerName: "Bürgermeisterin",
-};
-
-/** Persist changes made in the settings modal. */
-export function updateBasicGameData(patch: Partial<BasicGameData>): void {
-  BASIC_GAME_DATA = { ...BASIC_GAME_DATA, ...patch };
-}
-
 export interface Metric {
   key: string;
   label: string;

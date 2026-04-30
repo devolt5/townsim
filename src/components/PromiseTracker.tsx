@@ -1,9 +1,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { OPEN_PROMISES } from "@/data/gameData";
+import { useGameStore } from "@/store/gameStore";
 
 export function PromiseTracker() {
-  const promises = OPEN_PROMISES;
+  const promises = useGameStore((s) => s.openPromises);
 
   return (
     <Card className="border-stone-200">

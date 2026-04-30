@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Settings2 } from "lucide-react";
 import { MetricBar } from "@/components/MetricBar";
-import { METRICS, BASIC_GAME_DATA, updateBasicGameData } from "@/data/gameData";
+import { useGameStore } from "@/store/gameStore";
 import {
   Dialog,
   DialogContent,
@@ -13,24 +13,20 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 export function Header({ onCityOverview }: { onCityOverview?: () => void }) {
+  const { metrics, basicData, turn, updateBasicData, resetGame } =
+    useGameStore();
   const [showSettings, setShowSettings] = useState(false);
-  const [cityName, setCityName] = useState(BASIC_GAME_DATA.cityName);
-  const [playerName, setPlayerName] = useState(BASIC_GAME_DATA.playerName);
-
-  // Displayed city name reflects saved state
-  const [displayedCityName, setDisplayedCityName] = useState(
-    BASIC_GAME_DATA.cityName,
-  );
+  const [cityName, setCityName] = useState(basicData.cityName);
+  const [playerName, setPlayerName] = useState(basicData.playerName);
 
   function handleOpenSettings() {
-    setCityName(BASIC_GAME_DATA.cityName);
-    setPlayerName(BASIC_GAME_DATA.playerName);
+    setCityName(basicData.cityName);
+    setPlayerName(basicData.playerName);
     setShowSettings(true);
   }
 
   function handleSave() {
-    updateBasicGameData({ cityName, playerName });
-    setDisplayedCityName(cityName);
+    updateBasicData({ cityName, playerName });
     setShowSettings(false);
   }
 
@@ -38,8 +34,8 @@ export function Header({ onCityOverview }: { onCityOverview?: () => void }) {
     <>
       <header className="bg-stone-800 text-white px-4 py-2 flex items-center gap-4 shadow-md shrink-0 h-14">
         <div className="flex items-center gap-2 shrink-0">
-          <span className="text-lg font-bold">🏙 {displayedCityName}</span>
-          <span className="text-stone-400 text-sm">· Jahr 1</span>
+          <span className="text-lg font-bold">🏙 {basicData.cityName}</span>
+          <span className="text-stone-400 text-sm">· Jahr {turn.year}</span>
           <button
             onClick={handleOpenSettings}
             className="cursor-pointer text-stone-400 hover:text-white transition-colors p-1 rounded"
@@ -57,7 +53,7 @@ export function Header({ onCityOverview }: { onCityOverview?: () => void }) {
           )}
         </div>
         <div className="flex gap-4 flex-1 overflow-x-auto flex-nowrap justify-end scrollbar-none">
-          {METRICS.map((m) => (
+          {metrics.map((m) => (
             <MetricBar key={m.key} metric={m} />
           ))}
         </div>
@@ -96,11 +92,23 @@ export function Header({ onCityOverview }: { onCityOverview?: () => void }) {
             </div>
           </div>
 
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setShowSettings(false)}>
-              Abbrechen
+          <DialogFooter className="flex-col gap-2 sm:flex-col">
+            <div className="flex gap-2 justify-end">
+              <Button variant="outline" onClick={() => setShowSettings(false)}>
+                Abbrechen
+              </Button>
+              <Button onClick={handleSave}>Speichern</Button>
+            </div>
+            <Button
+              variant="destructive"
+              className="w-full"
+              onClick={() => {
+                resetGame();
+                setShowSettings(false);
+              }}
+            >
+              🗑 Neues Spiel (Spielstand löschen)
             </Button>
-            <Button onClick={handleSave}>Speichern</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

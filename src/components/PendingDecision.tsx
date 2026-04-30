@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { PENDING_DECISION } from "@/data/gameData";
+import { useGameStore } from "@/store/gameStore";
 
 const FACTION_REACTIONS = [
   { short: "GRÜN", icon: "🌿", reaction: "😊 +18", positive: true },
@@ -13,7 +13,15 @@ const FACTION_REACTIONS = [
 ];
 
 export function PendingDecision() {
-  const decision = PENDING_DECISION;
+  const decision = useGameStore((s) => s.pendingDecision);
+
+  if (!decision) {
+    return (
+      <p className="text-xs text-stone-400 italic text-center pt-8">
+        Keine offenen Anträge.
+      </p>
+    );
+  }
 
   return (
     <Card className="border-amber-200 bg-amber-50/50">
