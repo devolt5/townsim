@@ -34,6 +34,7 @@ function App() {
   const [selectedDistrict, setSelectedDistrict] = useState<District | null>(
     null,
   );
+  const [phoneOpen, setPhoneOpen] = useState(window.innerWidth >= 768);
   const [selectedBuildingId, setSelectedBuildingId] = useState<string | null>(
     null,
   );
@@ -107,15 +108,13 @@ function App() {
       />
 
       {/* Middle: left sidebar + phaser canvas + right sidebar */}
-      <div className="flex flex-1 overflow-hidden">
-        {/* Left sidebar context */}
-        <SidebarProvider
-          defaultOpen={window.innerWidth >= 768}
-          style={{ "--sidebar-width": "18rem" } as CSSProperties}
-          className="h-full"
-        >
-          <LeftPanel selectedDistrict={selectedDistrict} />
-        </SidebarProvider>
+      <div className="relative flex flex-1 overflow-hidden">
+        {/* Left phone panel */}
+        <LeftPanel
+          selectedDistrict={selectedDistrict}
+          open={phoneOpen}
+          onToggle={() => setPhoneOpen((o) => !o)}
+        />
 
         {/* Phaser canvas — grows to fill remaining space */}
         <main className="flex-1 bg-stone-200 overflow-hidden min-w-0">
