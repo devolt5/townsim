@@ -1,19 +1,3 @@
-// Shared game data types and static demo data
-export interface BasicGameData {
-  cityName: string;
-  playerName: string;
-}
-
-export let BASIC_GAME_DATA: BasicGameData = {
-  cityName: "Neustadt",
-  playerName: "Bürgermeister",
-};
-
-/** Persist changes made in the settings modal. */
-export function updateBasicGameData(patch: Partial<BasicGameData>): void {
-  BASIC_GAME_DATA = { ...BASIC_GAME_DATA, ...patch };
-}
-
 import citizen02 from "@/images/citizen_02.jpg";
 import districtNorth from "@/images/districts/north.jpg";
 import districtTownCenter from "@/images/districts/town_center.jpg";
@@ -26,6 +10,21 @@ import factionBusiness from "@/images/factions/business.jpg";
 import factionCitizens from "@/images/factions/citizens.jpg";
 import factionWorkers from "@/images/factions/workers.jpg";
 import factionConservatives from "@/images/factions/conservatives.jpg";
+
+export interface BasicGameData {
+  cityName: string;
+  playerName: string;
+}
+
+export let BASIC_GAME_DATA: BasicGameData = {
+  cityName: "Neustadt",
+  playerName: "Bürgermeisterin",
+};
+
+/** Persist changes made in the settings modal. */
+export function updateBasicGameData(patch: Partial<BasicGameData>): void {
+  BASIC_GAME_DATA = { ...BASIC_GAME_DATA, ...patch };
+}
 
 export interface Metric {
   key: string;

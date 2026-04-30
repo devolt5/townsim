@@ -9,19 +9,19 @@ export interface DialogData {
 export const allDialogs: DialogData[] = [
   {
     id: 1,
-    sender: "Stadtberater",
+    sender: "Stadtberaterin",
     title: "Willkommen in TownSim",
     text: "Willkommen! Hier beginnt dein Abenteuer als Bürgermeister. Triff kluge Entscheidungen, gewinne das Vertrauen deiner Bürger und forme das Schicksal deiner Stadt.",
   },
   {
     id: 2,
-    sender: "Stadtberater",
+    sender: "Stadtberaterin",
     title: "Erste Schritte",
     text: "Ein guter Anfang! Deine erste Aufgabe:\n\nVerschaffe dir einen **Überblick über die Stadtbezirke**. Jeder hat eigene Bedürfnisse und Problemlagen.\n\nKlicke auf einen Bezirk, um seine Details einzusehen.",
   },
   {
     id: 3,
-    sender: "Stadtberater",
+    sender: "Stadtberaterin",
     title: "Haushaltswarnung",
     text: "**Achtung, Bürgermeister** – die Stadtkasse sendet erste Warnsignale.\n\nÜberprüfe die Ausgaben im *nördlichen Bezirk*, bevor es zu einem **Defizit** kommt.",
   },
