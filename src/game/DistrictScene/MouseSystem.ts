@@ -7,6 +7,8 @@
  *   // In pointerdown/pointerup handlers: guard with mouse.isDragging
  */
 export class MouseSystem {
+  private readonly camera: Phaser.Cameras.Scene2D.Camera;
+  private readonly input: Phaser.Input.InputPlugin;
   private dragging = false;
   private panStartX = 0;
   private panStartY = 0;
@@ -19,9 +21,12 @@ export class MouseSystem {
   private static readonly ZOOM_STEP = 0.12;
 
   constructor(
-    private readonly camera: Phaser.Cameras.Scene2D.Camera,
-    private readonly input: Phaser.Input.InputPlugin,
-  ) {}
+    camera: Phaser.Cameras.Scene2D.Camera,
+    input: Phaser.Input.InputPlugin,
+  ) {
+    this.camera = camera;
+    this.input = input;
+  }
 
   /** Attach all input listeners. Call once in Scene.create(). */
   register(): void {
@@ -60,9 +65,7 @@ export class MouseSystem {
   ): void {
     const cam = this.camera;
     const factor =
-      deltaY < 0
-        ? 1 + MouseSystem.ZOOM_STEP
-        : 1 - MouseSystem.ZOOM_STEP;
+      deltaY < 0 ? 1 + MouseSystem.ZOOM_STEP : 1 - MouseSystem.ZOOM_STEP;
 
     const newZoom = Math.max(
       MouseSystem.MIN_ZOOM,
