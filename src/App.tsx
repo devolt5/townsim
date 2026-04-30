@@ -125,7 +125,7 @@ function App() {
         <SidebarProvider
           defaultOpen={window.innerWidth >= 768}
           style={{ "--sidebar-width": "20rem" } as CSSProperties}
-          className="h-full"
+          className="relative h-full"
         >
           <RightPanel />
         </SidebarProvider>

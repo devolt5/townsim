@@ -16,7 +16,7 @@ function SidebarToggle() {
     <Button
       variant="ghost"
       size="icon"
-      className="self-start mt-1 h-7 w-6 shrink-0 rounded text-stone-400 hover:text-stone-700 hover:bg-stone-200"
+      className="cursor-pointer absolute top-2 -left-8 z-10 h-7 w-6 shrink-0 rounded bg-white/80 shadow-sm text-stone-400 hover:text-stone-700 hover:bg-stone-200 backdrop-blur-sm"
       onClick={toggleSidebar}
       title="Panel umschalten"
     >
