@@ -39,6 +39,7 @@ function App() {
     null,
   );
   void selectedBuildingId; // will be used when GameDialog integration is wired up
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -114,10 +115,13 @@ function App() {
           selectedDistrict={selectedDistrict}
           open={phoneOpen}
           onToggle={() => setPhoneOpen((o) => !o)}
+          onDialogOpenChange={setDialogOpen}
         />
 
         {/* Phaser canvas — grows to fill remaining space */}
-        <main className="flex-1 bg-stone-200 overflow-hidden min-w-0">
+        <main
+          className={`flex-1 bg-stone-200 overflow-hidden min-w-0${dialogOpen ? " pointer-events-none" : ""}`}
+        >
           <div ref={containerRef} className="w-full h-full" />
         </main>
 

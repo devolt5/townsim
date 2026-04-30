@@ -14,6 +14,7 @@ interface LeftPanelProps {
   selectedDistrict: District | null;
   open: boolean;
   onToggle: () => void;
+  onDialogOpenChange?: (open: boolean) => void;
 }
 
 /** Active "app" shown on the phone screen */
@@ -23,13 +24,22 @@ export function LeftPanel({
   selectedDistrict,
   open,
   onToggle,
+  onDialogOpenChange,
 }: LeftPanelProps) {
   const [activeApp, setActiveApp] = useState<PhoneApp>("nachrichten");
   const [openDialog, setOpenDialog] = useState<DialogData | null>(null);
 
   function handleMessageClick(dialogId: number) {
     const dialog = dialogsById[dialogId];
-    if (dialog) setOpenDialog(dialog);
+    if (dialog) {
+      setOpenDialog(dialog);
+      onDialogOpenChange?.(true);
+    }
+  }
+
+  function handleDialogClose() {
+    setOpenDialog(null);
+    onDialogOpenChange?.(false);
   }
 
   return (
@@ -177,11 +187,7 @@ export function LeftPanel({
       </div>
 
       {openDialog && (
-        <GameDialog
-          open={true}
-          onClose={() => setOpenDialog(null)}
-          data={openDialog}
-        />
+        <GameDialog open={true} onClose={handleDialogClose} data={openDialog} />
       )}
     </>
   );

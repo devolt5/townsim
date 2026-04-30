@@ -41,26 +41,54 @@ export function GameDialog({ open, onClose, data }: GameDialogProps) {
 
   return (
     <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
-      <DialogContent className="sm:max-w-2xl h-[66vh] p-0 overflow-hidden flex flex-col gap-0 bg-stone-100 ring-stone-200">
+      <DialogContent className="sm:max-w-2xl h-[66vh] p-0 overflow-hidden flex flex-col gap-0 bg-stone-100 ring-stone-200 border-none [&>button]:hidden">
         {/* Chat header */}
-        <DialogHeader className="flex flex-row items-center gap-3 bg-white px-5 py-4 border-b border-stone-200 shadow-sm shrink-0">
-          <img
-            src={guideImage}
-            alt={data.sender}
-            className="w-11 h-11 rounded-full object-cover ring-2 ring-amber-400 shrink-0"
-          />
-          <div className="flex flex-col min-w-0">
-            <DialogTitle className="text-sm font-semibold text-stone-800 leading-tight">
-              {data.sender}
-            </DialogTitle>
-            <span className="text-xs text-emerald-500 font-medium">
-              ● Online
-            </span>
+        <div className="flex flex-row items-center justify-between bg-white px-6 py-8 border-b border-stone-200 shadow-sm shrink-0">
+          <div className="flex flex-row items-center gap-4">
+            <img
+              src={guideImage}
+              alt={data.sender}
+              className="w-12 h-12 rounded-full object-cover ring-2 ring-amber-400 shrink-0"
+            />
+            <div className="flex flex-col min-w-0 text-left">
+              <DialogHeader className="p-0 space-y-0 text-left">
+                <DialogTitle className="text-base font-bold text-stone-800 leading-tight">
+                  {data.sender}
+                </DialogTitle>
+              </DialogHeader>
+              <span className="text-xs text-emerald-500 font-medium flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                Online
+              </span>
+            </div>
           </div>
-        </DialogHeader>
+
+          {/* Custom Close Button */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onClose}
+            className="rounded-full h-10 w-10 text-stone-400 hover:text-stone-600 hover:bg-stone-100"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </Button>
+        </div>
 
         {/* Scrollable message history */}
-        <div className="px-5 py-6 flex-1 overflow-y-auto flex flex-col gap-4">
+        <div className="px-6 py-8 flex-1 overflow-y-auto flex flex-col gap-6">
           {history.map((entry, index) => {
             const isNewest = index === history.length - 1;
             return (
@@ -96,10 +124,10 @@ export function GameDialog({ open, onClose, data }: GameDialogProps) {
         </div>
 
         {/* Footer / reply bar */}
-        <DialogFooter className="bg-white border-t border-stone-200 px-5 pt-4 pb-8 flex flex-row items-center justify-end gap-2 shrink-0">
+        <DialogFooter className="bg-white border-t border-stone-200 px-6 py-4 flex flex-row items-center justify-end gap-2 shrink-0">
           <Button
             onClick={onClose}
-            className="cursor-pointer rounded-full px-8 py-6 bg-amber-500 hover:bg-amber-600 text-white font-semibold shadow-none"
+            className="cursor-pointer rounded-full px-6 py-2 h-auto bg-amber-500 hover:bg-amber-600 text-white font-semibold shadow-none text-sm"
           >
             Verstanden ✓
           </Button>
