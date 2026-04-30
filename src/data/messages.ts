@@ -9,9 +9,9 @@ export interface Message {
 export const messages: Message[] = [
   {
     id: 1,
-    sender: "Tutor",
+    sender: "Stadtberater",
     content: "Willkommen beim TownSim",
     timestamp: new Date(),
-    dialogId: 1,
+    dialogId: 3,
   },
 ];

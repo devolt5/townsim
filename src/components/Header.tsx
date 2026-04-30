@@ -1,28 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { MetricBar } from "@/components/MetricBar";
 import { METRICS } from "@/data/gameData";
 import { GameDialog } from "@/components/GameDialog";
-import { welcomeDialog } from "@/data/dialogs";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 
 export function Header({ onCityOverview }: { onCityOverview?: () => void }) {
   const [showTutorial, setShowTutorial] = useState(false);
-  const [tooltipOpen, setTooltipOpen] = useState(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setTooltipOpen(false), 10000);
-    return () => clearTimeout(timer);
-  }, []);
-
-  const handleOpenTutorial = () => {
-    setShowTutorial(true);
-    setTooltipOpen(false);
-  };
 
   return (
     <>
@@ -45,11 +27,6 @@ export function Header({ onCityOverview }: { onCityOverview?: () => void }) {
           ))}
         </div>
       </header>
-      <GameDialog
-        open={showTutorial}
-        onClose={() => setShowTutorial(false)}
-        data={welcomeDialog}
-      />
     </>
   );
 }

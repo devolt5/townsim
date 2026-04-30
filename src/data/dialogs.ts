@@ -1,15 +1,42 @@
 export interface DialogData {
   id: number;
+  /** Identifies the dialog partner – used to group conversation history. */
+  sender: string;
   title: string;
   text: string;
 }
 
-export const welcomeDialog: DialogData = {
-  id: 1,
-  title: "Willkommen in TownSim",
-  text: "Willkommen! Hier beginnt dein Abenteuer als Bürgermeister. Triff kluge Entscheidungen, gewinne das Vertrauen deiner Bürger und forme das Schicksal deiner Stadt.",
-};
+export const allDialogs: DialogData[] = [
+  {
+    id: 1,
+    sender: "Stadtberater",
+    title: "Willkommen in TownSim",
+    text: "Willkommen! Hier beginnt dein Abenteuer als Bürgermeister. Triff kluge Entscheidungen, gewinne das Vertrauen deiner Bürger und forme das Schicksal deiner Stadt.",
+  },
+  {
+    id: 2,
+    sender: "Stadtberater",
+    title: "Erste Schritte",
+    text: "Ein guter Anfang! Deine erste Aufgabe: Verschaffe dir einen Überblick über die Stadtbezirke. Jeder hat eigene Bedürfnisse und Problemlagen.",
+  },
+  {
+    id: 3,
+    sender: "Stadtberater",
+    title: "Haushaltswarnung",
+    text: "Achtung, Bürgermeister – die Stadtkasse sendet erste Warnsignale. Überprüfe die Ausgaben im nördlichen Bezirk, bevor es zu einem Defizit kommt.",
+  },
+];
 
-export const dialogsById: Record<number, DialogData> = {
-  1: welcomeDialog,
-};
+export const dialogsById: Record<number, DialogData> = Object.fromEntries(
+  allDialogs.map((d) => [d.id, d]),
+);
+
+/**
+ * All dialogs grouped by sender, sorted ascending by id (chronological).
+ */
+export const dialogsBySender: Record<string, DialogData[]> = allDialogs.reduce<
+  Record<string, DialogData[]>
+>((acc, d) => {
+  (acc[d.sender] ??= []).push(d);
+  return acc;
+}, {});
