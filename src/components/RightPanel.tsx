@@ -34,13 +34,13 @@ export function RightPanel() {
           <SidebarHeader className="p-0 shrink-0">
             <TabsList className="w-full rounded-none border-b border-stone-200 bg-stone-100 justify-start px-1 h-10">
               <TabsTrigger value="antrag" className="text-xs cursor-pointer">
-                Antrag
+                Anträge
               </TabsTrigger>
               <TabsTrigger
                 value="verhandlung"
                 className="text-xs cursor-pointer"
               >
-                Verhandlung
+                Verhandlungen
               </TabsTrigger>
               <TabsTrigger
                 value="versprechen"

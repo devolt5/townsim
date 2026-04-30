@@ -17,13 +17,13 @@ export const allDialogs: DialogData[] = [
     id: 2,
     sender: "Stadtberater",
     title: "Erste Schritte",
-    text: "Ein guter Anfang! Deine erste Aufgabe: Verschaffe dir einen Überblick über die Stadtbezirke. Jeder hat eigene Bedürfnisse und Problemlagen.",
+    text: "Ein guter Anfang! Deine erste Aufgabe:\n\nVerschaffe dir einen **Überblick über die Stadtbezirke**. Jeder hat eigene Bedürfnisse und Problemlagen.\n\nKlicke auf einen Bezirk, um seine Details einzusehen.",
   },
   {
     id: 3,
     sender: "Stadtberater",
     title: "Haushaltswarnung",
-    text: "Achtung, Bürgermeister – die Stadtkasse sendet erste Warnsignale. Überprüfe die Ausgaben im nördlichen Bezirk, bevor es zu einem Defizit kommt.",
+    text: "**Achtung, Bürgermeister** – die Stadtkasse sendet erste Warnsignale.\n\nÜberprüfe die Ausgaben im *nördlichen Bezirk*, bevor es zu einem **Defizit** kommt.",
   },
 ];
 

@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import ReactMarkdown from "react-markdown";
 import {
   Dialog,
   DialogContent,
@@ -81,9 +82,9 @@ export function GameDialog({ open, onClose, data }: GameDialogProps) {
                       isNewest ? "bg-amber-50 ring-amber-200" : "bg-white"
                     }`}
                   >
-                    <p className="text-stone-700 text-sm leading-relaxed whitespace-pre-wrap">
-                      {entry.text}
-                    </p>
+                    <div className="text-stone-700 text-sm leading-relaxed prose prose-sm prose-stone max-w-none prose-p:my-1 prose-strong:font-semibold prose-em:italic">
+                      <ReactMarkdown>{entry.text}</ReactMarkdown>
+                    </div>
                   </div>
                 </div>
               </div>
