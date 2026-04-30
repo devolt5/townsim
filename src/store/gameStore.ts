@@ -1,5 +1,6 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { devtools, persist } from "zustand/middleware";
+import type {} from "@redux-devtools/extension";
 import {
   METRICS,
   FACTIONS,
@@ -134,99 +135,142 @@ function buildInitialState() {
 // ---------------------------------------------------------------------------
 
 export const useGameStore = create<GameState>()(
-  persist(
-    (set, get) => ({
-      ...buildInitialState(),
+  devtools(
+    persist(
+      (set, get) => ({
+        ...buildInitialState(),
 
-      updateBasicData: (patch) =>
-        set((s) => ({ basicData: { ...s.basicData, ...patch } })),
-
-      setMetricValue: (key, value) =>
-        set((s) => ({
-          metrics: s.metrics.map((m) =>
-            m.key === key
-              ? { ...m, value: Math.max(0, Math.min(100, value)) }
-              : m,
+        updateBasicData: (patch) =>
+          set(
+            (s) => ({ basicData: { ...s.basicData, ...patch } }),
+            undefined,
+            "updateBasicData",
           ),
-        })),
 
-      applyMetricDelta: (key, delta) => {
-        const { setMetricValue, metrics } = get();
-        const metric = metrics.find((m) => m.key === key);
-        if (metric) setMetricValue(key, metric.value + delta);
+        setMetricValue: (key, value) =>
+          set(
+            (s) => ({
+              metrics: s.metrics.map((m) =>
+                m.key === key
+                  ? { ...m, value: Math.max(0, Math.min(100, value)) }
+                  : m,
+              ),
+            }),
+            undefined,
+            { type: "setMetricValue", key, value },
+          ),
+
+        applyMetricDelta: (key, delta) => {
+          const { setMetricValue, metrics } = get();
+          const metric = metrics.find((m) => m.key === key);
+          if (metric) setMetricValue(key, metric.value + delta);
+        },
+
+        setFactionTrust: (short, trust) =>
+          set(
+            (s) => ({
+              factions: s.factions.map((f) =>
+                f.short === short
+                  ? { ...f, trust: Math.max(0, Math.min(100, trust)) }
+                  : f,
+              ),
+            }),
+            undefined,
+            { type: "setFactionTrust", short, trust },
+          ),
+
+        applyFactionTrustDelta: (short, delta) => {
+          const { setFactionTrust, factions } = get();
+          const faction = factions.find((f) => f.short === short);
+          if (faction) setFactionTrust(short, faction.trust + delta);
+        },
+
+        applyPoliticalCapitalDelta: (delta) =>
+          set(
+            (s) => ({
+              politicalCapital: Math.max(
+                0,
+                Math.min(100, s.politicalCapital + delta),
+              ),
+            }),
+            undefined,
+            { type: "applyPoliticalCapitalDelta", delta },
+          ),
+
+        addPromise: (promise) =>
+          set(
+            (s) => ({ openPromises: [...s.openPromises, promise] }),
+            undefined,
+            { type: "addPromise", id: promise.id },
+          ),
+
+        fulfillPromise: (id) =>
+          set(
+            (s) => ({
+              openPromises: s.openPromises.map((p) =>
+                p.id === id ? { ...p, fulfilled: true } : p,
+              ),
+            }),
+            undefined,
+            { type: "fulfillPromise", id },
+          ),
+
+        removePromise: (id) =>
+          set(
+            (s) => ({
+              openPromises: s.openPromises.filter((p) => p.id !== id),
+            }),
+            undefined,
+            { type: "removePromise", id },
+          ),
+
+        setPendingDecision: (decision) =>
+          set({ pendingDecision: decision }, undefined, "setPendingDecision"),
+
+        resolveDecision: (chosenOption) =>
+          set(
+            (s) => {
+              if (!s.pendingDecision) return {};
+              const entry: CompletedDecision = {
+                turn: { year: s.turn.year, quarter: s.turn.quarter },
+                title: s.pendingDecision.title,
+                chosenOption,
+              };
+              return {
+                pendingDecision: null,
+                decisionHistory: [...s.decisionHistory, entry],
+              };
+            },
+            undefined,
+            { type: "resolveDecision", chosenOption },
+          ),
+
+        advanceTurn: () =>
+          set(
+            (s) => {
+              const { year, quarter, phase } = s.turn;
+              if (phase < 3)
+                return {
+                  turn: { year, quarter, phase: (phase + 1) as 1 | 2 | 3 },
+                };
+              if (quarter < 4)
+                return { turn: { year, quarter: quarter + 1, phase: 1 } };
+              if (year < 5)
+                return { turn: { year: year + 1, quarter: 1, phase: 1 } };
+              return {};
+            },
+            undefined,
+            "advanceTurn",
+          ),
+
+        resetGame: () => set(buildInitialState(), undefined, "resetGame"),
+      }),
+      {
+        name: "townsim-save",
       },
-
-      setFactionTrust: (short, trust) =>
-        set((s) => ({
-          factions: s.factions.map((f) =>
-            f.short === short
-              ? { ...f, trust: Math.max(0, Math.min(100, trust)) }
-              : f,
-          ),
-        })),
-
-      applyFactionTrustDelta: (short, delta) => {
-        const { setFactionTrust, factions } = get();
-        const faction = factions.find((f) => f.short === short);
-        if (faction) setFactionTrust(short, faction.trust + delta);
-      },
-
-      applyPoliticalCapitalDelta: (delta) =>
-        set((s) => ({
-          politicalCapital: Math.max(
-            0,
-            Math.min(100, s.politicalCapital + delta),
-          ),
-        })),
-
-      addPromise: (promise) =>
-        set((s) => ({ openPromises: [...s.openPromises, promise] })),
-
-      fulfillPromise: (id) =>
-        set((s) => ({
-          openPromises: s.openPromises.map((p) =>
-            p.id === id ? { ...p, fulfilled: true } : p,
-          ),
-        })),
-
-      removePromise: (id) =>
-        set((s) => ({
-          openPromises: s.openPromises.filter((p) => p.id !== id),
-        })),
-
-      setPendingDecision: (decision) => set({ pendingDecision: decision }),
-
-      resolveDecision: (chosenOption) =>
-        set((s) => {
-          if (!s.pendingDecision) return {};
-          const entry: CompletedDecision = {
-            turn: { year: s.turn.year, quarter: s.turn.quarter },
-            title: s.pendingDecision.title,
-            chosenOption,
-          };
-          return {
-            pendingDecision: null,
-            decisionHistory: [...s.decisionHistory, entry],
-          };
-        }),
-
-      advanceTurn: () =>
-        set((s) => {
-          const { year, quarter, phase } = s.turn;
-          if (phase < 3)
-            return { turn: { year, quarter, phase: (phase + 1) as 1 | 2 | 3 } };
-          if (quarter < 4)
-            return { turn: { year, quarter: quarter + 1, phase: 1 } };
-          if (year < 5)
-            return { turn: { year: year + 1, quarter: 1, phase: 1 } };
-          // Year 5 Q4 Phase 3 — game over (Wahlnacht); stay at final state
-          return {};
-        }),
-
-      resetGame: () => set(buildInitialState()),
-    }),
+    ),
     {
-      name: "townsim-save",
+      name: "TownSim",
     },
   ),
 );
