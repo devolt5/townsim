@@ -30,21 +30,6 @@ export function Header({ onCityOverview }: { onCityOverview?: () => void }) {
         <div className="flex items-center gap-2 shrink-0">
           <span className="text-lg font-bold">🏙 Neustadt</span>
           <span className="text-stone-400 text-sm">· Jahr 1</span>
-          <TooltipProvider>
-            <Tooltip open={tooltipOpen}>
-              <TooltipTrigger
-                onClick={handleOpenTutorial}
-                onMouseEnter={() => setTooltipOpen(true)}
-                onMouseLeave={() => setTooltipOpen(false)}
-                className="text-stone-400 hover:text-white cursor-pointer transition-colors"
-              >
-                📖
-              </TooltipTrigger>
-              <TooltipContent className="bg-white text-black text-lg font-medium border-stone-300 shadow-xl py-2 px-4">
-                ✨ Sieh dir das Tutorial an
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
           {onCityOverview && (
             <button
               onClick={onCityOverview}

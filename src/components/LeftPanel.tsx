@@ -128,6 +128,38 @@ export function LeftPanel({
                   </TabsContent>
                 </Tabs>
               </div>
+
+              {/*
+               * Dock icon zones — calibrated to phone.png dock bar:
+               *   vertical: 83.5 % – 93.5 % from top
+               *   horizontal centers: ~16 %, ~39 %, ~62 %, ~84 %
+               * Each zone is ~15 % wide.
+               */}
+              {(
+                [
+                  { app: "nachrichten", left: "10.5%", title: "Nachrichten" },
+                  { app: "stadtbild", left: "32.5%", title: "Stadtbild" },
+                  { app: "bilanz", left: "53.5%", title: "Bilanz" },
+                  {
+                    app: null,
+                    left: "73.5%",
+                    title: "Kamera (nicht verfügbar)",
+                  },
+                ] as const
+              ).map(({ app, left, title }) => (
+                <button
+                  key={left}
+                  title={title}
+                  onClick={() => app && setActiveApp(app)}
+                  className="absolute cursor-pointer rounded-xl bg-transparent hover:bg-white/20 transition-colors"
+                  style={{
+                    top: "84.5%",
+                    left,
+                    width: "15%",
+                    bottom: "6%",
+                  }}
+                />
+              ))}
             </div>
           </div>
         </div>
