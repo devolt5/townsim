@@ -1,4 +1,4 @@
-import testBuildingUrl from "@/images/buildings/4x4/test_building.png";
+import testBuildingUrl from "@/images/buildings/4x4/building1.png";
 import type { DistrictData, MapCell } from "@/data/districtTypes";
 
 // ---------------------------------------------------------------------------
@@ -65,12 +65,12 @@ function buildNorthMap(): MapCell[][] {
   const map = emptyMap();
 
   // Placeable construction zones
-  markPlaceable(map,  4, 4, 18, 18);   // western quarter
-  markPlaceable(map, 28, 6, 43, 20);   // eastern quarter
+  markPlaceable(map, 4, 4, 18, 18); // western quarter
+  markPlaceable(map, 28, 6, 43, 20); // eastern quarter
 
   // Pre-placed buildings
-  placeBuilding(map,  6,  6, DEFS.TEST_BUILDING, [4, 4]);  // building A
-  placeBuilding(map, 11,  11, DEFS.TEST_BUILDING, [4, 4]);  // building B
+  placeBuilding(map, 6, 6, DEFS.TEST_BUILDING, [4, 4]); // building A
+  placeBuilding(map, 11, 11, DEFS.TEST_BUILDING, [4, 4]); // building B
 
   return map;
 }
