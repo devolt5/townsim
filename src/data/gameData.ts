@@ -250,13 +250,13 @@ export const DISTRICTS: District[] = [
       { x: -62, y: -107 },
       { x: -95, y: -175 }, // → Nord border
       { x: -100, y: -257 },
-      { x: -165, y: -205 }, // outer west
-      { x: -200, y: -119 },
+      { x: -210, y: -205 }, // outer west
+      { x: -235, y: -119 },
       { x: -240, y: -20 },
-      { x: -218, y: 20 }, // outer west
-      { x: -190, y: 6 },
-      { x: -180, y: 25 },
-      { x: -180, y: 50 }, // outer west
+      { x: -250, y: 20 }, // outer west
+      { x: -260, y: 20 },
+      { x: -280, y: 25 },
+      { x: -250, y: 80 }, // outer west
       { x: -175, y: 93 },
       { x: -155, y: 120 }, // outer south-west
       { x: -125, y: 131 },

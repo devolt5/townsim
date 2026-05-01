@@ -76,7 +76,12 @@ export class CityScene extends Scene {
   }
 
   create() {
-    // ── Tiled background: 9×9 grid centered on world origin ──────────
+    // ── Tiled background: 9×9 grid centered on the districts' bounding box ──
+    const allPts = DISTRICTS.flatMap((d) => d.points);
+    const allBox = bboxOf(allPts);
+    const mapCX = (allBox.minX + allBox.maxX) / 2;
+    const mapCY = (allBox.minY + allBox.maxY) / 2;
+
     const src = this.textures
       .get("background")
       .getSourceImage() as HTMLImageElement;
@@ -85,8 +90,15 @@ export class CityScene extends Scene {
     const totalW = tileW * 9;
     const totalH = tileH * 9;
     this.add
-      .tileSprite(-totalW / 2, -totalH / 2, totalW, totalH, "background")
-      .setOrigin(0, 0);
+      .tileSprite(
+        mapCX - totalW / 2,
+        mapCY - totalH / 2,
+        totalW,
+        totalH,
+        "background",
+      )
+      .setOrigin(0, 0)
+      .setDepth(-1);
 
     // ── Center camera on world origin ─────────────────────────────────
     this.cameras.main.centerOn(0, 0);
