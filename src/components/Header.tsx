@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Settings2 } from "lucide-react";
+import { Cog } from "lucide-react";
 import { MetricBar } from "@/components/MetricBar";
 import { useGameStore } from "@/store/gameStore";
 import {
@@ -35,13 +35,29 @@ export function Header({ onCityOverview }: { onCityOverview?: () => void }) {
       <header className="bg-stone-800 text-white px-4 py-2 flex items-center gap-4 shadow-md shrink-0 h-14">
         <div className="flex items-center gap-2 shrink-0">
           <span className="text-lg font-bold">🏙 {basicData.cityName}</span>
-          <span className="text-stone-400 text-sm">· Jahr {turn.year}</span>
+          <div className="flex items-center gap-2 px-2 py-1 bg-stone-700/50 rounded-md border border-stone-600/50">
+            <span className="text-stone-100 text-sm uppercase font-medium">
+              Jahr {turn.year}
+            </span>
+            <span className="text-stone-400">·</span>
+            <span className="text-stone-300 text-xs uppercase tracking-wider font-semibold">
+              Quartal {turn.quarter}
+            </span>
+            <span className="text-stone-400">·</span>
+            <span className="text-stone-400 text-[10px] uppercase font-bold">
+              {turn.phase === 1
+                ? "Berichte (1/3)"
+                : turn.phase === 2
+                  ? "Planungsphase (2/3)"
+                  : "Abstimmungen (3/3)"}
+            </span>
+          </div>
           <button
             onClick={handleOpenSettings}
             className="cursor-pointer text-stone-400 hover:text-white transition-colors p-1 rounded"
             title="Einstellungen"
           >
-            <Settings2 size={15} />
+            <Cog size={25} />
           </button>
           {onCityOverview && (
             <button
@@ -94,14 +110,20 @@ export function Header({ onCityOverview }: { onCityOverview?: () => void }) {
 
           <DialogFooter className="flex-col gap-2 sm:flex-col">
             <div className="flex gap-2 justify-end">
-              <Button variant="outline" onClick={() => setShowSettings(false)}>
+              <Button
+                variant="outline"
+                className="cursor-pointer"
+                onClick={() => setShowSettings(false)}
+              >
                 Abbrechen
               </Button>
-              <Button onClick={handleSave}>Speichern</Button>
+              <Button className="cursor-pointer" onClick={handleSave}>
+                Speichern
+              </Button>
             </div>
             <Button
               variant="destructive"
-              className="w-full"
+              className="w-full cursor-pointer"
               onClick={() => {
                 resetGame();
                 setShowSettings(false);
