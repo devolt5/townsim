@@ -11,6 +11,17 @@ import { Button } from "@/components/ui/button";
 import type { DialogData } from "@/data/dialogs";
 import { dialogsBySender } from "@/data/dialogs";
 import guideImage from "@/images/guide.jpg";
+import delegate01Image from "@/images/delegate_01.jpg";
+
+/** Maps a sender name to the avatar image shown in the chat dialog. */
+const SENDER_AVATAR: Record<string, string> = {
+  Stadtberaterin: guideImage,
+  Stadtredakteur: delegate01Image,
+};
+
+function senderAvatar(sender: string): string {
+  return SENDER_AVATAR[sender] ?? guideImage;
+}
 
 interface GameDialogProps {
   open: boolean;
@@ -46,7 +57,7 @@ export function GameDialog({ open, onClose, data }: GameDialogProps) {
         <div className="flex flex-row items-center justify-between bg-white px-6 py-8 border-b border-stone-200 shadow-sm shrink-0">
           <div className="flex flex-row items-center gap-4">
             <img
-              src={guideImage}
+              src={senderAvatar(data.sender)}
               alt={data.sender}
               className="w-12 h-12 rounded-full object-cover ring-2 ring-amber-400 shrink-0"
             />
@@ -101,7 +112,7 @@ export function GameDialog({ open, onClose, data }: GameDialogProps) {
                 {/* Message bubble */}
                 <div className="flex items-end gap-2 max-w-[85%]">
                   <img
-                    src={guideImage}
+                    src={senderAvatar(data.sender)}
                     alt={data.sender}
                     className="w-8 h-8 rounded-full object-cover shrink-0 mb-0.5"
                   />

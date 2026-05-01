@@ -7,6 +7,8 @@ import type { Promise as GamePromise } from "@/data/gameData";
 import { DECISIONS } from "@/data/decisions";
 import type { Decision } from "@/data/decisionType";
 import { messages as INITIAL_MESSAGES, type Message } from "@/data/messages";
+import { TIMED_TRIGGERS } from "@/data/timedMessages";
+import { TUTORIAL_TRIGGERS } from "@/data/tutorialMessages";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -55,6 +57,10 @@ interface GameState {
   usedDecisionIds: string[];
   decisionHistory: CompletedDecision[];
   messages: Message[];
+  /** Keys of triggers that have already been delivered — prevents duplicates after reloads. */
+  deliveredTriggerKeys: string[];
+  /** Counts all significant player interactions for tutorial triggers. */
+  globalClickCount: number;
 
   // ── Actions ───────────────────────────────────────────────────────────────
 
@@ -96,6 +102,12 @@ interface GameState {
    * push it to decisionHistory, and clear pendingDecision.
    */
   resolveDecision: (chosenOption: string) => void;
+
+  /** Dynamically add a new message to the inbox. */
+  addMessage: (msg: Omit<Message, "id" | "timestamp" | "read">) => void;
+
+  /** Increment the global interaction counter and fire any matching tutorial triggers. */
+  incrementGlobalClicks: () => void;
 
   /** Mark a message as read. */
   markMessageRead: (messageId: number) => void;
@@ -150,6 +162,8 @@ function buildInitialState() {
     usedDecisionIds: newUsedIds,
     decisionHistory: [] as CompletedDecision[],
     messages: structuredClone(INITIAL_MESSAGES),
+    deliveredTriggerKeys: [],
+    globalClickCount: 0,
   };
 }
 
@@ -280,6 +294,49 @@ export const useGameStore = create<GameState>()(
             { type: "resolveDecision", chosenOption },
           ),
 
+        addMessage: (msg) =>
+          set(
+            (s) => ({
+              messages: [
+                ...s.messages,
+                { ...msg, id: Date.now(), timestamp: new Date(), read: false },
+              ],
+            }),
+            undefined,
+            { type: "addMessage", sender: msg.sender },
+          ),
+
+        incrementGlobalClicks: () =>
+          set(
+            (s) => {
+              const newCount = s.globalClickCount + 1;
+              const newMsgs: Message[] = [];
+              const newKeys = [...s.deliveredTriggerKeys];
+              for (const trigger of TUTORIAL_TRIGGERS) {
+                if (
+                  trigger.afterClickCount === newCount &&
+                  !newKeys.includes(trigger.key)
+                ) {
+                  newKeys.push(trigger.key);
+                  newMsgs.push({
+                    ...trigger.message,
+                    id: Date.now() + newMsgs.length,
+                    timestamp: new Date(),
+                    read: false,
+                  });
+                }
+              }
+              return {
+                globalClickCount: newCount,
+                deliveredTriggerKeys: newKeys,
+                messages:
+                  newMsgs.length > 0 ? [...s.messages, ...newMsgs] : s.messages,
+              };
+            },
+            undefined,
+            "incrementGlobalClicks",
+          ),
+
         markMessageRead: (messageId) =>
           set(
             (s) => ({
@@ -295,10 +352,12 @@ export const useGameStore = create<GameState>()(
           set(
             (s) => {
               const { year, quarter, phase } = s.turn;
-              if (phase < 3)
+              // Only phase advance — no quarter/year boundary, no triggers
+              if (phase < 3) {
                 return {
                   turn: { year, quarter, phase: (phase + 1) as 1 | 2 | 3 },
                 };
+              }
               // Quarter boundary — draw a new decision
               const { decision, newUsedIds } = pickRandomDecision(
                 s.usedDecisionIds,
@@ -307,17 +366,42 @@ export const useGameStore = create<GameState>()(
                 pendingDecision: decision,
                 usedDecisionIds: newUsedIds,
               };
-              if (quarter < 4)
-                return {
-                  turn: { year, quarter: quarter + 1, phase: 1 },
-                  ...decisionPatch,
-                };
-              if (year < 5)
-                return {
-                  turn: { year: year + 1, quarter: 1, phase: 1 },
-                  ...decisionPatch,
-                };
-              return {};
+
+              let newTurn: Turn;
+              if (quarter < 4) {
+                newTurn = { year, quarter: quarter + 1, phase: 1 };
+              } else if (year < 5) {
+                newTurn = { year: year + 1, quarter: 1, phase: 1 };
+              } else {
+                return {}; // end of game
+              }
+
+              // Check timed triggers for the new turn position
+              const newMsgs: Message[] = [];
+              const newKeys = [...s.deliveredTriggerKeys];
+              for (const trigger of TIMED_TRIGGERS) {
+                if (
+                  trigger.year === newTurn.year &&
+                  trigger.quarter === newTurn.quarter &&
+                  !newKeys.includes(trigger.key)
+                ) {
+                  newKeys.push(trigger.key);
+                  newMsgs.push({
+                    ...trigger.message,
+                    id: Date.now() + newMsgs.length,
+                    timestamp: new Date(),
+                    read: false,
+                  });
+                }
+              }
+
+              return {
+                turn: newTurn,
+                ...decisionPatch,
+                deliveredTriggerKeys: newKeys,
+                messages:
+                  newMsgs.length > 0 ? [...s.messages, ...newMsgs] : s.messages,
+              };
             },
             undefined,
             "advanceTurn",

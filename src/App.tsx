@@ -11,6 +11,7 @@ import { Header } from "@/components/Header";
 import { LeftPanel } from "@/components/LeftPanel";
 import { RightPanel } from "@/components/RightPanel";
 import { Footer } from "@/components/Footer";
+import { useGameStore } from "@/store/gameStore";
 import "./App.css";
 
 /**
@@ -65,6 +66,9 @@ function App() {
 
         cityScene.setSelectCallback((district) => {
           setSelectedDistrict(district);
+          if (district) {
+            useGameStore.getState().incrementGlobalClicks();
+          }
           const districtData = district
             ? findDistrictData(district.name)
             : undefined;

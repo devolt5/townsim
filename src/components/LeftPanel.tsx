@@ -29,10 +29,11 @@ export function LeftPanel({
 }: LeftPanelProps) {
   const [activeApp, setActiveApp] = useState<PhoneApp>("nachrichten");
   const [openDialog, setOpenDialog] = useState<DialogData | null>(null);
-  const { messages, markMessageRead } = useGameStore();
+  const { messages, markMessageRead, incrementGlobalClicks } = useGameStore();
 
   function handleMessageClick(dialogId: number, messageId: number) {
     markMessageRead(messageId);
+    incrementGlobalClicks();
     const dialog = dialogsById[dialogId];
     if (dialog) {
       setOpenDialog(dialog);
@@ -43,6 +44,7 @@ export function LeftPanel({
   function handleDialogClose() {
     setOpenDialog(null);
     onDialogOpenChange?.(false);
+    incrementGlobalClicks();
   }
 
   return (
@@ -91,7 +93,10 @@ export function LeftPanel({
               >
                 <Tabs
                   value={activeApp}
-                  onValueChange={(v) => setActiveApp(v as PhoneApp)}
+                  onValueChange={(v) => {
+                    setActiveApp(v as PhoneApp);
+                    incrementGlobalClicks();
+                  }}
                   className="flex flex-col h-full bg-white/90 backdrop-blur-sm"
                 >
                   {/* App navigation bar */}
