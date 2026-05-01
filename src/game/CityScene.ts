@@ -1,6 +1,6 @@
-import { Scene, GameObjects, Geom } from 'phaser';
-import { type District, DISTRICTS } from '@/data/gameData';
-import backgroundUrl from '@/images/background2.jpg';
+import { Scene, GameObjects, Geom } from "phaser";
+import { type District, DISTRICTS } from "@/data/gameData";
+import backgroundUrl from "@/images/background.png";
 
 // ── Geometry helpers ──────────────────────────────────────────────────────────
 function centroid(pts: { x: number; y: number }[]): { x: number; y: number } {
@@ -12,17 +12,24 @@ function centroid(pts: { x: number; y: number }[]): { x: number; y: number } {
 }
 
 function bboxOf(pts: { x: number; y: number }[]) {
-  const xs = pts.map(p => p.x);
-  const ys = pts.map(p => p.y);
+  const xs = pts.map((p) => p.x);
+  const ys = pts.map((p) => p.y);
   return {
-    minX: Math.min(...xs), maxX: Math.max(...xs),
-    minY: Math.min(...ys), maxY: Math.max(...ys),
+    minX: Math.min(...xs),
+    maxX: Math.max(...xs),
+    minY: Math.min(...ys),
+    maxY: Math.max(...ys),
   };
 }
 
 /** Trace a closed polygon path on a Graphics object. */
 function polyPath(
-  g: { beginPath(): void; moveTo(x: number, y: number): void; lineTo(x: number, y: number): void; closePath(): void },
+  g: {
+    beginPath(): void;
+    moveTo(x: number, y: number): void;
+    lineTo(x: number, y: number): void;
+    closePath(): void;
+  },
   pts: { x: number; y: number }[],
 ) {
   g.beginPath();
@@ -44,7 +51,7 @@ export class CityScene extends Scene {
   private highlightGraphics!: GameObjects.Graphics;
 
   // ── Panning state ─────────────────────────────────────────────────
-  private isDragging = false;          // true once drag threshold exceeded
+  private isDragging = false; // true once drag threshold exceeded
   private panStartX = 0;
   private panStartY = 0;
   private panStartScrollX = 0;
@@ -57,7 +64,7 @@ export class CityScene extends Scene {
   private static readonly ZOOM_STEP = 0.12; // per wheel tick
 
   constructor() {
-    super({ key: 'CityScene' });
+    super({ key: "CityScene" });
   }
 
   setSelectCallback(cb: (district: District | null) => void) {
@@ -65,18 +72,20 @@ export class CityScene extends Scene {
   }
 
   preload() {
-    this.load.image('background', backgroundUrl);
+    this.load.image("background", backgroundUrl);
   }
 
   create() {
     // ── Tiled background: 9×9 grid centered on world origin ──────────
-    const src = this.textures.get('background').getSourceImage() as HTMLImageElement;
-    const tileW = src.naturalWidth  || src.width;
+    const src = this.textures
+      .get("background")
+      .getSourceImage() as HTMLImageElement;
+    const tileW = src.naturalWidth || src.width;
     const tileH = src.naturalHeight || src.height;
     const totalW = tileW * 9;
     const totalH = tileH * 9;
     this.add
-      .tileSprite(-totalW / 2, -totalH / 2, totalW, totalH, 'background')
+      .tileSprite(-totalW / 2, -totalH / 2, totalW, totalH, "background")
       .setOrigin(0, 0);
 
     // ── Center camera on world origin ─────────────────────────────────
@@ -88,65 +97,65 @@ export class CityScene extends Scene {
 
     this.setupCameraControls();
 
-    DISTRICTS.forEach(d => {
+    DISTRICTS.forEach((d) => {
       // Build a bounding box so the zone rectangle covers the polygon
-      const box  = bboxOf(d.points);
-      const cx   = (box.minX + box.maxX) / 2;
-      const cy   = (box.minY + box.maxY) / 2;
-      const bw   = box.maxX - box.minX;
-      const bh   = box.maxY - box.minY;
+      const box = bboxOf(d.points);
+      const cx = (box.minX + box.maxX) / 2;
+      const cy = (box.minY + box.maxY) / 2;
+      const bw = box.maxX - box.minX;
+      const bh = box.maxY - box.minY;
 
       // Local polygon (coordinates relative to zone top-left, i.e. local origin)
       // Phaser's hit-test converts world→local as: lx = wx - x + displayOriginX
       // where displayOriginX = bw * 0.5 for origin=0.5, so local(0,0) = world(minX,minY).
       const localPoly = new Geom.Polygon(
-        d.points.flatMap(p => [p.x - box.minX, p.y - box.minY]),
+        d.points.flatMap((p) => [p.x - box.minX, p.y - box.minY]),
       );
 
       const zone = this.add
         .zone(cx, cy, bw, bh)
         .setInteractive(localPoly, Geom.Polygon.Contains);
-      zone.input!.cursor = 'pointer';
+      zone.input!.cursor = "pointer";
 
       // Label at visual centroid
       const c = centroid(d.points);
       this.add
         .text(c.x, c.y, d.name, {
-          fontSize: '11px',
-          color: '#1a1a1a',
-          fontStyle: 'bold',
+          fontSize: "11px",
+          color: "#1a1a1a",
+          fontStyle: "bold",
           wordWrap: { width: bw - 12 },
-          align: 'center',
-          stroke: '#ffffff',
+          align: "center",
+          stroke: "#ffffff",
           strokeThickness: 3,
         })
         .setOrigin(0.5);
 
-      zone.on('pointerover', () => {
+      zone.on("pointerover", () => {
         if (this.selectedName !== d.name) {
           this.highlightGraphics.clear();
           this.highlightGraphics.lineStyle(3, 0xffffff, 0.8);
           polyPath(this.highlightGraphics, d.points);
           this.highlightGraphics.strokePath();
           if (this.selectedName) {
-            const sel = DISTRICTS.find(x => x.name === this.selectedName);
+            const sel = DISTRICTS.find((x) => x.name === this.selectedName);
             if (sel) this.drawSelectedHighlight(sel);
           }
         }
       });
 
-      zone.on('pointerout', () => {
+      zone.on("pointerout", () => {
         if (this.selectedName !== d.name) {
           this.highlightGraphics.clear();
           if (this.selectedName) {
-            const sel = DISTRICTS.find(x => x.name === this.selectedName);
+            const sel = DISTRICTS.find((x) => x.name === this.selectedName);
             if (sel) this.drawSelectedHighlight(sel);
           }
         }
       });
 
       // Selection fires on pointerup so a drag doesn't accidentally select
-      zone.on('pointerup', () => {
+      zone.on("pointerup", () => {
         if (this.isDragging) return;
         if (this.selectedName === d.name) {
           this.selectedName = null;
@@ -167,11 +176,10 @@ export class CityScene extends Scene {
 
     // ── Zoom toward cursor on mouse wheel ────────────────────────────
     this.input.on(
-      'wheel',
+      "wheel",
       (_p: unknown, _objs: unknown, _dx: number, deltaY: number) => {
-        const factor = deltaY < 0
-          ? 1 + CityScene.ZOOM_STEP
-          : 1 - CityScene.ZOOM_STEP;
+        const factor =
+          deltaY < 0 ? 1 + CityScene.ZOOM_STEP : 1 - CityScene.ZOOM_STEP;
         const newZoom = Math.max(
           CityScene.MIN_ZOOM,
           Math.min(CityScene.MAX_ZOOM, cam.zoom * factor),
@@ -188,7 +196,7 @@ export class CityScene extends Scene {
     );
 
     // ── Pan on left-mouse drag (with threshold to preserve click-to-select) ──
-    this.input.on('pointerdown', (p: PhaserPointer) => {
+    this.input.on("pointerdown", (p: PhaserPointer) => {
       if (!p.leftButtonDown()) return;
       this.isDragging = false;
       this.panStartX = p.x;
@@ -197,23 +205,23 @@ export class CityScene extends Scene {
       this.panStartScrollY = cam.scrollY;
     });
 
-    this.input.on('pointermove', (p: PhaserPointer) => {
+    this.input.on("pointermove", (p: PhaserPointer) => {
       if (!p.leftButtonDown()) return;
       const dx = p.x - this.panStartX;
       const dy = p.y - this.panStartY;
       if (!this.isDragging) {
         if (Math.sqrt(dx * dx + dy * dy) < CityScene.DRAG_THRESHOLD) return;
         this.isDragging = true;
-        this.input.setDefaultCursor('grabbing');
+        this.input.setDefaultCursor("grabbing");
       }
       cam.scrollX = this.panStartScrollX - dx / cam.zoom;
       cam.scrollY = this.panStartScrollY - dy / cam.zoom;
     });
 
-    this.input.on('pointerup', (p: PhaserPointer) => {
+    this.input.on("pointerup", (p: PhaserPointer) => {
       if (this.isDragging) {
         this.isDragging = false;
-        this.input.setDefaultCursor('default');
+        this.input.setDefaultCursor("default");
       }
       // suppress unused-param warning
       void p;
@@ -223,7 +231,7 @@ export class CityScene extends Scene {
   private drawBase() {
     const g = this.baseGraphics;
 
-    DISTRICTS.forEach(d => {
+    DISTRICTS.forEach((d) => {
       g.fillStyle(d.color, 0.5);
       polyPath(g, d.points);
       g.fillPath();
