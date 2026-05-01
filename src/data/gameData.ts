@@ -73,18 +73,24 @@ export const METRICS: Metric[] = [
 ];
 
 export const FACTIONS: Faction[] = [
-  { short: "GRÜNE", icon: "🌿", image: factionGreen, trust: 62, seats: 8 },
+  { short: "Terra", icon: "🌿", image: factionGreen, trust: 62, seats: 8 },
   {
-    short: "HANDEL A.G.",
+    short: "Syndikat",
     icon: "💼",
     image: factionBusiness,
     trust: 45,
     seats: 9,
   },
-  { short: "BÜRGER", icon: "🏘️", image: factionCitizens, trust: 71, seats: 10 },
-  { short: "UWP", icon: "🔧", image: factionWorkers, trust: 38, seats: 7 },
+  { short: "Bürger", icon: "🏘️", image: factionCitizens, trust: 71, seats: 10 },
   {
-    short: "Die Nation",
+    short: "Union der Gilden",
+    icon: "🔧",
+    image: factionWorkers,
+    trust: 38,
+    seats: 7,
+  },
+  {
+    short: "Der Bund",
     icon: "🏛️",
     image: factionConservatives,
     trust: 29,

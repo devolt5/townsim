@@ -75,7 +75,15 @@ export function PendingDecision() {
                 className="flex items-center justify-between text-xs"
               >
                 <span className="flex items-center gap-1 text-stone-600">
-                  <span>{faction?.icon ?? "❓"}</span>
+                  {faction?.image ? (
+                    <img
+                      src={faction.image}
+                      alt={faction.short}
+                      className="w-5 h-5 rounded-full object-cover"
+                    />
+                  ) : (
+                    <span>❓</span>
+                  )}
                   <span>{r.factionShort}</span>
                 </span>
                 <span
