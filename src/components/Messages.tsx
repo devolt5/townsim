@@ -42,49 +42,52 @@ export function Messages({
 
   return (
     <div className="flex flex-col gap-1.5 px-1 py-1.5">
-      {items.map((msg) => (
-        <div
-          key={msg.id}
-          className={`flex gap-1.5 items-start ${msg.dialogId && onMessageClick ? "cursor-pointer hover:opacity-80 active:opacity-60 transition-opacity" : "cursor-pointer"}`}
-          onClick={() => {
-            if (msg.dialogId && onMessageClick) {
-              onMessageClick(msg.dialogId, msg.id);
-            } else {
-              onMarkAsRead?.(msg.id);
-            }
-          }}
-        >
-          {/* Avatar */}
+      {items
+        .slice()
+        .reverse()
+        .map((msg) => (
           <div
-            className={`shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-white font-semibold ${senderColor(msg.sender)}`}
-            style={{ fontSize: "9px" }}
-            title={msg.sender}
+            key={msg.id}
+            className={`flex gap-1.5 items-start ${msg.dialogId && onMessageClick ? "cursor-pointer hover:opacity-80 active:opacity-60 transition-opacity" : "cursor-pointer"}`}
+            onClick={() => {
+              if (msg.dialogId && onMessageClick) {
+                onMessageClick(msg.dialogId, msg.id);
+              } else {
+                onMarkAsRead?.(msg.id);
+              }
+            }}
           >
-            {senderInitial(msg.sender)}
-          </div>
+            {/* Avatar */}
+            <div
+              className={`shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-white font-semibold ${senderColor(msg.sender)}`}
+              style={{ fontSize: "9px" }}
+              title={msg.sender}
+            >
+              {senderInitial(msg.sender)}
+            </div>
 
-          {/* Bubble */}
-          <div className="flex-1 min-w-0">
-            <div className="flex items-baseline gap-1 mb-0.5">
-              <span className="text-[9px] font-semibold text-stone-600 truncate">
-                {msg.sender}
-              </span>
-              <span className="text-[8px] text-stone-400 shrink-0">
-                {formatTime(msg.timestamp)}
-              </span>
-              {!msg.read && (
-                <Bell
-                  className="w-4 h-4 text-amber-500 animate-[bell-shake_0.75s_infinite]"
-                  fill="currentColor"
-                />
-              )}
-            </div>
-            <div className="bg-stone-100 border border-stone-200 rounded-lg rounded-tl-none px-2 py-1 text-[10px] text-stone-700 leading-snug wrap-break-word">
-              {msg.content}
+            {/* Bubble */}
+            <div className="flex-1 min-w-0">
+              <div className="flex items-baseline gap-1 mb-0.5">
+                <span className="text-[9px] font-semibold text-stone-600 truncate">
+                  {msg.sender}
+                </span>
+                <span className="text-[8px] text-stone-400 shrink-0">
+                  {formatTime(msg.timestamp)}
+                </span>
+                {!msg.read && (
+                  <Bell
+                    className="w-4 h-4 text-amber-500 animate-[bell-shake_0.75s_infinite]"
+                    fill="currentColor"
+                  />
+                )}
+              </div>
+              <div className="bg-stone-100 border border-stone-200 rounded-lg rounded-tl-none px-2 py-1 text-[10px] text-stone-700 leading-snug wrap-break-word">
+                {msg.content}
+              </div>
             </div>
           </div>
-        </div>
-      ))}
+        ))}
     </div>
   );
 }
