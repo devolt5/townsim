@@ -42,7 +42,7 @@ export const allDialogs: DialogData[] = [
     id: 6,
     sender: "Stadtberaterin",
     title: "Du bist bereit",
-    text: "Ich glaube, du hast das Wesentliche verstanden, {playerName}.\n\nSchaue dich regelmäßig in den Stadtbezirken um. Ab und zu tauchen neue Herausforderungen auf, die du angehen kannst.\n\nViel Erfolg, {playerName}!",
+    text: "Ich glaube, du hast das Wesentliche verstanden, {playerName}.\n\nSchaue dich regelmäßig in den Stadtbezirken um. Ab und zu tauchen neue Herausforderungen auf, die du angehen kannst.\n\nViel Erfolg!",
   },
   // ── Timed messages (delivered by year/quarter triggers) ───────────────────
   {

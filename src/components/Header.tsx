@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Cog } from "lucide-react";
+import { Settings } from "lucide-react";
 import { MetricBar } from "@/components/MetricBar";
 import { useGameStore } from "@/store/gameStore";
 import {
@@ -58,7 +58,7 @@ export function Header({ onCityOverview }: { onCityOverview?: () => void }) {
             className="cursor-pointer text-stone-400 hover:text-white transition-colors p-1 rounded"
             title="Einstellungen"
           >
-            <Cog size={25} />
+            <Settings size={25} />
           </button>
           {onCityOverview && (
             <button
