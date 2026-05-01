@@ -5,9 +5,12 @@ import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
 
 export function Footer() {
-  const { factions, advanceTurn } = useGameStore();
+  const { factions, advanceTurn, pendingDecision } = useGameStore();
   const TOTAL_SEATS = factions.reduce((sum, f) => sum + f.seats, 0);
   const MAJORITY = Math.ceil(TOTAL_SEATS / 2) + 1;
+
+  const canAdvance = !pendingDecision;
+
   return (
     <footer className="bg-stone-800 px-4 py-2 flex items-center gap-4 border-t border-stone-700 shrink-0 min-h-13">
       <div className="flex flex-col shrink-0">
@@ -28,10 +31,11 @@ export function Footer() {
       <Separator orientation="vertical" className="h-8 bg-stone-600 shrink-0" />
       <Button
         onClick={advanceTurn}
+        disabled={!canAdvance}
         size="sm"
-        className="bg-amber-600 cursor-pointer hover:bg-amber-500 text-white font-bold px-4 h-9 shadow-lg shadow-amber-900/20 border-b-2 border-amber-800 active:border-b-0 active:translate-y-[1px] transition-all flex gap-2 group"
+        className="bg-amber-600 cursor-pointer hover:bg-amber-500 text-white font-bold px-4 h-9 shadow-lg shadow-amber-900/20 border-b-2 border-amber-800 active:border-b-0 active:translate-y-[1px] transition-all flex gap-2 group disabled:opacity-50 disabled:grayscale disabled:cursor-not-allowed"
       >
-        <span>Nächste Phase</span>
+        <span>{canAdvance ? "Nächste Phase" : "Entscheidung ausstehend"}</span>
         <ChevronRight
           size={16}
           className="group-hover:translate-x-0.5 transition-transform"

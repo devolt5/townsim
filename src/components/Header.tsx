@@ -34,22 +34,23 @@ export function Header({ onCityOverview }: { onCityOverview?: () => void }) {
     <>
       <header className="bg-stone-800 text-white px-4 py-2 flex items-center gap-4 shadow-md shrink-0 h-14">
         <div className="flex items-center gap-2 shrink-0">
-          <span className="text-lg font-bold">🏙 {basicData.cityName}</span>
+          <span className="text-lg font-bold">🏬 {basicData.cityName}</span>
           <div className="flex items-center gap-2 px-2 py-1 bg-stone-700/50 rounded-md border border-stone-600/50">
-            <span className="text-stone-100 text-sm uppercase font-medium">
-              Jahr {turn.year}
+            <span className="text-stone-100 text-sm uppercase font-semibold">
+              📅 Jahr {turn.year}
             </span>
-            <span className="text-stone-400">·</span>
-            <span className="text-stone-300 text-xs uppercase tracking-wider font-semibold">
-              Quartal {turn.quarter}
+            <span className="text-stone-500">|</span>
+            <span className="text-stone-100 text-sm uppercase font-semibold">
+              🕒 Q{turn.quarter}
             </span>
-            <span className="text-stone-400">·</span>
-            <span className="text-stone-400 text-[10px] uppercase font-bold">
+            <span className="text-stone-500">|</span>
+            <span className="text-stone-100 text-sm uppercase font-semibold">
+              ⚡ Phase {turn.phase} von 3:{" "}
               {turn.phase === 1
-                ? "Berichte (1/3)"
+                ? "Berichte"
                 : turn.phase === 2
-                  ? "Planungsphase (2/3)"
-                  : "Abstimmungen (3/3)"}
+                  ? "Planungsphase"
+                  : "Abstimmungen"}
             </span>
           </div>
           <button

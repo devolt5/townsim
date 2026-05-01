@@ -3,6 +3,11 @@ import citizen02 from "@/images/citizen_02.jpg";
 import citizen03 from "@/images/citizen_03.jpg";
 import citizen04 from "@/images/citizen_04.jpg";
 import citizen05 from "@/images/citizen_05.jpg";
+import delegate01 from "@/images/delegate_01.jpg";
+import delegate02 from "@/images/delegate_02.jpg";
+import delegate03 from "@/images/delegate_03.jpg";
+import delegate04 from "@/images/delegate_04.jpg";
+import delegate05 from "@/images/delegate_05.jpg";
 import type { Decision } from "./decisionType";
 
 export const DECISIONS: Decision[] = [
@@ -24,7 +29,7 @@ export const DECISIONS: Decision[] = [
     id: "industrie_ansiedlung",
     title: "Erweiterung Industriegebiet Ost",
     text: "Ein Logistikkonzern will eine neue Halle bauen. Verspricht 200 Arbeitsplätze, erfordert aber Rodung von Wald.",
-    image: citizen04,
+    image: delegate01,
     imageAlt: "Manager",
     factionReactions: [
       { factionShort: "GRÜNE", delta: -20 },
@@ -136,7 +141,7 @@ export const DECISIONS: Decision[] = [
     id: "solarpflicht",
     title: "Solar-Pflicht für Gewerbe",
     text: "Alle Neubauten im Gewerbegebiet müssen künftig PV-Anlagen installieren. Investoren warnen vor Kostentreiber.",
-    image: citizen04,
+    image: delegate02,
     imageAlt: "Solar-Ingenieur",
     factionReactions: [
       { factionShort: "GRÜNE", delta: +22 },

@@ -1,4 +1,3 @@
-import citizen02 from "@/images/citizen_02.jpg";
 import districtNorth from "@/images/districts/north.jpg";
 import districtTownCenter from "@/images/districts/town_center.jpg";
 import districtBusiness from "@/images/districts/business_district.jpg";
@@ -92,18 +91,6 @@ export const FACTIONS: Faction[] = [
     seats: 6,
   },
 ];
-
-export const PENDING_DECISION: PendingDecision = {
-  title: "Ausbau des Radwegenetzes",
-  text: "Die Grüne Liste beantragt den Bau von 15 km neuer Radwege. Kosten: 2,4 Mio €. Betroffen sind Innenstadt und beide Wohngebiete.",
-  image: citizen02,
-  imageAlt: "Bürger",
-  options: [
-    { label: "✓ Zustimmen", variant: "accept" },
-    { label: "✗ Ablehnen", variant: "reject" },
-    { label: "⚖ Verhandeln", variant: "negotiate" },
-  ],
-};
 
 export const OPEN_PROMISES: Promise[] = [];
 

@@ -103,7 +103,7 @@ export function PendingDecision() {
               key={opt.variant}
               size="sm"
               variant={opt.variant === "negotiate" ? "outline" : "default"}
-              className={buttonClass(opt.variant)}
+              className={buttonClass(opt.variant) + " cursor-pointer"}
               onClick={() => resolveDecision(opt.label)}
             >
               {opt.label}
