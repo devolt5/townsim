@@ -6,6 +6,7 @@ import type { Metric, Faction } from "@/data/gameData";
 import type { Promise as GamePromise } from "@/data/gameData";
 import { DECISIONS } from "@/data/decisions";
 import type { Decision } from "@/data/decisionType";
+import { messages as INITIAL_MESSAGES, type Message } from "@/data/messages";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -53,6 +54,7 @@ interface GameState {
   pendingDecision: Decision | null;
   usedDecisionIds: string[];
   decisionHistory: CompletedDecision[];
+  messages: Message[];
 
   // ── Actions ───────────────────────────────────────────────────────────────
 
@@ -94,6 +96,9 @@ interface GameState {
    * push it to decisionHistory, and clear pendingDecision.
    */
   resolveDecision: (chosenOption: string) => void;
+
+  /** Mark a message as read. */
+  markMessageRead: (messageId: number) => void;
 
   /**
    * Advance the game clock by one phase.
@@ -144,6 +149,7 @@ function buildInitialState() {
     pendingDecision: decision,
     usedDecisionIds: newUsedIds,
     decisionHistory: [] as CompletedDecision[],
+    messages: structuredClone(INITIAL_MESSAGES),
   };
 }
 
@@ -272,6 +278,17 @@ export const useGameStore = create<GameState>()(
             },
             undefined,
             { type: "resolveDecision", chosenOption },
+          ),
+
+        markMessageRead: (messageId) =>
+          set(
+            (s) => ({
+              messages: s.messages.map((m) =>
+                m.id === messageId ? { ...m, read: true } : m,
+              ),
+            }),
+            undefined,
+            { type: "markMessageRead", messageId },
           ),
 
         advanceTurn: () =>

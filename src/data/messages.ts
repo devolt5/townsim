@@ -4,6 +4,7 @@ export interface Message {
   content: string;
   timestamp: Date;
   dialogId?: number;
+  read: boolean;
 }
 
 export const messages: Message[] = [
@@ -13,5 +14,6 @@ export const messages: Message[] = [
     content: "Willkommen beim TownSim",
     timestamp: new Date(),
     dialogId: 3,
+    read: false,
   },
 ];

@@ -1,7 +1,9 @@
+import { Bell } from "lucide-react";
 import { messages as defaultMessages, type Message } from "@/data/messages";
 
-function formatTime(date: Date): string {
-  return date.toLocaleTimeString("de-DE", {
+function formatTime(date: Date | string): string {
+  const d = typeof date === "string" ? new Date(date) : date;
+  return d.toLocaleTimeString("de-DE", {
     hour: "2-digit",
     minute: "2-digit",
   });
@@ -21,12 +23,14 @@ function senderColor(name: string): string {
 
 interface MessagesProps {
   items?: Message[];
-  onMessageClick?: (dialogId: number) => void;
+  onMessageClick?: (dialogId: number, messageId: number) => void;
+  onMarkAsRead?: (messageId: number) => void;
 }
 
 export function Messages({
   items = defaultMessages,
   onMessageClick,
+  onMarkAsRead,
 }: MessagesProps) {
   if (items.length === 0) {
     return (
@@ -41,8 +45,14 @@ export function Messages({
       {items.map((msg) => (
         <div
           key={msg.id}
-          className={`flex gap-1.5 items-start ${msg.dialogId && onMessageClick ? "cursor-pointer hover:opacity-80 active:opacity-60 transition-opacity" : ""}`}
-          onClick={() => msg.dialogId && onMessageClick?.(msg.dialogId)}
+          className={`flex gap-1.5 items-start ${msg.dialogId && onMessageClick ? "cursor-pointer hover:opacity-80 active:opacity-60 transition-opacity" : "cursor-pointer"}`}
+          onClick={() => {
+            if (msg.dialogId && onMessageClick) {
+              onMessageClick(msg.dialogId, msg.id);
+            } else {
+              onMarkAsRead?.(msg.id);
+            }
+          }}
         >
           {/* Avatar */}
           <div
@@ -62,6 +72,12 @@ export function Messages({
               <span className="text-[8px] text-stone-400 shrink-0">
                 {formatTime(msg.timestamp)}
               </span>
+              {!msg.read && (
+                <Bell
+                  className="w-4 h-4 text-amber-500 animate-[bell-shake_0.75s_infinite]"
+                  fill="currentColor"
+                />
+              )}
             </div>
             <div className="bg-stone-100 border border-stone-200 rounded-lg rounded-tl-none px-2 py-1 text-[10px] text-stone-700 leading-snug wrap-break-word">
               {msg.content}

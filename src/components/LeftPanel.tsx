@@ -8,6 +8,7 @@ import { GameDialog } from "@/components/GameDialog";
 import { dialogsById } from "@/data/dialogs";
 import type { DialogData } from "@/data/dialogs";
 import type { District } from "@/game/CityScene";
+import { useGameStore } from "@/store/gameStore";
 import phonePng from "@/images/phone.png";
 
 interface LeftPanelProps {
@@ -28,8 +29,10 @@ export function LeftPanel({
 }: LeftPanelProps) {
   const [activeApp, setActiveApp] = useState<PhoneApp>("nachrichten");
   const [openDialog, setOpenDialog] = useState<DialogData | null>(null);
+  const { messages, markMessageRead } = useGameStore();
 
-  function handleMessageClick(dialogId: number) {
+  function handleMessageClick(dialogId: number, messageId: number) {
+    markMessageRead(messageId);
     const dialog = dialogsById[dialogId];
     if (dialog) {
       setOpenDialog(dialog);
@@ -118,7 +121,13 @@ export function LeftPanel({
                     value="nachrichten"
                     className="flex-1 overflow-y-auto p-2 mt-0"
                   >
-                    <Messages onMessageClick={handleMessageClick} />
+                    <Messages
+                      items={messages}
+                      onMessageClick={(dialogId, messageId) =>
+                        handleMessageClick(dialogId, messageId)
+                      }
+                      onMarkAsRead={markMessageRead}
+                    />
                   </TabsContent>
 
                   <TabsContent
