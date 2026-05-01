@@ -24,6 +24,7 @@ export interface Faction {
   image: string;
   trust: number;
   seats: number;
+  description?: string;
 }
 
 export interface PendingDecision {
@@ -73,21 +74,41 @@ export const METRICS: Metric[] = [
 ];
 
 export const FACTIONS: Faction[] = [
-  { short: "Terra", icon: "🌿", image: factionGreen, trust: 62, seats: 8 },
+  {
+    short: "Terra",
+    icon: "🌿",
+    image: factionGreen,
+    trust: 62,
+    seats: 8,
+    description:
+      "Terra setzt sich leidenschaftlich für Nachhaltigkeit und Umweltschutz ein und vertraut darauf, dass grüne Stadtentwicklung der Schlüssel zu langfristigem Wohlstand ist. Die Fraktion repräsentiert Umweltschützer, Öko-Unternehmer und Bürger, denen die Zukunft des Planeten am Herzen liegt. Sie fordern eine Reduktion von CO2-Emissionen, den Ausbau von Grünflächen und eine nachhaltige Energiewende in der Stadt. Terra glaubt, dass Wirtschaftswachstum und Umweltschutz keine Gegensätze sind, sondern sich gegenseitig verstärken können. Ihre Werte sind Verantwortung gegenüber kommenden Generationen und die Harmonie zwischen Stadt und Natur.",
+  },
   {
     short: "Syndikat",
     icon: "💼",
     image: factionBusiness,
     trust: 45,
     seats: 9,
+    description:
+      "Das Syndikat vertritt die Interessen der lokalen Wirtschaft, großer Konzerne und innovativen Unternehmern, die die Stadt als Zentrum des Handels und der Industrie sehen. Sie repräsentieren Geschäftsleute, Investoren und jene, die Arbeitsplätze und wirtschaftliches Wachstum als Priorität einstufen. Das Syndikat fordert weniger Bürokratie, Steuererleichterungen für Unternehmen und massive Investitionen in Infrastruktur und Gewerbegebiete. Sie sehen die Stadt als wirtschaftliches Kraftwerk, das die Region antreibt und Wohlstand für alle schafft. Ihre Werte sind Leistung, Effizienz und wirtschaftliche Stärke durch offene Märkte.",
   },
-  { short: "Bürger", icon: "🏘️", image: factionCitizens, trust: 71, seats: 10 },
+  {
+    short: "Bürger",
+    icon: "🏘️",
+    image: factionCitizens,
+    trust: 71,
+    seats: 10,
+    description:
+      "Die Bürger-Fraktion ist die Stimme des normalen Volkes und konzentriert sich auf das Wohl der breiten Bevölkerung in ihrem täglichen Leben. Sie vertreten Arbeiter, Familien, Rentner und alle, die auf gute öffentliche Dienste, bezahlbaren Wohnraum und Sicherheit angewiesen sind. Die Fraktion fordert bessere Schulen, Krankenhäuser, öffentliche Verkehrsmittel und lebenswerte Wohnviertel für alle Einkommensschichten. Sie setzen sich für soziale Gerechtigkeit ein und wollen sicherstellen, dass wirtschaftliche Entwicklung allen Menschen zugute kommt, nicht nur den Wohlhabenden. Ihre Werte sind Gemeinwohl, Sicherheit und eine lebenswerte Stadt für alle Bürger.",
+  },
   {
     short: "Union der Gilden",
     icon: "🔧",
     image: factionWorkers,
     trust: 38,
     seats: 7,
+    description:
+      "Die Union der Gilden vertritt das Handwerk, die Arbeiterschaft und mittelständischen Betriebe, die das Rückgrat der lokalen Wirtschaft bilden. Sie setzen sich für faire Löhne, sichere Arbeitsbedingungen und angemessene Sozialleistungen ein und stehen für die Handwerkskunst und Expertise ihrer Mitglieder. Die Fraktion fordert Investitionen in Berufsausbildung, Schutz von lokalen Handwerksbetrieben vor großen Konzernen und starke Arbeitnehmerrechte. Sie sehen sich als Vermittler zwischen kapitalistischen Großkonzernen und idealistischen Umweltbewegungen. Ihre Werte sind Handwerkskunst, Arbeiterrechte und die Wahrung des Mittelstands als wirtschaftliches Fundament.",
   },
   {
     short: "Der Bund",
@@ -95,6 +116,8 @@ export const FACTIONS: Faction[] = [
     image: factionConservatives,
     trust: 29,
     seats: 6,
+    description:
+      "Der Bund vertritt traditionelle Werte, Stabilität und bewährte Institutionen und möchte die Stadt vor zu schnellen, potenziell destabilisierenden Veränderungen bewahren. Sie repräsentieren ältere Generationen, konservative Geschäftsleute und jene, die in etablierten Strukturen Sicherheit finden. Der Bund fordert Vorsicht bei Reformen, Bewahrung historischer Stadtteile und Respekt vor etablierten Machtstrukturen und Traditionen. Sie sehen radikale Veränderungen mit Skepsis und bevorzugen graduelle, sichere Entwicklungen über Jahrzehnte. Ihre Werte sind Kontinuität, Tradition, Verlässlichkeit und der Erhalt bewährter Ordnung.",
   },
 ];
 

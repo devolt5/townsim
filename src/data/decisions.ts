@@ -1,13 +1,13 @@
 import citizen01 from "@/images/citizen_01.jpg";
 import citizen02 from "@/images/citizen_02.jpg";
 import citizen03 from "@/images/citizen_03.jpg";
-import citizen04 from "@/images/citizen_04.jpg";
+// import citizen04 from "@/images/citizen_04.jpg";
 import citizen05 from "@/images/citizen_05.jpg";
 import delegate01 from "@/images/delegate_01.jpg";
 import delegate02 from "@/images/delegate_02.jpg";
-import delegate03 from "@/images/delegate_03.jpg";
-import delegate04 from "@/images/delegate_04.jpg";
-import delegate05 from "@/images/delegate_05.jpg";
+// import delegate03 from "@/images/delegate_03.jpg";
+// import delegate04 from "@/images/delegate_04.jpg";
+// import delegate05 from "@/images/delegate_05.jpg";
 import type { Decision } from "./decisionType";
 
 export const DECISIONS: Decision[] = [

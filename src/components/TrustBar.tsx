@@ -1,14 +1,6 @@
 import { useState } from "react";
 import type { Faction } from "@/data/gameData";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Card } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
+import { FactionWindow } from "@/components/FactionWindow";
 
 interface TrustBarProps {
   trust: number;
@@ -63,45 +55,11 @@ export function FactionChip({ faction }: FactionChipProps) {
         </div>
       </div>
 
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-md">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <span className="text-3xl">{faction.icon}</span>
-              {faction.short}
-            </DialogTitle>
-            <DialogDescription>Fraktionsinformationen</DialogDescription>
-          </DialogHeader>
-
-          <Card className="p-4">
-            <div className="space-y-4">
-              {/* Faction Image */}
-              <img
-                src={faction.image}
-                alt={faction.short}
-                className="w-full h-40 object-cover rounded"
-              />
-
-              {/* Trust */}
-              <div>
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm font-medium">Vertrauen</span>
-                  <span className="text-sm font-semibold">
-                    {faction.trust}%
-                  </span>
-                </div>
-                <Progress value={faction.trust} className="h-2" />
-              </div>
-
-              {/* Seats */}
-              <div className="flex justify-between items-center">
-                <span className="text-sm font-medium">Sitze im Rat</span>
-                <span className="text-sm font-semibold">{faction.seats}</span>
-              </div>
-            </div>
-          </Card>
-        </DialogContent>
-      </Dialog>
+      <FactionWindow
+        factionShort={faction.short}
+        open={open}
+        onOpenChange={setOpen}
+      />
     </>
   );
 }
