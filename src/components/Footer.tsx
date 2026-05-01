@@ -33,7 +33,7 @@ export function Footer() {
         onClick={advanceTurn}
         disabled={!canAdvance}
         size="sm"
-        className="bg-amber-600 cursor-pointer hover:bg-amber-500 text-white font-bold px-4 h-9 shadow-lg shadow-amber-900/20 border-b-2 border-amber-800 active:border-b-0 active:translate-y-[1px] transition-all flex gap-2 group disabled:opacity-50 disabled:grayscale disabled:cursor-not-allowed"
+        className="bg-amber-600 cursor-pointer hover:bg-amber-500 text-white font-bold px-4 h-9 shadow-lg shadow-amber-900/20 border-b-2 border-amber-800 active:border-b-0 active:translate-y-1px transition-all flex gap-2 group disabled:opacity-50 disabled:grayscale disabled:cursor-not-allowed"
       >
         <span>{canAdvance ? "Nächste Phase" : "Entscheidung ausstehend"}</span>
         <ChevronRight
