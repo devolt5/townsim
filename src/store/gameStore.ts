@@ -1,14 +1,11 @@
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 import type {} from "@redux-devtools/extension";
-import {
-  METRICS,
-  FACTIONS,
-  PENDING_DECISION,
-  OPEN_PROMISES,
-} from "@/data/gameData";
-import type { Metric, Faction, PendingDecision } from "@/data/gameData";
+import { METRICS, FACTIONS, OPEN_PROMISES } from "@/data/gameData";
+import type { Metric, Faction } from "@/data/gameData";
 import type { Promise as GamePromise } from "@/data/gameData";
+import { DECISIONS } from "@/data/decisions";
+import type { Decision } from "@/data/decisionType";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -53,7 +50,8 @@ interface GameState {
   /** 0–100 (GDD §6). Starts at 50. */
   politicalCapital: number;
   openPromises: GamePromise[];
-  pendingDecision: PendingDecision | null;
+  pendingDecision: Decision | null;
+  usedDecisionIds: string[];
   decisionHistory: CompletedDecision[];
 
   // ── Actions ───────────────────────────────────────────────────────────────
@@ -86,7 +84,10 @@ interface GameState {
   removePromise: (id: string) => void;
 
   /** Replace the current pending decision (or clear it). */
-  setPendingDecision: (decision: PendingDecision | null) => void;
+  setPendingDecision: (decision: Decision | null) => void;
+
+  /** Draw a random decision from DECISIONS that hasn't been used yet this cycle. */
+  drawDecision: () => void;
 
   /**
    * Record that the pending decision was resolved with the given option label,
@@ -117,7 +118,22 @@ const INITIAL_TURN: Turn = { year: 1, quarter: 1, phase: 1 };
 
 const INITIAL_POLITICAL_CAPITAL = 50;
 
+function pickRandomDecision(usedIds: string[]): {
+  decision: Decision;
+  newUsedIds: string[];
+} {
+  let pool = DECISIONS.filter((d) => !usedIds.includes(d.id));
+  const wasReset = pool.length === 0;
+  if (wasReset) pool = [...DECISIONS];
+  const picked = pool[Math.floor(Math.random() * pool.length)];
+  return {
+    decision: picked,
+    newUsedIds: wasReset ? [picked.id] : [...usedIds, picked.id],
+  };
+}
+
 function buildInitialState() {
+  const { decision, newUsedIds } = pickRandomDecision([]);
   return {
     basicData: INITIAL_BASIC_DATA,
     turn: INITIAL_TURN,
@@ -125,7 +141,8 @@ function buildInitialState() {
     factions: structuredClone(FACTIONS),
     politicalCapital: INITIAL_POLITICAL_CAPITAL,
     openPromises: structuredClone(OPEN_PROMISES),
-    pendingDecision: structuredClone(PENDING_DECISION) as PendingDecision,
+    pendingDecision: decision,
+    usedDecisionIds: newUsedIds,
     decisionHistory: [] as CompletedDecision[],
   };
 }
@@ -227,6 +244,18 @@ export const useGameStore = create<GameState>()(
         setPendingDecision: (decision) =>
           set({ pendingDecision: decision }, undefined, "setPendingDecision"),
 
+        drawDecision: () =>
+          set(
+            (s) => {
+              const { decision, newUsedIds } = pickRandomDecision(
+                s.usedDecisionIds,
+              );
+              return { pendingDecision: decision, usedDecisionIds: newUsedIds };
+            },
+            undefined,
+            "drawDecision",
+          ),
+
         resolveDecision: (chosenOption) =>
           set(
             (s) => {
@@ -253,10 +282,24 @@ export const useGameStore = create<GameState>()(
                 return {
                   turn: { year, quarter, phase: (phase + 1) as 1 | 2 | 3 },
                 };
+              // Quarter boundary — draw a new decision
+              const { decision, newUsedIds } = pickRandomDecision(
+                s.usedDecisionIds,
+              );
+              const decisionPatch = {
+                pendingDecision: decision,
+                usedDecisionIds: newUsedIds,
+              };
               if (quarter < 4)
-                return { turn: { year, quarter: quarter + 1, phase: 1 } };
+                return {
+                  turn: { year, quarter: quarter + 1, phase: 1 },
+                  ...decisionPatch,
+                };
               if (year < 5)
-                return { turn: { year: year + 1, quarter: 1, phase: 1 } };
+                return {
+                  turn: { year: year + 1, quarter: 1, phase: 1 },
+                  ...decisionPatch,
+                };
               return {};
             },
             undefined,
@@ -267,6 +310,7 @@ export const useGameStore = create<GameState>()(
       }),
       {
         name: "townsim-save",
+        version: 2,
       },
     ),
     {
