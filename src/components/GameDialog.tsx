@@ -10,6 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import type { DialogData } from "@/data/dialogs";
 import { dialogsBySender } from "@/data/dialogs";
+import { useGameStore } from "@/store/gameStore";
 import guideImage from "@/images/guide.jpg";
 import delegate01Image from "@/images/delegate_01.jpg";
 
@@ -32,6 +33,7 @@ interface GameDialogProps {
 
 export function GameDialog({ open, onClose, data }: GameDialogProps) {
   const scrollEndRef = useRef<HTMLDivElement>(null);
+  const playerName = useGameStore((s) => s.basicData.playerName);
 
   // All dialogs for this sender up to and including the current one (chronological).
   const history = (dialogsBySender[data.sender] ?? [data]).filter(
@@ -122,7 +124,9 @@ export function GameDialog({ open, onClose, data }: GameDialogProps) {
                     }`}
                   >
                     <div className="text-stone-700 text-sm leading-relaxed prose prose-sm prose-stone max-w-none prose-p:my-1 prose-strong:font-semibold prose-em:italic">
-                      <ReactMarkdown>{entry.text}</ReactMarkdown>
+                      <ReactMarkdown>
+                        {entry.text.replace("{playerName}", playerName)}
+                      </ReactMarkdown>
                     </div>
                   </div>
                 </div>

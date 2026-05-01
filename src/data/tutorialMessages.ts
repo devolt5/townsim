@@ -14,8 +14,8 @@ export const TUTORIAL_TRIGGERS: TutorialTrigger[] = [
     key: "tutorial-click-2",
     message: {
       sender: "Stadtberaterin",
-      content: "Denk auch an die Fraktionen im Stadtrat.",
-      dialogId: 4,
+      content: "Erste Schritte",
+      dialogId: 2,
     },
   },
   {
@@ -23,16 +23,34 @@ export const TUTORIAL_TRIGGERS: TutorialTrigger[] = [
     key: "tutorial-click-4",
     message: {
       sender: "Stadtberaterin",
-      content: "Ein wichtiger Hinweis zu Versprechen und Konsequenzen.",
+      content: "Verschiedene Phasen",
+      dialogId: 3,
+    },
+  },
+  {
+    afterClickCount: 8,
+    key: "tutorial-click-8",
+    message: {
+      sender: "Stadtberaterin",
+      content: "Was wichtig ist...",
+      dialogId: 4,
+    },
+  },
+  {
+    afterClickCount: 10,
+    key: "tutorial-click-10",
+    message: {
+      sender: "Stadtberaterin",
+      content: "Versprechen & Konsequenzen",
       dialogId: 5,
     },
   },
   {
-    afterClickCount: 6,
-    key: "tutorial-click-6",
+    afterClickCount: 12,
+    key: "tutorial-click-12",
     message: {
       sender: "Stadtberaterin",
-      content: "Ich glaube, du bist bereit. Viel Erfolg!",
+      content: "Du bist bereit",
       dialogId: 6,
     },
   },

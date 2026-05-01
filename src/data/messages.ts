@@ -7,13 +7,14 @@ export interface Message {
   read: boolean;
 }
 
+// ── First Tutorial message ────────────────
 export const messages: Message[] = [
   {
     id: 1,
     sender: "Stadtberaterin",
-    content: "Willkommen beim TownSim",
+    content: "Willkommen im Amt!",
     timestamp: new Date(),
-    dialogId: 3,
+    dialogId: 1,
     read: false,
   },
 ];

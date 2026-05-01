@@ -10,27 +10,27 @@ export const allDialogs: DialogData[] = [
   {
     id: 1,
     sender: "Stadtberaterin",
-    title: "Willkommen in TownSim",
-    text: "Willkommen! Hier beginnt dein Abenteuer als Bürgermeister. Triff kluge Entscheidungen, gewinne das Vertrauen deiner Bürger und forme das Schicksal deiner Stadt.",
+    title: "Willkommen im Amt!",
+    text: "Willkommen, {playerName}! Gratulation zur Wahl. Die nächsten vier Jahre werden eine spannende Reise – mit vielen Herausforderungen, aber auch Chancen für deine Stadt.\n\nIch bin deine Stadtberaterin und werde dich mit Ratschlägen unterstützen. Lass uns gleich loslegen!",
   },
+  // ── Tutorial messages (delivered via click-count triggers) ────────────────
   {
     id: 2,
     sender: "Stadtberaterin",
     title: "Erste Schritte",
-    text: "Ein guter Anfang! Deine erste Aufgabe:\n\nVerschaffe dir einen **Überblick über die Stadtbezirke**. Jeder hat eigene Bedürfnisse und Problemlagen.\n\nKlicke auf einen Bezirk, um seine Details einzusehen.",
+    text: "Deine erste Aufgabe:\n\n**Stadtbezirke**\nVerschaffe dir einen Überblick über die Stadtbezirke. Jeder hat eigene Bedürfnisse und Problemlagen.\nKlicke auf einen Bezirk, um seine Details einzusehen.\n\n**Smartphone**\nProbiere verschiedene Funktionen deines Smartphones aus – dort findest du wichtige Informationen und kannst mit verschiedenen Akteuren in Kontakt treten.\n\n**Unterlagen**\nRechts siehst du deine Unterlagen, vor allem die Anträge, die du dem Parlament vorlegen kannst. Jeder Antrag wird Auswirkungen auf die Stadtentwicklung haben – und auf deine Beliebtheit bei den Fraktionen im Stadtrat.\n\n**Fraktionen**\nUnten kannst du mehr über die Fraktionen erfahren – sie sind wichtige Verbündete, aber auch Widersacher. Ihre Unterstützung brauchst du, um deine Pläne durchzusetzen.",
   },
   {
     id: 3,
     sender: "Stadtberaterin",
-    title: "Haushaltswarnung",
-    text: "**Achtung, Bürgermeister** – die Stadtkasse sendet erste Warnsignale.\n\nÜberprüfe die Ausgaben im *nördlichen Bezirk*, bevor es zu einem **Defizit** kommt.",
+    title: "Verschiedene Phasen",
+    text: "Das Spiel ist in verschiedene Phasen unterteilt:\n\n1. **Berichtsphase**: Hier bekommst du Anträge und Informationen.\n2. **Planungsphase**: In dieser Phase kannst du deine Strategie entwickeln. Du kannst mit verschiedenen Akteuren in Kontakt treten: Abgeordnete, Bürger, Vereine, Wirtschaftsakteure.\n3. **Abstimmungsphase**: Die Fraktionen im Stadtrat entscheiden über deine Anträge. Je nachdem, wie du dich in der Planungsphase positioniert hast, kannst du auf mehr oder weniger Unterstützung zählen.",
   },
-  // ── Tutorial messages (delivered via click-count triggers) ────────────────
   {
     id: 4,
     sender: "Stadtberaterin",
-    title: "Fraktionen beachten",
-    text: "Du lernst schnell! Vergiss nicht die **Fraktionen** im Stadtrat.\n\nJede Fraktion hat eigene Interessen – ihre Zustimmung entscheidet über Mehrheiten und beeinflusst deinen politischen Spielraum.",
+    title: "Was wichtig ist...",
+    text: "Du lernst schnell! Versuche immer, deine Werte im **oberen Bereich** im Auge zu behalten – vor allem die **Bürgerzufriedenheit**. Wenn sie zu niedrig wird, könnte es schwierig werden, deine Pläne durchzubringen.\n\nAchte auch auf die **Wirtschaftskraft** der Stadt – sie beeinflusst deine finanziellen Möglichkeiten.\n\nUnd vergiss nicht: Die Fraktionen im Stadtrat beobachten dich genau. Ihre Unterstützung ist entscheidend für deinen Erfolg.",
   },
   {
     id: 5,
@@ -42,20 +42,20 @@ export const allDialogs: DialogData[] = [
     id: 6,
     sender: "Stadtberaterin",
     title: "Du bist bereit",
-    text: "Ich glaube, du hast das Wesentliche verstanden. Von hier an liegst du auf dich allein gestellt – aber ich bin natürlich jederzeit für Rückfragen da.\n\n**Viel Erfolg, Bürgermeister!**",
+    text: "Ich glaube, du hast das Wesentliche verstanden, {playerName}.\n\nSchaue dich regelmäßig in den Stadtbezirken um. Ab und zu tauchen neue Herausforderungen auf, die du angehen kannst.\n\nViel Erfolg, {playerName}!",
   },
   // ── Timed messages (delivered by year/quarter triggers) ───────────────────
   {
     id: 7,
     sender: "Stadtredakteur",
     title: "Presseanfrage",
-    text: "Guten Tag, Bürgermeister!\n\nIch bin Redakteur der *Neustädter Stadtzeitung*. Unsere Leser interessieren sich sehr für Ihre Pläne zum **Stadthaushalt**.\n\nWären Sie bereit für ein kurzes Interview? Ich würde mich über eine Rückmeldung freuen.",
+    text: "Guten Tag, {playerName}!\n\nIch bin Redakteur der *{cityName} Zeitung*. Unsere Leser interessieren sich sehr für Ihre Pläne zum **Stadthaushalt**.\n\nWären Sie bereit für ein kurzes Interview? Ich würde mich über eine Rückmeldung freuen.",
   },
   {
     id: 8,
     sender: "Stadtredakteur",
     title: "Jahresbericht der Presse",
-    text: "Bürgermeister, die Halbzeit Ihrer Amtszeit nähert sich.\n\nUnsere Redaktion hat die bisherige Stadtentwicklung analysiert – die **Bürgerzufriedenheit** und die **Wirtschaftskraft** stehen besonders im Fokus unserer Leserschaft.\n\nWir berichten in der nächsten Ausgabe.",
+    text: "{playerName}, die Halbzeit Ihrer Amtszeit nähert sich.\n\nUnsere Redaktion hat die bisherige Stadtentwicklung analysiert – die **Bürgerzufriedenheit** und die **Wirtschaftskraft** stehen besonders im Fokus unserer Leserschaft.\n\nWir berichten in der nächsten Ausgabe.",
   },
 ];
 
