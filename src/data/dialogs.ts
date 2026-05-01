@@ -18,7 +18,7 @@ export const allDialogs: DialogData[] = [
     id: 2,
     sender: "Stadtberaterin",
     title: "Erste Schritte",
-    text: "Deine erste Aufgabe:\n\n**Stadtbezirke**\nVerschaffe dir einen Überblick über die Stadtbezirke. Jeder hat eigene Bedürfnisse und Problemlagen.\nKlicke auf einen Bezirk, um seine Details einzusehen.\n\n**Smartphone**\nProbiere verschiedene Funktionen deines Smartphones aus – dort findest du wichtige Informationen und kannst mit verschiedenen Akteuren in Kontakt treten.\n\n**Unterlagen**\nRechts siehst du deine Unterlagen, vor allem die Anträge, die du dem Parlament vorlegen kannst. Jeder Antrag wird Auswirkungen auf die Stadtentwicklung haben – und auf deine Beliebtheit bei den Fraktionen im Stadtrat.\n\n**Fraktionen**\nUnten kannst du mehr über die Fraktionen erfahren – sie sind wichtige Verbündete, aber auch Widersacher. Ihre Unterstützung brauchst du, um deine Pläne durchzusetzen.",
+    text: "### Hier noch einige wichtige Tipps\n#### Stadtbezirke\n\nVerschaffe dir einen Überblick über die Stadtbezirke. Jeder hat eigene Bedürfnisse und Problemlagen.\nKlicke auf einen Bezirk, um seine Details einzusehen.\n#### Smartphone\nProbiere verschiedene Funktionen deines Smartphones aus – dort findest du wichtige Informationen und kannst mit verschiedenen Akteuren in Kontakt treten.\n#### Unterlagen\nRechts siehst du deine Unterlagen, vor allem die Anträge, die du dem Parlament vorlegen kannst. Jeder Antrag wird Auswirkungen auf die Stadtentwicklung haben – und auf deine Beliebtheit bei den Fraktionen im Stadtrat.\n#### Fraktionen\nUnten kannst du mehr über die Fraktionen erfahren – sie sind wichtige Verbündete, aber auch Widersacher. Ihre Unterstützung brauchst du, um deine Pläne durchzusetzen.",
   },
   {
     id: 3,
