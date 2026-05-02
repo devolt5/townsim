@@ -1,9 +1,9 @@
 # 🏛️ TownSim: Serious Politics
 
-TownSim is a browser-based political simulation and **Serious Game** that puts you in the mayor's seat of "Neustadt," a fictional German city with 80,000 citizens. Your goal is to navigate the complex world of local politics, balancing competing interests across a four-year legislative term.
+TownSim is a browser-based political simulation and **Serious Game** that puts you in the mayor's seat of a fictional democratic city with 80,000 citizens. Your goal is to navigate the complex world of local politics, balancing competing interests across a four-year legislative term.
 
 > [!IMPORTANT]
-> The game is **currently available in German only** (Sprache: Deutsch).
+> The game is under development and **currently available in German only**.
 
 🚀 [Click here to play in the browser](https://devolt5.github.io/townsim/)
 
