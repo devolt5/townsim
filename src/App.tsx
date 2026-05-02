@@ -47,6 +47,10 @@ function App() {
   const [selectedDelegate, setSelectedDelegate] = useState<Delegate | null>(
     null,
   );
+  const [activeScene, setActiveScene] = useState<
+    "city" | "district" | "parliament"
+  >("city");
+  const [factionOverlay, setFactionOverlay] = useState(false);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -121,6 +125,8 @@ function App() {
           gameRef.current.scene.stop("ParliamentScene");
           gameRef.current.scene.start("CityScene");
           setSelectedDistrict(null);
+          setActiveScene("city");
+          setFactionOverlay(false);
         }}
         onParliament={() => {
           if (!gameRef.current) return;
@@ -128,6 +134,8 @@ function App() {
           gameRef.current.scene.stop("DistrictScene");
           gameRef.current.scene.start("ParliamentScene");
           setSelectedDistrict(null);
+          setActiveScene("parliament");
+          setFactionOverlay(false);
         }}
       />
 
@@ -143,7 +151,7 @@ function App() {
 
         {/* Phaser canvas — grows to fill remaining space */}
         <main
-          className={`flex-1 bg-stone-200 overflow-hidden min-w-0${dialogOpen ? " pointer-events-none" : ""}`}
+          className={`relative flex-1 bg-stone-200 overflow-hidden min-w-0${dialogOpen ? " pointer-events-none" : ""}`}
         >
           <div ref={containerRef} className="w-full h-full" />
         </main>
@@ -158,7 +166,12 @@ function App() {
         </SidebarProvider>
       </div>
 
-      <Footer />
+      <Footer
+        activeScene={activeScene}
+        factionOverlay={factionOverlay}
+        setFactionOverlay={setFactionOverlay}
+        gameRef={gameRef}
+      />
 
       {/* Delegate modal – rendered outside the Phaser canvas so pointer-events work */}
       <DelegateModal

@@ -1,10 +1,28 @@
+import type { Game } from "phaser";
 import { Separator } from "@/components/ui/separator";
 import { FactionChip } from "@/components/TrustBar";
 import { useGameStore } from "@/store/gameStore";
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
+import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+} from "@/components/ui/tooltip";
 
-export function Footer() {
+interface FooterProps {
+  activeScene: "city" | "district" | "parliament";
+  factionOverlay: boolean;
+  setFactionOverlay: (visible: boolean) => void;
+  gameRef: React.RefObject<Game | null>;
+}
+
+export function Footer({
+  activeScene,
+  factionOverlay,
+  setFactionOverlay,
+  gameRef,
+}: FooterProps) {
   const { factions, advanceTurn, pendingDecisions } = useGameStore();
   const TOTAL_SEATS = factions.reduce((sum, f) => sum + f.seats, 0);
   const MAJORITY = Math.ceil(TOTAL_SEATS / 2) + 1;
@@ -28,6 +46,26 @@ export function Footer() {
           <FactionChip key={f.short} faction={f} />
         ))}
       </div>
+      <Separator orientation="vertical" className="h-8 bg-stone-600 shrink-0" />
+      <Tooltip>
+        <TooltipTrigger>
+          <button
+            onClick={() => {
+              const next = !factionOverlay;
+              setFactionOverlay(next);
+              const scene = gameRef.current?.scene.getScene(
+                "ParliamentScene",
+              ) as import("@/game/ParliamentScene").ParliamentScene | undefined;
+              scene?.setFactionOverlay(next);
+            }}
+            disabled={activeScene !== "parliament"}
+            className="cursor-pointer text-xl hover:scale-110 transition-transform disabled:opacity-40 disabled:cursor-not-allowed hover:disabled:scale-100"
+          >
+            👥
+          </button>
+        </TooltipTrigger>
+        <TooltipContent side="top">Fraktionen ein-/ausblenden</TooltipContent>
+      </Tooltip>
       <Separator orientation="vertical" className="h-8 bg-stone-600 shrink-0" />
       <Button
         onClick={advanceTurn}

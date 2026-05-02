@@ -126,7 +126,6 @@ export class ParliamentScene extends Scene {
   private highlightGraphics!: GameObjects.Graphics;
   private debugGraphics!: GameObjects.Graphics;
   private delegateOverlayGraphics!: GameObjects.Graphics;
-  private showDelegatesOverlay = false;
 
   // Panning state (mirrors CityScene)
   private isDragging = false;
@@ -172,10 +171,18 @@ export class ParliamentScene extends Scene {
 
     this.createSeatZones();
     this.setupCameraControls();
-    this.createDelegateToggleButton();
 
     if (DEBUG_ZONES) {
       this.drawDebugOverlay();
+    }
+  }
+
+  /** Called by React to toggle the faction colour overlay. */
+  setFactionOverlay(visible: boolean) {
+    if (visible) {
+      this.drawDelegateOverlay();
+    } else {
+      this.delegateOverlayGraphics.clear();
     }
   }
 
@@ -255,65 +262,6 @@ export class ParliamentScene extends Scene {
         });
       }
     }
-  }
-
-  // ── Delegate toggle button (fixed to camera) ─────────────────────────────
-
-  private createDelegateToggleButton() {
-    const pad = 12;
-    const btnW = 160;
-    const btnH = 36;
-    const margin = 16;
-
-    // Background rectangle (fixed to camera)
-    const bg = this.add.graphics().setScrollFactor(0).setDepth(10);
-
-    const label = this.add
-      .text(margin + btnW / 2, margin + btnH / 2, "👥 Fraktionen anzeigen", {
-        fontSize: "11px",
-        color: "#ffffff",
-        fontStyle: "bold",
-        padding: { x: pad, y: pad },
-      })
-      .setOrigin(0.5)
-      .setScrollFactor(0)
-      .setDepth(11);
-
-    const drawButton = (hover: boolean) => {
-      bg.clear();
-      bg.fillStyle(
-        this.showDelegatesOverlay ? 0x1a6bb5 : hover ? 0x555555 : 0x333333,
-        0.92,
-      );
-      bg.fillRoundedRect(margin, margin, btnW, btnH, 6);
-    };
-
-    drawButton(false);
-
-    // Invisible interactive zone pinned to camera
-    const zone = this.add
-      .zone(margin + btnW / 2, margin + btnH / 2, btnW, btnH)
-      .setScrollFactor(0)
-      .setDepth(12)
-      .setInteractive();
-
-    zone.on("pointerover", () => drawButton(true));
-    zone.on("pointerout", () => drawButton(false));
-    zone.on("pointerup", () => {
-      if (this.isDragging) return;
-      this.showDelegatesOverlay = !this.showDelegatesOverlay;
-      label.setText(
-        this.showDelegatesOverlay
-          ? "👥 Fraktionen ausblenden"
-          : "👥 Fraktionen anzeigen",
-      );
-      drawButton(false);
-      if (this.showDelegatesOverlay) {
-        this.drawDelegateOverlay();
-      } else {
-        this.delegateOverlayGraphics.clear();
-      }
-    });
   }
 
   // ── Delegate overlay ──────────────────────────────────────────────────────
