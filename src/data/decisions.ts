@@ -3,11 +3,11 @@ import citizen02 from "@/images/citizen_02.jpg";
 import citizen03 from "@/images/citizen_03.jpg";
 // import citizen04 from "@/images/citizen_04.jpg";
 import citizen05 from "@/images/citizen_05.jpg";
-import delegate01 from "@/images/delegate_01.jpg";
-import delegate02 from "@/images/delegate_02.jpg";
-// import delegate03 from "@/images/delegate_03.jpg";
-// import delegate04 from "@/images/delegate_04.jpg";
-// import delegate05 from "@/images/delegate_05.jpg";
+import delegate01 from "@/images/delegate_01_female.jpg";
+import delegate02 from "@/images/delegate_02_male.jpg";
+// import delegate03 from "@/images/delegate_03_male.jpg";
+// import delegate04 from "@/images/delegate_04_female.jpg";
+// import delegate05 from "@/images/delegate_05_male.jpg";
 import type { Decision } from "./types/decision";
 
 export const DECISIONS: Decision[] = [

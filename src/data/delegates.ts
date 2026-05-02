@@ -1,16 +1,16 @@
 import type { Delegate, DelegateFaction } from "@/data/types/delegate";
-import delegate01 from "@/images/delegate_01.jpg";
-import delegate02 from "@/images/delegate_02.jpg";
-import delegate03 from "@/images/delegate_03.jpg";
-import delegate04 from "@/images/delegate_04.jpg";
-import delegate05 from "@/images/delegate_05.jpg";
+import delegate01 from "@/images/delegate_01_female.jpg";
+import delegate02 from "@/images/delegate_02_male.jpg";
+import delegate03 from "@/images/delegate_03_male.jpg";
+import delegate04 from "@/images/delegate_04_female.jpg";
+import delegate05 from "@/images/delegate_05_male.jpg";
 
 const AVATAR_POOL = [
-  delegate01,
-  delegate02,
-  delegate03,
-  delegate04,
-  delegate05,
+  { image: delegate01, gender: "female" as const },
+  { image: delegate02, gender: "male" as const },
+  { image: delegate03, gender: "male" as const },
+  { image: delegate04, gender: "female" as const },
+  { image: delegate05, gender: "male" as const },
 ];
 
 // ── Segment layout configuration (mirrors ParliamentScene ROWS) ─────────────
@@ -101,27 +101,29 @@ const SEGMENT_ASSIGNMENTS: Record<string, DelegateFaction> = {
   r4_s23: "Bürger",
 };
 
-const FIRST_NAMES = [
-  "Anna",
+const MALE_FIRST_NAMES = [
   "Klaus",
-  "Maria",
   "Thomas",
-  "Julia",
   "Peter",
-  "Sandra",
   "Michael",
-  "Sabine",
-  "Hans",
-  "Laura",
+  "Markus",
   "Stefan",
-  "Monika",
-  "Georg",
-  "Petra",
+  "Lukas",
   "Werner",
-  "Inge",
   "Dieter",
+  "Jakob",
+];
+const FEMALE_FIRST_NAMES = [
+  "Anna",
+  "Maria",
+  "Julia",
+  "Laura",
+  "Clara",
+  "Emilia",
+  "Lena",
+  "Lea",
+  "Emma",
   "Claudia",
-  "Ernst",
 ];
 const LAST_NAMES = [
   "Müller",
@@ -146,26 +148,23 @@ const LAST_NAMES = [
   "Zimmermann",
 ];
 
-// Deterministic-ish name generation per segment key (no global counter needed)
-function nameForKey(key: string): { firstName: string; lastName: string } {
+// Deterministic name generation per segment key based on delegate gender
+function nameForKey(
+  key: string,
+  gender: "male" | "female",
+): { firstName: string; lastName: string } {
   // Use a simple hash of the key so names are stable across re-renders
   let hash = 0;
   for (let i = 0; i < key.length; i++) {
     hash = (hash * 31 + key.charCodeAt(i)) >>> 0;
   }
-  const firstName = FIRST_NAMES[hash % FIRST_NAMES.length];
+  const firstNamePool =
+    gender === "male" ? MALE_FIRST_NAMES : FEMALE_FIRST_NAMES;
+  const firstName = firstNamePool[hash % firstNamePool.length];
   const lastName = LAST_NAMES[(hash * 7) % LAST_NAMES.length];
   return { firstName, lastName };
 }
 
-/**
- * Segment-keyed delegate map.
- *
- * Keys follow the pattern `r{row}_s{segmentIndex}` (e.g. "r0_s3").
- * Segments not listed in SEGMENT_ASSIGNMENTS are set to null (empty).
- * To override a generated entry, assign directly after this block:
- *   DELEGATES["r2_s5"] = null;
- */
 export const DELEGATES: Record<string, Delegate | null> = {};
 
 for (const { row, segmentCount } of ROWS) {
@@ -178,9 +177,10 @@ for (const { row, segmentCount } of ROWS) {
       continue;
     }
 
-    const { firstName, lastName } = nameForKey(key);
     const avatarIndex =
       (key.charCodeAt(1) * 13 + key.charCodeAt(4)) % AVATAR_POOL.length;
+    const avatar = AVATAR_POOL[avatarIndex];
+    const { firstName, lastName } = nameForKey(key, avatar.gender);
 
     DELEGATES[key] = {
       id: key,
@@ -188,7 +188,7 @@ for (const { row, segmentCount } of ROWS) {
       faction,
       title: "Stadtratsmitglied",
       bio: `${firstName} ${lastName} ist seit mehreren Jahren Mitglied des Stadtrats und vertritt die Interessen der ${faction}-Fraktion.`,
-      imageUrl: AVATAR_POOL[avatarIndex],
+      imageUrl: avatar.image,
       row,
       seatIndex: segIndex,
     };

@@ -2,11 +2,11 @@ import { Scene, GameObjects, Geom } from "phaser";
 import { DELEGATES } from "@/data/delegates";
 import type { Delegate } from "@/data/types/delegate";
 import parliamentUrl from "@/images/parliament.jpg";
-import delegate01Url from "@/images/delegate_01.jpg";
-import delegate02Url from "@/images/delegate_02.jpg";
-import delegate03Url from "@/images/delegate_03.jpg";
-import delegate04Url from "@/images/delegate_04.jpg";
-import delegate05Url from "@/images/delegate_05.jpg";
+import delegate01Url from "@/images/delegate_01_female.jpg";
+import delegate02Url from "@/images/delegate_02_male.jpg";
+import delegate03Url from "@/images/delegate_03_male.jpg";
+import delegate04Url from "@/images/delegate_04_female.jpg";
+import delegate05Url from "@/images/delegate_05_male.jpg";
 
 // ── Geometry ─────────────────────────────────────────────────────────────────
 
