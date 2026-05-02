@@ -104,7 +104,7 @@ const ARC_END = (ARC_END_DEG * Math.PI) / 180;
  * Show coloured polygon outlines for every seat zone so you can visually
  * align them with the parliament.jpg background.
  */
-const DEBUG_ZONES = true;
+const DEBUG_ZONES = false;
 
 // ── Faction colours ───────────────────────────────────────────────────────────
 
@@ -125,6 +125,8 @@ export class ParliamentScene extends Scene {
   private selectCallback: ((delegate: Delegate | null) => void) | null = null;
   private highlightGraphics!: GameObjects.Graphics;
   private debugGraphics!: GameObjects.Graphics;
+  private delegateOverlayGraphics!: GameObjects.Graphics;
+  private showDelegatesOverlay = false;
 
   // Panning state (mirrors CityScene)
   private isDragging = false;
@@ -166,9 +168,11 @@ export class ParliamentScene extends Scene {
 
     this.highlightGraphics = this.add.graphics().setDepth(2);
     this.debugGraphics = this.add.graphics().setDepth(3);
+    this.delegateOverlayGraphics = this.add.graphics().setDepth(1);
 
     this.createSeatZones();
     this.setupCameraControls();
+    this.createDelegateToggleButton();
 
     if (DEBUG_ZONES) {
       this.drawDebugOverlay();
@@ -249,6 +253,103 @@ export class ParliamentScene extends Scene {
           if (this.isDragging) return;
           if (delegate) this.selectCallback?.(delegate);
         });
+      }
+    }
+  }
+
+  // ── Delegate toggle button (fixed to camera) ─────────────────────────────
+
+  private createDelegateToggleButton() {
+    const pad = 12;
+    const btnW = 160;
+    const btnH = 36;
+    const margin = 16;
+
+    // Background rectangle (fixed to camera)
+    const bg = this.add.graphics().setScrollFactor(0).setDepth(10);
+
+    const label = this.add
+      .text(margin + btnW / 2, margin + btnH / 2, "👥 Fraktionen anzeigen", {
+        fontSize: "11px",
+        color: "#ffffff",
+        fontStyle: "bold",
+        padding: { x: pad, y: pad },
+      })
+      .setOrigin(0.5)
+      .setScrollFactor(0)
+      .setDepth(11);
+
+    const drawButton = (hover: boolean) => {
+      bg.clear();
+      bg.fillStyle(
+        this.showDelegatesOverlay ? 0x1a6bb5 : hover ? 0x555555 : 0x333333,
+        0.92,
+      );
+      bg.fillRoundedRect(margin, margin, btnW, btnH, 6);
+    };
+
+    drawButton(false);
+
+    // Invisible interactive zone pinned to camera
+    const zone = this.add
+      .zone(margin + btnW / 2, margin + btnH / 2, btnW, btnH)
+      .setScrollFactor(0)
+      .setDepth(12)
+      .setInteractive();
+
+    zone.on("pointerover", () => drawButton(true));
+    zone.on("pointerout", () => drawButton(false));
+    zone.on("pointerup", () => {
+      if (this.isDragging) return;
+      this.showDelegatesOverlay = !this.showDelegatesOverlay;
+      label.setText(
+        this.showDelegatesOverlay
+          ? "👥 Fraktionen ausblenden"
+          : "👥 Fraktionen anzeigen",
+      );
+      drawButton(false);
+      if (this.showDelegatesOverlay) {
+        this.drawDelegateOverlay();
+      } else {
+        this.delegateOverlayGraphics.clear();
+      }
+    });
+  }
+
+  // ── Delegate overlay ──────────────────────────────────────────────────────
+
+  private drawDelegateOverlay() {
+    const g = this.delegateOverlayGraphics;
+    g.clear();
+    const { x: cx, y: cy } = PARLIAMENT_CENTER;
+
+    for (let rowIndex = 0; rowIndex < ROWS.length; rowIndex++) {
+      const { innerR, outerR, segmentCount } = ROWS[rowIndex];
+      const sectorSpan = (ARC_END - ARC_START) / segmentCount;
+
+      for (let segIndex = 0; segIndex < segmentCount; segIndex++) {
+        const segmentId = `r${rowIndex}_s${segIndex}`;
+        const delegate = DELEGATES[segmentId] ?? null;
+        if (!delegate) continue;
+
+        const color = FACTION_COLORS[delegate.faction] ?? 0xcccccc;
+        const sectorStart = ARC_START + segIndex * sectorSpan;
+        const sectorEnd = sectorStart + sectorSpan;
+        const pts = annularSectorPolygon(
+          cx,
+          cy,
+          innerR,
+          outerR,
+          sectorStart,
+          sectorEnd,
+        );
+
+        g.fillStyle(color, 0.55);
+        g.lineStyle(1, color, 0.9);
+        this.fillPoly(g, pts);
+        g.fillPath();
+        this.strokePoly(g, pts);
+        g.strokePath();
       }
     }
   }
