@@ -1,5 +1,5 @@
 import { Scene, GameObjects, Geom } from "phaser";
-import { type District, DISTRICTS } from "@/data/gameData";
+import { type District, DISTRICTS } from "@/data/districtPolygons";
 import backgroundUrl from "@/images/background.png";
 
 // ── Geometry helpers ──────────────────────────────────────────────────────────

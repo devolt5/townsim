@@ -8,7 +8,7 @@ import delegate02 from "@/images/delegate_02.jpg";
 // import delegate03 from "@/images/delegate_03.jpg";
 // import delegate04 from "@/images/delegate_04.jpg";
 // import delegate05 from "@/images/delegate_05.jpg";
-import type { Decision } from "./decisionType";
+import type { Decision } from "./types/decision";
 
 export const DECISIONS: Decision[] = [
   {

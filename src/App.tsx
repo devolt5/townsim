@@ -4,7 +4,7 @@ import { Game, AUTO } from "phaser";
 import { CityScene } from "@/game/CityScene";
 import type { District } from "@/game/CityScene";
 import { DistrictScene } from "@/game/DistrictScene";
-import type { DistrictData } from "@/data/districtTypes";
+import type { DistrictData } from "@/data/types/district";
 import { northDistrict } from "@/data/disctricts/north";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { Header } from "@/components/Header";

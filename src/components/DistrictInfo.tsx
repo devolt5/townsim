@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import type { District } from "@/data/gameData";
+import type { District } from "@/data/districtPolygons";
 
 interface DistrictInfoProps {
   district: District | null;

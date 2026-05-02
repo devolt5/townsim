@@ -1,5 +1,5 @@
 import testBuildingUrl from "@/images/buildings/4x4/building1.png";
-import type { DistrictData, MapCell } from "@/data/districtTypes";
+import type { DistrictData, MapCell } from "@/data/types/district";
 
 // ---------------------------------------------------------------------------
 // Building definitions

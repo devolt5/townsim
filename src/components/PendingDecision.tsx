@@ -3,8 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { useGameStore } from "@/store/gameStore";
-import { DECISION_OPTIONS } from "@/data/decisionType";
-import type { DecisionVariant } from "@/data/decisionType";
+import { DECISION_OPTIONS } from "@/data/types/decision";
+import type { DecisionVariant } from "@/data/types/decision";
 
 function reactionLabel(delta: number): string {
   if (delta > 0) return `😊 +${delta}`;

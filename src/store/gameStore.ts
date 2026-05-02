@@ -5,7 +5,7 @@ import { METRICS, FACTIONS, OPEN_PROMISES } from "@/data/gameData";
 import type { Metric, Faction } from "@/data/gameData";
 import type { Promise as GamePromise } from "@/data/gameData";
 import { DECISIONS } from "@/data/decisions";
-import type { Decision } from "@/data/decisionType";
+import type { Decision } from "@/data/types/decision";
 import { messages as INITIAL_MESSAGES, type Message } from "@/data/messages";
 import { TIMED_TRIGGERS } from "@/data/timedMessages";
 import { TUTORIAL_TRIGGERS } from "@/data/tutorialMessages";

@@ -1,7 +1,12 @@
 import { Scene } from "phaser";
-import type { DistrictData } from "@/data/districtTypes";
+import type { DistrictData } from "@/data/types/district";
 import { GRID_COLS, GRID_ROWS, TILE_H, TILE_IDS, TILE_W } from "./constants";
-import { diamondPoints, tileKey, tileToWorld, worldToTile } from "./coordHelpers";
+import {
+  diamondPoints,
+  tileKey,
+  tileToWorld,
+  worldToTile,
+} from "./coordHelpers";
 import { HoverSystem } from "./HoverSystem";
 import { MouseSystem } from "./MouseSystem";
 import type { BuildingDef, DistrictSceneCallbacks, TileState } from "./types";
@@ -48,7 +53,9 @@ export class DistrictScene extends Scene {
 
   /** Place a building on the grid at runtime (mayor confirms placement). */
   placeBuilding(col: number, row: number, buildingId: string): void {
-    const def = Object.values(this.districtData.buildingDefs).find((d) => d.id === buildingId);
+    const def = Object.values(this.districtData.buildingDefs).find(
+      (d) => d.id === buildingId,
+    );
     if (!def) return;
 
     const [fw, fh] = def.footprint ?? [1, 1];
@@ -69,7 +76,7 @@ export class DistrictScene extends Scene {
   // -------------------------------------------------------------------------
 
   preload(): void {
-    this.generatePlaceholderTexture("ground_empty",    0x8fbc8f);
+    this.generatePlaceholderTexture("ground_empty", 0x8fbc8f);
     this.generatePlaceholderTexture("ground_placeable", 0xf5c842);
 
     for (const def of Object.values(this.districtData.buildingDefs)) {
@@ -80,7 +87,7 @@ export class DistrictScene extends Scene {
   }
 
   create(): void {
-    this.groundLayer    = this.add.graphics();
+    this.groundLayer = this.add.graphics();
     this.highlightLayer = this.add.graphics();
 
     this.hover = new HoverSystem(
@@ -99,7 +106,7 @@ export class DistrictScene extends Scene {
     this.drawInitialBuildings();
 
     this.input.on("pointermove", this.onPointerMove, this);
-    this.input.on("pointerdown", this.onPointerDown,  this);
+    this.input.on("pointerdown", this.onPointerDown, this);
 
     this.centerCamera();
   }
@@ -115,9 +122,15 @@ export class DistrictScene extends Scene {
         if (cell === "occ") continue; // filled by anchor tile's footprint loop
 
         if (cell === TILE_IDS.EMPTY) {
-          this.tileMap.set(tileKey(col, row), { type: "empty", placeable: false });
+          this.tileMap.set(tileKey(col, row), {
+            type: "empty",
+            placeable: false,
+          });
         } else if (cell === TILE_IDS.PLACEABLE) {
-          this.tileMap.set(tileKey(col, row), { type: "empty", placeable: true });
+          this.tileMap.set(tileKey(col, row), {
+            type: "empty",
+            placeable: true,
+          });
         } else if (cell > 0) {
           const def = this.districtData.buildingDefs[cell];
           if (!def) continue;
@@ -147,7 +160,8 @@ export class DistrictScene extends Scene {
         const state = this.tileMap.get(tileKey(col, row));
         const { x, y } = tileToWorld(col, row);
 
-        const fillColor = state?.type === "empty" && state.placeable ? 0xf5c842 : 0x8fbc8f;
+        const fillColor =
+          state?.type === "empty" && state.placeable ? 0xf5c842 : 0x8fbc8f;
         this.groundLayer.fillStyle(fillColor, 1);
         this.groundLayer.lineStyle(1, 0x5a7a5a, 0.6);
         this.groundLayer.fillPoints(diamondPoints(x, y), true);
@@ -161,7 +175,9 @@ export class DistrictScene extends Scene {
       for (let col = 0; col < GRID_COLS; col++) {
         const state = this.tileMap.get(tileKey(col, row));
         if (state?.type === "building" && state.anchor) {
-          const def = Object.values(this.districtData.buildingDefs).find((d) => d.id === state.buildingId);
+          const def = Object.values(this.districtData.buildingDefs).find(
+            (d) => d.id === state.buildingId,
+          );
           if (def) this.drawBuilding(col, row, def);
         }
       }
@@ -212,7 +228,11 @@ export class DistrictScene extends Scene {
   private onPointerMove(pointer: Phaser.Input.Pointer): void {
     const tile = worldToTile(pointer.worldX, pointer.worldY);
 
-    if (tile?.col === this.hoveredTile?.col && tile?.row === this.hoveredTile?.row) return;
+    if (
+      tile?.col === this.hoveredTile?.col &&
+      tile?.row === this.hoveredTile?.row
+    )
+      return;
 
     this.hover.clear();
     this.hoveredTile = tile;
