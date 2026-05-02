@@ -12,7 +12,13 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-export function Header({ onCityOverview }: { onCityOverview?: () => void }) {
+export function Header({
+  onCityOverview,
+  onParliament,
+}: {
+  onCityOverview?: () => void;
+  onParliament?: () => void;
+}) {
   const { metrics, basicData, turn, updateBasicData, resetGame } =
     useGameStore();
   const [showSettings, setShowSettings] = useState(false);
@@ -66,6 +72,14 @@ export function Header({ onCityOverview }: { onCityOverview?: () => void }) {
               className="cursor-pointer text-xs text-stone-300 hover:text-white border border-stone-600 hover:border-stone-400 rounded px-2 py-1 transition-colors"
             >
               🗺 Stadtübersicht
+            </button>
+          )}
+          {onParliament && (
+            <button
+              onClick={onParliament}
+              className="cursor-pointer text-xs text-stone-300 hover:text-white border border-stone-600 hover:border-stone-400 rounded px-2 py-1 transition-colors"
+            >
+              🏛 Stadtrat
             </button>
           )}
         </div>

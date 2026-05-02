@@ -4,6 +4,8 @@ import { Game, AUTO } from "phaser";
 import { CityScene } from "@/game/CityScene";
 import type { District } from "@/game/CityScene";
 import { DistrictScene } from "@/game/DistrictScene";
+import { ParliamentScene } from "@/game/ParliamentScene";
+import type { Delegate } from "@/data/types/delegate";
 import type { DistrictData } from "@/data/types/district";
 import { northDistrict } from "@/data/disctricts/north";
 import { SidebarProvider } from "@/components/ui/sidebar";
@@ -11,6 +13,7 @@ import { Header } from "@/components/Header";
 import { LeftPanel } from "@/components/LeftPanel";
 import { RightPanel } from "@/components/RightPanel";
 import { Footer } from "@/components/Footer";
+import { DelegateModal } from "@/components/DelegateModal";
 import { useGameStore } from "@/store/gameStore";
 import "./App.css";
 
@@ -41,6 +44,9 @@ function App() {
   );
   void selectedBuildingId; // will be used when GameDialog integration is wired up
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedDelegate, setSelectedDelegate] = useState<Delegate | null>(
+    null,
+  );
 
   useEffect(() => {
     const container = containerRef.current;
@@ -57,6 +63,11 @@ function App() {
       if (!game) {
         const cityScene = new CityScene();
         const districtScene = new DistrictScene();
+        const parliamentScene = new ParliamentScene();
+
+        parliamentScene.setSelectCallback((delegate) => {
+          setSelectedDelegate(delegate);
+        });
 
         districtScene.setCallbacks({
           onBuildingClick: (buildingId) => setSelectedBuildingId(buildingId),
@@ -84,7 +95,7 @@ function App() {
           height: h,
           backgroundColor: "#dfd9c4",
           parent: container,
-          scene: [cityScene, districtScene],
+          scene: [cityScene, districtScene, parliamentScene],
         });
         gameRef.current = game;
       } else {
@@ -107,7 +118,15 @@ function App() {
         onCityOverview={() => {
           if (!gameRef.current) return;
           gameRef.current.scene.stop("DistrictScene");
+          gameRef.current.scene.stop("ParliamentScene");
           gameRef.current.scene.start("CityScene");
+          setSelectedDistrict(null);
+        }}
+        onParliament={() => {
+          if (!gameRef.current) return;
+          gameRef.current.scene.stop("CityScene");
+          gameRef.current.scene.stop("DistrictScene");
+          gameRef.current.scene.start("ParliamentScene");
           setSelectedDistrict(null);
         }}
       />
@@ -140,6 +159,13 @@ function App() {
       </div>
 
       <Footer />
+
+      {/* Delegate modal – rendered outside the Phaser canvas so pointer-events work */}
+      <DelegateModal
+        open={selectedDelegate !== null}
+        delegate={selectedDelegate}
+        onClose={() => setSelectedDelegate(null)}
+      />
     </div>
   );
 }
