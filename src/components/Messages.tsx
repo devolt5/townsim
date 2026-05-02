@@ -10,7 +10,7 @@ function formatTime(date: Date | string): string {
 }
 
 const SENDER_COLORS: Record<string, string> = {
-  Tutor: "bg-amber-500",
+  Stadtberaterin: "bg-amber-500",
 };
 
 function senderInitial(name: string): string {

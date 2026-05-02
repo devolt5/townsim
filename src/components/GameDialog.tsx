@@ -40,15 +40,15 @@ export function GameDialog({ open, onClose, data }: GameDialogProps) {
     (d) => d.id <= data.id,
   );
 
-  // Scroll to the bottom (newest message) whenever the dialog opens or the data changes.
+  // Scroll to the top (newest message) whenever the dialog opens or the data changes.
   useEffect(() => {
     if (open) {
       // Use a small timeout so the DOM has been painted before scrolling.
-      const id = setTimeout(
-        () => scrollEndRef.current?.scrollIntoView({ behavior: "instant" }),
-        50,
-      );
-      return () => clearTimeout(id);
+      const scrollableDiv = scrollEndRef.current?.parentElement;
+      if (scrollableDiv) {
+        const id = setTimeout(() => (scrollableDiv.scrollTop = 0), 50);
+        return () => clearTimeout(id);
+      }
     }
   }, [open, data.id]);
 
@@ -101,9 +101,12 @@ export function GameDialog({ open, onClose, data }: GameDialogProps) {
         </div>
 
         {/* Scrollable message history */}
-        <div className="px-6 py-8 flex-1 overflow-y-auto flex flex-col gap-6">
-          {history.map((entry, index) => {
-            const isNewest = index === history.length - 1;
+        <div
+          className="px-6 py-8 flex-1 overflow-y-auto flex flex-col gap-6"
+          ref={scrollEndRef}
+        >
+          {[...history].reverse().map((entry, index) => {
+            const isNewest = index === 0;
             return (
               <div key={entry.id} className="flex flex-col gap-2">
                 {/* Topic separator chip */}
@@ -112,11 +115,11 @@ export function GameDialog({ open, onClose, data }: GameDialogProps) {
                 </span>
 
                 {/* Message bubble */}
-                <div className="flex items-end gap-2 max-w-[85%]">
+                <div className="flex items-start gap-2 max-w-[85%]">
                   <img
                     src={senderAvatar(data.sender)}
                     alt={data.sender}
-                    className="w-8 h-8 rounded-full object-cover shrink-0 mb-0.5"
+                    className="w-8 h-8 rounded-full object-cover shrink-0 mt-0.5"
                   />
                   <div
                     className={`rounded-2xl rounded-bl-sm px-4 py-3 shadow-sm ring-1 ring-stone-200 transition-colors ${
@@ -133,9 +136,6 @@ export function GameDialog({ open, onClose, data }: GameDialogProps) {
               </div>
             );
           })}
-
-          {/* Anchor element that we scroll into view */}
-          <div ref={scrollEndRef} />
         </div>
 
         {/* Footer / reply bar */}
