@@ -110,10 +110,10 @@ const DEBUG_ZONES = true;
 
 const FACTION_COLORS: Record<string, number> = {
   Terra: 0x4caf50,
-  Syndikat: 0xf44336,
-  Bürger: 0x2196f3,
-  "Union der Gilden": 0xff9800,
-  "Der Bund": 0x9c27b0,
+  Syndikat: 0x05599d,
+  Bürger: 0xeb7800,
+  "Union der Gilden": 0xca1819,
+  "Der Bund": 0x191919,
 };
 
 // ── Phaser pointer minimal type ───────────────────────────────────────────────

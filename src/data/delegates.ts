@@ -16,11 +16,12 @@ const AVATAR_POOL = [
 // ── Segment layout configuration (mirrors ParliamentScene ROWS) ─────────────
 // Each entry describes one concentric ring. segmentCount must match ROWS in ParliamentScene.ts.
 const ROWS: { segmentCount: number; row: number }[] = [
-  { row: 0, segmentCount: 8 },
-  { row: 1, segmentCount: 14 },
-  { row: 2, segmentCount: 20 },
+  { row: 0, segmentCount: 30 },
+  { row: 1, segmentCount: 30 },
+  { row: 2, segmentCount: 40 },
   { row: 3, segmentCount: 40 },
   { row: 4, segmentCount: 40 },
+  { row: 5, segmentCount: 40 },
 ];
 
 // ── Explicit seat assignments ─────────────────────────────────────────────────
@@ -38,6 +39,66 @@ const SEGMENT_ASSIGNMENTS: Record<string, DelegateFaction> = {
   r1_s6: "Syndikat",
   r2_s10: "Syndikat",
   r4_s13: "Syndikat",
+
+  // ── Der Bund ──────────────────────────────────────────────────────
+  r0_s1: "Der Bund",
+  r0_s0: "Der Bund",
+  r0_s29: "Der Bund",
+  r1_s2: "Der Bund",
+  r1_s0: "Der Bund",
+  r1_s29: "Der Bund",
+  r2_s3: "Der Bund",
+  r2_s2: "Der Bund",
+  r2_s0: "Der Bund",
+  r2_s39: "Der Bund",
+  r2_s38: "Der Bund",
+  r3_s2: "Der Bund",
+  r3_s1: "Der Bund",
+  r3_s0: "Der Bund",
+  r3_s39: "Der Bund",
+  r3_s38: "Der Bund",
+  r5_s0: "Der Bund",
+  r5_s39: "Der Bund",
+
+  // ── Union der Gilden ──────────────────────────────────────────────
+  r0_s21: "Union der Gilden",
+  r0_s22: "Union der Gilden",
+  r0_s23: "Union der Gilden",
+  r1_s21: "Union der Gilden",
+  r1_s22: "Union der Gilden",
+  r1_s23: "Union der Gilden",
+  r2_s28: "Union der Gilden",
+  r2_s29: "Union der Gilden",
+  r2_s30: "Union der Gilden",
+  r2_s31: "Union der Gilden",
+  r2_s33: "Union der Gilden",
+
+  // ── Terra ─────────────────────────────────────────────────────────
+  r0_s15: "Terra",
+  r0_s16: "Terra",
+  r1_s15: "Terra",
+  r1_s16: "Terra",
+  r2_s19: "Terra",
+  r2_s20: "Terra",
+  r2_s21: "Terra",
+  r3_s19: "Terra",
+  r3_s20: "Terra",
+  r3_s21: "Terra",
+  r4_s19: "Terra",
+  r4_s20: "Terra",
+  r4_s21: "Terra",
+
+  // ── Bürger ────────────────────────────────────────────────────────
+  r0_s17: "Bürger",
+  r1_s17: "Bürger",
+  r2_s22: "Bürger",
+  r2_s23: "Bürger",
+  r2_s24: "Bürger",
+  r3_s22: "Bürger",
+  r3_s23: "Bürger",
+  r3_s24: "Bürger",
+  r4_s22: "Bürger",
+  r4_s23: "Bürger",
 };
 
 const FIRST_NAMES = [
