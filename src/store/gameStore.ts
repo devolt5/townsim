@@ -53,7 +53,8 @@ interface GameState {
   /** 0–100 (GDD §6). Starts at 50. */
   politicalCapital: number;
   openPromises: GamePromise[];
-  pendingDecision: Decision | null;
+  /** The three decisions offered to the player this quarter. Empty once one has been resolved. */
+  pendingDecisions: Decision[];
   usedDecisionIds: string[];
   decisionHistory: CompletedDecision[];
   messages: Message[];
@@ -91,17 +92,17 @@ interface GameState {
   /** Remove a promise (e.g. after it was broken or resolved). */
   removePromise: (id: string) => void;
 
-  /** Replace the current pending decision (or clear it). */
-  setPendingDecision: (decision: Decision | null) => void;
+  /** Replace the current pending decisions array. */
+  setPendingDecisions: (decisions: Decision[]) => void;
 
-  /** Draw a random decision from DECISIONS that hasn't been used yet this cycle. */
-  drawDecision: () => void;
+  /** Draw 3 random decisions from DECISIONS that haven't been used yet this cycle. */
+  drawDecisions: () => void;
 
   /**
-   * Record that the pending decision was resolved with the given option label,
-   * push it to decisionHistory, and clear pendingDecision.
+   * Record that one of the pending decisions was resolved with the given option label.
+   * The other two decisions are returned to the pool (removed from usedDecisionIds).
    */
-  resolveDecision: (chosenOption: string) => void;
+  resolveDecision: (decisionId: string, chosenOption: string) => void;
 
   /** Dynamically add a new message to the inbox. */
   addMessage: (msg: Omit<Message, "id" | "timestamp" | "read">) => void;
@@ -135,22 +136,30 @@ const INITIAL_TURN: Turn = { year: 1, quarter: 1, phase: 1 };
 
 const INITIAL_POLITICAL_CAPITAL = 50;
 
-function pickRandomDecision(usedIds: string[]): {
-  decision: Decision;
-  newUsedIds: string[];
-} {
+function pickRandomDecisions(
+  usedIds: string[],
+  count: number = 3,
+): { decisions: Decision[]; newUsedIds: string[] } {
   let pool = DECISIONS.filter((d) => !usedIds.includes(d.id));
-  const wasReset = pool.length === 0;
-  if (wasReset) pool = [...DECISIONS];
-  const picked = pool[Math.floor(Math.random() * pool.length)];
-  return {
-    decision: picked,
-    newUsedIds: wasReset ? [picked.id] : [...usedIds, picked.id],
-  };
+  // If the pool is exhausted, reset it
+  if (pool.length === 0) {
+    pool = [...DECISIONS];
+    usedIds = [];
+  }
+  const picked: Decision[] = [];
+  const newUsedIds = [...usedIds];
+  const take = Math.min(count, pool.length);
+  for (let i = 0; i < take; i++) {
+    const idx = Math.floor(Math.random() * pool.length);
+    picked.push(pool[idx]);
+    newUsedIds.push(pool[idx].id);
+    pool = pool.filter((_, j) => j !== idx);
+  }
+  return { decisions: picked, newUsedIds };
 }
 
 function buildInitialState() {
-  const { decision, newUsedIds } = pickRandomDecision([]);
+  const { decisions, newUsedIds } = pickRandomDecisions([]);
   return {
     basicData: INITIAL_BASIC_DATA,
     turn: INITIAL_TURN,
@@ -158,7 +167,7 @@ function buildInitialState() {
     factions: structuredClone(FACTIONS),
     politicalCapital: INITIAL_POLITICAL_CAPITAL,
     openPromises: structuredClone(OPEN_PROMISES),
-    pendingDecision: decision,
+    pendingDecisions: decisions,
     usedDecisionIds: newUsedIds,
     decisionHistory: [] as CompletedDecision[],
     messages: structuredClone(INITIAL_MESSAGES),
@@ -261,37 +270,55 @@ export const useGameStore = create<GameState>()(
             { type: "removePromise", id },
           ),
 
-        setPendingDecision: (decision) =>
-          set({ pendingDecision: decision }, undefined, "setPendingDecision"),
-
-        drawDecision: () =>
+        setPendingDecisions: (decisions) =>
           set(
-            (s) => {
-              const { decision, newUsedIds } = pickRandomDecision(
-                s.usedDecisionIds,
-              );
-              return { pendingDecision: decision, usedDecisionIds: newUsedIds };
-            },
+            { pendingDecisions: decisions },
             undefined,
-            "drawDecision",
+            "setPendingDecisions",
           ),
 
-        resolveDecision: (chosenOption) =>
+        drawDecisions: () =>
           set(
             (s) => {
-              if (!s.pendingDecision) return {};
-              const entry: CompletedDecision = {
-                turn: { year: s.turn.year, quarter: s.turn.quarter },
-                title: s.pendingDecision.title,
-                chosenOption,
-              };
+              const { decisions, newUsedIds } = pickRandomDecisions(
+                s.usedDecisionIds,
+              );
               return {
-                pendingDecision: null,
-                decisionHistory: [...s.decisionHistory, entry],
+                pendingDecisions: decisions,
+                usedDecisionIds: newUsedIds,
               };
             },
             undefined,
-            { type: "resolveDecision", chosenOption },
+            "drawDecisions",
+          ),
+
+        resolveDecision: (decisionId, chosenOption) =>
+          set(
+            (s) => {
+              const resolved = s.pendingDecisions.find(
+                (d) => d.id === decisionId,
+              );
+              if (!resolved) return {};
+              const entry: CompletedDecision = {
+                turn: { year: s.turn.year, quarter: s.turn.quarter },
+                title: resolved.title,
+                chosenOption,
+              };
+              // Return the other two decisions to the pool
+              const otherIds = s.pendingDecisions
+                .filter((d) => d.id !== decisionId)
+                .map((d) => d.id);
+              const newUsedIds = s.usedDecisionIds.filter(
+                (id) => !otherIds.includes(id),
+              );
+              return {
+                pendingDecisions: [],
+                decisionHistory: [...s.decisionHistory, entry],
+                usedDecisionIds: newUsedIds,
+              };
+            },
+            undefined,
+            { type: "resolveDecision", decisionId, chosenOption },
           ),
 
         addMessage: (msg) =>
@@ -358,12 +385,12 @@ export const useGameStore = create<GameState>()(
                   turn: { year, quarter, phase: (phase + 1) as 1 | 2 | 3 },
                 };
               }
-              // Quarter boundary — draw a new decision
-              const { decision, newUsedIds } = pickRandomDecision(
+              // Quarter boundary — draw 3 new decisions
+              const { decisions, newUsedIds } = pickRandomDecisions(
                 s.usedDecisionIds,
               );
               const decisionPatch = {
-                pendingDecision: decision,
+                pendingDecisions: decisions,
                 usedDecisionIds: newUsedIds,
               };
 
@@ -411,7 +438,7 @@ export const useGameStore = create<GameState>()(
       }),
       {
         name: "townsim-save",
-        version: 2,
+        version: 3,
       },
     ),
     {

@@ -23,6 +23,5 @@ export interface Decision {
 /** Fixed options available for every decision */
 export const DECISION_OPTIONS: DecisionOption[] = [
   { label: "✓ Zustimmen", variant: "accept" },
-  { label: "✗ Ablehnen", variant: "reject" },
   { label: "⚖ Verhandeln", variant: "negotiate" },
 ];

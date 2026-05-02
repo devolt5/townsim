@@ -5,11 +5,11 @@ import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
 
 export function Footer() {
-  const { factions, advanceTurn, pendingDecision } = useGameStore();
+  const { factions, advanceTurn, pendingDecisions } = useGameStore();
   const TOTAL_SEATS = factions.reduce((sum, f) => sum + f.seats, 0);
   const MAJORITY = Math.ceil(TOTAL_SEATS / 2) + 1;
 
-  const canAdvance = !pendingDecision;
+  const canAdvance = pendingDecisions.length === 0;
 
   return (
     <footer className="bg-stone-800 px-4 py-2 flex items-center gap-4 border-t border-stone-700 shrink-0 min-h-13">
