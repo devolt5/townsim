@@ -7,17 +7,51 @@
         }
     },
     "buildings": {
+        "house1": {
+            "footprint": [
+                3,
+                3
+            ],
+            "assetPath": "src/images/buildings/3x3/house1.png"
+        },
+        "house2": {
+            "footprint": [
+                3,
+                3
+            ],
+            "assetPath": "src/images/buildings/3x3/house2.png"
+        },
         "building1": {
             "footprint": [
                 4,
                 4
             ],
             "assetPath": "src/images/buildings/4x4/building1.png"
+        },
+        "grass4": {
+            "footprint": [
+                4,
+                4
+            ],
+            "assetPath": "src/images/buildings/4x4/grass4.png"
+        },
+        "townhall": {
+            "footprint": [
+                5,
+                5
+            ],
+            "assetPath": "src/images/buildings/5x5/townhall.png"
         }
     },
     "grounds": {
         "street": {
             "assetPath": "src/images/buildings/1x1/street1.png"
+        },
+        "trafficlight": {
+            "assetPath": "src/images/buildings/1x1/trafficlight.png"
+        },
+        "grass1": {
+            "assetPath": "src/images/buildings/1x1/grass1.png"
         }
     }
 }
