@@ -1,0 +1,20 @@
+{
+    "districts": {
+        "north": {
+            "id": "north",
+            "name": "Nördlicher Distrikt",
+            "citySceneName": "Wohngebiet Nord"
+        }
+    },
+    "buildings": {
+        "building1": {
+            "footprint": [4, 4],
+            "assetPath": "src/images/buildings/4x4/building1.png"
+        }
+    },
+    "grounds": {
+        "street": {
+            "assetPath": "src/images/buildings/1x1/street1.png"
+        }
+    }
+}
