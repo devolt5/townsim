@@ -74,9 +74,8 @@ function App() {
         });
 
         districtScene.setCallbacks({
-          onBuildingClick: (buildingId) => setSelectedBuildingId(buildingId),
-          onPlaceBuilding: (col, row) =>
-            console.log("Place building at", col, row),
+          onBuildingClick: (instanceId, defKey) =>
+            setSelectedBuildingId(`${instanceId}:${defKey}`),
         });
 
         cityScene.setSelectCallback((district) => {

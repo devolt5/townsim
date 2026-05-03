@@ -60,6 +60,13 @@ interface GameState {
   messages: Message[];
   /** Keys of triggers that have already been delivered — prevents duplicates after reloads. */
   deliveredTriggerKeys: string[];
+  /**
+   * Runtime building overrides for districts.
+   * Format: { [districtId]: { [instanceId]: newDefKey } }
+   * e.g. { "north": { "building1_D3": "swimming_pool" } }
+   * Applied on top of the static map when a DistrictScene is loaded.
+   */
+  districtOverrides: Record<string, Record<string, string>>;
   /** Counts all significant player interactions for tutorial triggers. */
   globalClickCount: number;
 
@@ -106,6 +113,16 @@ interface GameState {
 
   /** Dynamically add a new message to the inbox. */
   addMessage: (msg: Omit<Message, "id" | "timestamp" | "read">) => void;
+
+  /**
+   * Replace a building instance in a district.
+   * Persisted in districtOverrides so the change survives reloads.
+   */
+  replaceDistrictBuilding: (
+    districtId: string,
+    instanceId: string,
+    defKey: string,
+  ) => void;
 
   /** Increment the global interaction counter and fire any matching tutorial triggers. */
   incrementGlobalClicks: () => void;
@@ -173,6 +190,7 @@ function buildInitialState() {
     messages: structuredClone(INITIAL_MESSAGES),
     deliveredTriggerKeys: [],
     globalClickCount: 0,
+    districtOverrides: {} as Record<string, Record<string, string>>,
   };
 }
 
@@ -333,6 +351,21 @@ export const useGameStore = create<GameState>()(
             { type: "addMessage", sender: msg.sender },
           ),
 
+        replaceDistrictBuilding: (districtId, instanceId, defKey) =>
+          set(
+            (s) => ({
+              districtOverrides: {
+                ...s.districtOverrides,
+                [districtId]: {
+                  ...s.districtOverrides[districtId],
+                  [instanceId]: defKey,
+                },
+              },
+            }),
+            undefined,
+            { type: "replaceDistrictBuilding", districtId, instanceId, defKey },
+          ),
+
         incrementGlobalClicks: () =>
           set(
             (s) => {
@@ -438,7 +471,7 @@ export const useGameStore = create<GameState>()(
       }),
       {
         name: "townsim-save",
-        version: 3,
+        version: 4,
       },
     ),
     {

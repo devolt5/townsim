@@ -10,8 +10,7 @@ export const GRID_COLS = 48;
 /** Total rows in the grid. */
 export const GRID_ROWS = 48;
 
-/** Numeric tile IDs used in CITY_MAP. */
+/** Numeric tile IDs used in the map matrix. */
 export const TILE_IDS = {
   EMPTY: 0,
-  PLACEABLE: -1,
 } as const;

@@ -8,7 +8,10 @@
     },
     "buildings": {
         "building1": {
-            "footprint": [4, 4],
+            "footprint": [
+                4,
+                4
+            ],
             "assetPath": "src/images/buildings/4x4/building1.png"
         }
     },

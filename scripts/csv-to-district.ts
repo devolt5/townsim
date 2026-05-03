@@ -237,7 +237,13 @@ function buildMaps(
     }
   }
 
-  return { buildingMap, groundMap, instances, usedBuildingKeys, usedGroundKeys };
+  return {
+    buildingMap,
+    groundMap,
+    instances,
+    usedBuildingKeys,
+    usedGroundKeys,
+  };
 }
 
 // ---------------------------------------------------------------------------
@@ -342,17 +348,34 @@ console.log(`  Config:  ${sharedConfigPath}`);
 console.log(`  CSV:     ${csvPath}`);
 console.log(`  Output:  ${outPath}`);
 
-const shared: SharedConfig = JSON.parse(readFileSync(sharedConfigPath, "utf-8"));
+const shared: SharedConfig = JSON.parse(
+  readFileSync(sharedConfigPath, "utf-8"),
+);
 const meta = shared.districts[districtName];
 if (!meta) {
-  console.error(`District "${districtName}" not found in districts.config.json.`);
+  console.error(
+    `District "${districtName}" not found in districts.config.json.`,
+  );
   process.exit(1);
 }
-const config: DistrictConfig = { ...meta, buildings: shared.buildings, grounds: shared.grounds };
+const config: DistrictConfig = {
+  ...meta,
+  buildings: shared.buildings,
+  grounds: shared.grounds,
+};
 
 const parsed = parseCSV(csvPath);
-const { buildingMap, groundMap, usedBuildingKeys, usedGroundKeys } = buildMaps(parsed, config);
-const tsSource = generateTS(config, buildingMap, groundMap, usedBuildingKeys, usedGroundKeys);
+const { buildingMap, groundMap, usedBuildingKeys, usedGroundKeys } = buildMaps(
+  parsed,
+  config,
+);
+const tsSource = generateTS(
+  config,
+  buildingMap,
+  groundMap,
+  usedBuildingKeys,
+  usedGroundKeys,
+);
 
 writeFileSync(outPath, tsSource, "utf-8");
 console.log("Done.");

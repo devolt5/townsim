@@ -2,26 +2,39 @@
 // Tile state types
 // ---------------------------------------------------------------------------
 
-export type MapCell = number | "occ";
+/**
+ * A cell in the 48×48 map matrix.
+ *   0     = empty ground
+ * "occ"   = occupied by an adjacent building's footprint
+ *  string = building def key (anchor tile), e.g. "building1"
+ */
+export type MapCell = 0 | "occ" | string;
 
-/** A tile that is empty and may or may not be buildable by the mayor. */
+/** A tile that has no building on it. */
 export interface EmptyTile {
   type: "empty";
-  placeable: boolean;
 }
 
-/** A tile that is occupied by a building (the anchor sprite is drawn here). */
+/** A tile that is the anchor of a building sprite. */
 export interface BuildingTile {
   type: "building";
-  buildingId: string;
-  /** Only the anchor tile owns the sprite; other tiles in the footprint reference the anchor. */
-  anchor: boolean;
+  /** Unique instance identifier — Excel address of the anchor tile, e.g. "D3". */
+  instanceId: string;
+  /** Key into DistrictData.buildingDefs. */
+  defKey: string;
+  /** Mirror the sprite horizontally (left ↔ right). */
+  flipX: boolean;
+  /** Mirror the sprite vertically (top ↔ bottom). */
+  flipY: boolean;
+  anchor: true;
 }
 
 /** A tile that is blocked because a multi-tile building occupies it. */
 export interface OccupiedTile {
   type: "occupied";
-  buildingId: string;
+  /** Instance ID of the anchor building. */
+  instanceId: string;
+  defKey: string;
 }
 
 export type TileState = EmptyTile | BuildingTile | OccupiedTile;
@@ -35,9 +48,17 @@ export interface BuildingDef {
   textureKey: string;
   /** Footprint in tiles [cols, rows]. Defaults to [1, 1]. */
   footprint?: [number, number];
-  /** Whether the mayor can place this building. */
-  placeable: boolean;
-  /** Vite asset URL — set in mapData.ts, consumed by preload(). */
+  /** Vite asset URL — consumed by preload(). */
+  assetUrl?: string;
+}
+
+// ---------------------------------------------------------------------------
+// Ground tile definition (streets, water, etc.)
+// ---------------------------------------------------------------------------
+
+export interface GroundTileDef {
+  textureKey: string;
+  /** Vite asset URL — consumed by preload(). */
   assetUrl?: string;
 }
 
@@ -46,7 +67,6 @@ export interface BuildingDef {
 // ---------------------------------------------------------------------------
 
 export interface DistrictSceneCallbacks {
-  onBuildingClick?: (buildingId: string) => void;
-  onPlaceBuilding?: (col: number, row: number) => void;
+  onBuildingClick?: (instanceId: string, defKey: string) => void;
   onTileHover?: (col: number, row: number, state: TileState) => void;
 }
