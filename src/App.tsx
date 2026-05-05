@@ -14,6 +14,7 @@ import { LeftPanel } from "@/components/LeftPanel";
 import { RightPanel } from "@/components/RightPanel";
 import { Footer } from "@/components/Footer";
 import { DelegateModal } from "@/components/DelegateModal";
+import { BuildingModal } from "@/components/BuildingModal";
 import { useGameStore } from "@/store/gameStore";
 import "./App.css";
 
@@ -39,10 +40,10 @@ function App() {
     null,
   );
   const [phoneOpen, setPhoneOpen] = useState(window.innerWidth >= 768);
-  const [selectedBuildingId, setSelectedBuildingId] = useState<string | null>(
-    null,
-  );
-  void selectedBuildingId; // will be used when GameDialog integration is wired up
+  const [selectedBuilding, setSelectedBuilding] = useState<{
+    instanceId: string;
+    defKey: string;
+  } | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedDelegate, setSelectedDelegate] = useState<Delegate | null>(
     null,
@@ -75,7 +76,7 @@ function App() {
 
         districtScene.setCallbacks({
           onBuildingClick: (instanceId, defKey) =>
-            setSelectedBuildingId(`${instanceId}:${defKey}`),
+            setSelectedBuilding({ instanceId, defKey }),
         });
 
         cityScene.setSelectCallback((district) => {
@@ -177,6 +178,13 @@ function App() {
         open={selectedDelegate !== null}
         delegate={selectedDelegate}
         onClose={() => setSelectedDelegate(null)}
+      />
+
+      {/* Building modal */}
+      <BuildingModal
+        open={selectedBuilding !== null}
+        defKey={selectedBuilding?.defKey ?? null}
+        onClose={() => setSelectedBuilding(null)}
       />
     </div>
   );
