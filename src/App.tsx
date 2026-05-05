@@ -13,8 +13,6 @@ import { Header } from "@/components/Header";
 import { LeftPanel } from "@/components/LeftPanel";
 import { RightPanel } from "@/components/RightPanel";
 import { Footer } from "@/components/Footer";
-import { DelegateModal } from "@/components/DelegateModal";
-import { BuildingModal } from "@/components/BuildingModal";
 import { useGameStore } from "@/store/gameStore";
 import "./App.css";
 
@@ -81,6 +79,7 @@ function App() {
 
         cityScene.setSelectCallback((district) => {
           setSelectedDistrict(district);
+          setSelectedBuilding(null); // clear building when entering new district
           if (district) {
             useGameStore.getState().incrementGlobalClicks();
           }
@@ -125,6 +124,7 @@ function App() {
           gameRef.current.scene.stop("ParliamentScene");
           gameRef.current.scene.start("CityScene");
           setSelectedDistrict(null);
+          setSelectedBuilding(null);
           setActiveScene("city");
           setFactionOverlay(false);
         }}
@@ -134,6 +134,7 @@ function App() {
           gameRef.current.scene.stop("DistrictScene");
           gameRef.current.scene.start("ParliamentScene");
           setSelectedDistrict(null);
+          setSelectedBuilding(null);
           setActiveScene("parliament");
           setFactionOverlay(false);
         }}
@@ -144,6 +145,8 @@ function App() {
         {/* Left phone panel */}
         <LeftPanel
           selectedDistrict={selectedDistrict}
+          selectedBuilding={selectedBuilding}
+          selectedDelegate={selectedDelegate}
           open={phoneOpen}
           onToggle={() => setPhoneOpen((o) => !o)}
           onDialogOpenChange={setDialogOpen}
@@ -171,20 +174,6 @@ function App() {
         factionOverlay={factionOverlay}
         setFactionOverlay={setFactionOverlay}
         gameRef={gameRef}
-      />
-
-      {/* Delegate modal – rendered outside the Phaser canvas so pointer-events work */}
-      <DelegateModal
-        open={selectedDelegate !== null}
-        delegate={selectedDelegate}
-        onClose={() => setSelectedDelegate(null)}
-      />
-
-      {/* Building modal */}
-      <BuildingModal
-        open={selectedBuilding !== null}
-        defKey={selectedBuilding?.defKey ?? null}
-        onClose={() => setSelectedBuilding(null)}
       />
     </div>
   );

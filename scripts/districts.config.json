@@ -84,6 +84,9 @@
         },
         "tree2": {
             "assetPath": "src/images/buildings/1x1/tree2.png"
+        },
+        "bus_stop": {
+            "assetPath": "src/images/buildings/1x1/bus_stop.png"
         }
     }
 }

@@ -12,6 +12,7 @@ import swimming_bathUrl from "@/images/buildings/3x3/swimming_bath.png";
 import streetUrl from "@/images/buildings/1x1/street1.png";
 import trafficlightUrl from "@/images/buildings/1x1/trafficlight.png";
 import grass1Url from "@/images/buildings/1x1/grass1.png";
+import bus_stopUrl from "@/images/buildings/1x1/bus_stop.png";
 import bikeway1Url from "@/images/buildings/1x1/bikeway1.png";
 import sideway1Url from "@/images/buildings/1x1/sideway1.png";
 import tree1Url from "@/images/buildings/1x1/tree1.png";
@@ -36,6 +37,7 @@ export const northDistrict: DistrictData = {
   street: { textureKey: "street", assetUrl: streetUrl },
   trafficlight: { textureKey: "trafficlight", assetUrl: trafficlightUrl },
   grass1: { textureKey: "grass1", assetUrl: grass1Url },
+  bus_stop: { textureKey: "bus_stop", assetUrl: bus_stopUrl },
   bikeway1: { textureKey: "bikeway1", assetUrl: bikeway1Url },
   sideway1: { textureKey: "sideway1", assetUrl: sideway1Url },
   tree1: { textureKey: "tree1", assetUrl: tree1Url },
@@ -61,10 +63,10 @@ export const northDistrict: DistrictData = {
   [0, 0, 0, 0, "occ", "occ", "occ", "occ", 0, "occ", "occ", "occ", "occ", 0, "occ", "occ", "occ", "occ", "occ", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   [0, 0, 0, 0, "occ", "occ", "occ", "occ", 0, "occ", "occ", "occ", "occ", 0, "occ", "occ", "occ", "occ", "occ", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   [0, 0, 0, 0, 0, 0, 0, 0, 0, "occ", "occ", "occ", "occ", 0, "occ", "occ", "occ", "occ", "occ", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, "building1_E19", "occ", "occ", "occ", 0, 0, 0, 0, 0, 0, "occ", "occ", "occ", "occ", "occ", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, "occ", "occ", "occ", "occ", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, "occ", "occ", "occ", "occ", 0, "building1_J21", "occ", "occ", "occ", 0, "grass4_O21", "occ", "occ", "occ", "grass4_S21", "occ", "occ", "occ", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, "occ", "occ", "occ", "occ", 0, "occ", "occ", "occ", "occ", 0, "occ", "occ", "occ", "occ", "occ", "occ", "occ", "occ", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "occ", "occ", "occ", "occ", "occ", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, "building1_J21", "occ", "occ", "occ", 0, "grass4_O21", "occ", "occ", "occ", "grass4_S21", "occ", "occ", "occ", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, "occ", "occ", "occ", "occ", 0, "occ", "occ", "occ", "occ", "occ", "occ", "occ", "occ", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   [0, 0, 0, 0, 0, 0, 0, 0, 0, "occ", "occ", "occ", "occ", 0, "occ", "occ", "occ", "occ", "occ", "occ", "occ", "occ", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   [0, 0, 0, 0, 0, 0, 0, 0, 0, "occ", "occ", "occ", "occ", 0, "occ", "occ", "occ", "occ", "occ", "occ", "occ", "occ", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "grass4_O25", "occ", "occ", "occ", "grass4_S25", "occ", "occ", "occ", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -118,7 +120,7 @@ export const northDistrict: DistrictData = {
   [null, null, null, null, null, null, null, null, "street", null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
   [null, null, null, null, null, null, null, null, "street", null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
   [null, null, null, null, null, null, null, null, "street", null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null, "street", null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, "bus_stop", "street", null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
   [null, null, null, null, null, null, null, null, "street", null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
   [null, null, null, null, null, null, null, null, "street", null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
   [null, null, null, null, null, "bikeway1", "sideway1", null, "street", null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],

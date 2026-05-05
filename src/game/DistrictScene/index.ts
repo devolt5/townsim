@@ -281,7 +281,7 @@ export class DistrictScene extends Scene {
     sprite.setDepth(anchorCol + anchorRow);
     sprite.setFlipX(flipX);
     sprite.setFlipY(flipY);
-    sprite.setInteractive();
+    sprite.setInteractive({ cursor: "pointer" });
 
     sprite.on("pointerdown", () => {
       if (this.mouse.isDragging) return;

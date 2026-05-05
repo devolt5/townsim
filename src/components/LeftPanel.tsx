@@ -1,18 +1,23 @@
 import { PanelLeftIcon } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { DistrictInfo } from "@/components/DistrictInfo";
+import { BuildingInfo } from "@/components/BuildingInfo";
+import { DelegateInfo } from "@/components/DelegateInfo";
 import { Messages } from "@/components/Messages";
 import { GameDialog } from "@/components/GameDialog";
 import { dialogsById } from "@/data/dialogs";
 import type { DialogData } from "@/data/dialogs";
 import type { District } from "@/game/CityScene";
+import type { Delegate } from "@/data/types/delegate";
 import { useGameStore } from "@/store/gameStore";
 import phonePng from "@/images/phone.png";
 
 interface LeftPanelProps {
   selectedDistrict: District | null;
+  selectedBuilding: { instanceId: string; defKey: string } | null;
+  selectedDelegate: Delegate | null;
   open: boolean;
   onToggle: () => void;
   onDialogOpenChange?: (open: boolean) => void;
@@ -23,6 +28,8 @@ type PhoneApp = "nachrichten" | "stadtbild" | "bilanz";
 
 export function LeftPanel({
   selectedDistrict,
+  selectedBuilding,
+  selectedDelegate,
   open,
   onToggle,
   onDialogOpenChange,
@@ -30,6 +37,12 @@ export function LeftPanel({
   const [activeApp, setActiveApp] = useState<PhoneApp>("nachrichten");
   const [openDialog, setOpenDialog] = useState<DialogData | null>(null);
   const { messages, markMessageRead, incrementGlobalClicks } = useGameStore();
+
+  // Switch to stadtbild tab when a district, building or delegate is selected
+  useEffect(() => {
+    if (selectedDistrict || selectedBuilding || selectedDelegate)
+      setActiveApp("stadtbild");
+  }, [selectedDistrict, selectedBuilding, selectedDelegate]);
 
   function handleMessageClick(dialogId: number, messageId: number) {
     markMessageRead(messageId);
@@ -111,7 +124,7 @@ export function LeftPanel({
                       value="stadtbild"
                       className="text-[10px] px-2 cursor-pointer"
                     >
-                      Stadt
+                      Infos
                     </TabsTrigger>
                     <TabsTrigger
                       value="bilanz"
@@ -139,7 +152,16 @@ export function LeftPanel({
                     value="stadtbild"
                     className="flex-1 overflow-y-auto p-2 mt-0"
                   >
-                    <DistrictInfo district={selectedDistrict} />
+                    {selectedDelegate ? (
+                      <DelegateInfo delegate={selectedDelegate} />
+                    ) : selectedBuilding ? (
+                      <BuildingInfo
+                        defKey={selectedBuilding.defKey}
+                        instanceId={selectedBuilding.instanceId}
+                      />
+                    ) : (
+                      <DistrictInfo district={selectedDistrict} />
+                    )}
                   </TabsContent>
 
                   <TabsContent
