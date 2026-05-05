@@ -21,6 +21,13 @@
             ],
             "assetPath": "src/images/buildings/3x3/house2.png"
         },
+        "swimming_bath": {
+            "footprint": [
+                3,
+                3
+            ],
+            "assetPath": "src/images/buildings/3x3/swimming_bath.png"
+        },
         "building1": {
             "footprint": [
                 4,
@@ -41,6 +48,13 @@
                 5
             ],
             "assetPath": "src/images/buildings/5x5/townhall.png"
+        },
+        "park1": {
+            "footprint": [
+                5,
+                5
+            ],
+            "assetPath": "src/images/buildings/5x5/park1.png"
         }
     },
     "grounds": {
@@ -52,6 +66,24 @@
         },
         "grass1": {
             "assetPath": "src/images/buildings/1x1/grass1.png"
+        },
+        "bikeway_sign": {
+            "assetPath": "src/images/buildings/1x1/bikeway_sign.png"
+        },
+        "bikeway1": {
+            "assetPath": "src/images/buildings/1x1/bikeway1.png"
+        },
+        "crossway": {
+            "assetPath": "src/images/buildings/1x1/crossway.png"
+        },
+        "sideway1": {
+            "assetPath": "src/images/buildings/1x1/sideway1.png"
+        },
+        "tree1": {
+            "assetPath": "src/images/buildings/1x1/tree1.png"
+        },
+        "tree2": {
+            "assetPath": "src/images/buildings/1x1/tree2.png"
         }
     }
 }

@@ -147,6 +147,7 @@ export class DistrictScene extends Scene {
 
   create(): void {
     this.groundLayer = this.add.graphics();
+    this.groundLayer.setDepth(-1); // below all sprites
     this.highlightLayer = this.add.graphics();
 
     this.hover = new HoverSystem(
@@ -226,7 +227,8 @@ export class DistrictScene extends Scene {
           if (groundDef && this.textures.exists(groundDef.textureKey)) {
             const sprite = this.add.sprite(x, y, groundDef.textureKey);
             sprite.setOrigin(0.5, 0.5);
-            sprite.setDepth(-1); // below buildings
+            // Isometric depth: same formula as buildings but offset below them
+            sprite.setDepth(col + row - 0.5);
             sprite.setFlipX(flipX);
             sprite.setFlipY(flipY);
             this.groundSprites.set(tileKey(col, row), sprite);
