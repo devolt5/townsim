@@ -47,6 +47,7 @@ function chosenOptionBadge(chosenOption: string) {
 }
 
 export function PendingDecision() {
+  const turn = useGameStore((s) => s.turn);
   const decisions = useGameStore((s) => s.pendingDecisions);
   const factions = useGameStore((s) => s.factions);
   const resolveDecision = useGameStore((s) => s.resolveDecision);
@@ -61,36 +62,8 @@ export function PendingDecision() {
 
   return (
     <div className="space-y-3">
-      {/* History accordion */}
-      {decisionHistory.length > 0 && (
-        <Accordion defaultValue={hasPending ? [] : ["history"]}>
-          <AccordionItem value="history" className="border-stone-200">
-            <AccordionTrigger className="cursor-pointer text-xs font-semibold text-stone-500 uppercase tracking-wide py-2 hover:no-underline">
-              Bearbeitete Anträge ({decisionHistory.length})
-            </AccordionTrigger>
-            <AccordionContent className="pb-1">
-              <ul className="space-y-1.5 pt-1">
-                {decisionHistory.map((entry, i) => (
-                  <li
-                    key={i}
-                    className="flex items-center justify-between gap-2 text-xs text-stone-600"
-                  >
-                    <span className="truncate">{entry.title}</span>
-                    {chosenOptionBadge(entry.chosenOption)}
-                  </li>
-                ))}
-              </ul>
-            </AccordionContent>
-          </AccordionItem>
-        </Accordion>
-      )}
-
       {/* Pending decisions */}
-      {!hasPending ? (
-        <p className="text-xs text-stone-400 italic text-center pt-8">
-          Keine offenen Anträge.
-        </p>
-      ) : (
+      {hasPending ? (
         <>
           <p className="text-md font-bold text-stone-800 text-center">
             Wähle einen Antrag aus
@@ -210,6 +183,32 @@ export function PendingDecision() {
             </CardContent>
           </Card>
         </>
+      ) : (
+        turn.phase === 1 && (
+          <p className="text-xs text-stone-400 italic text-center pt-8">
+            Keine offenen Anträge.
+          </p>
+        )
+      )}
+
+      {/* History list - only visible if phase is not 1 */}
+      {decisionHistory.length > 0 && turn.phase !== 1 && (
+        <div className="space-y-2 pt-2">
+          <p className="text-xs font-semibold text-stone-500 uppercase tracking-wide">
+            Bearbeitete Anträge ({decisionHistory.length})
+          </p>
+          <ul className="space-y-1.5">
+            {decisionHistory.map((entry, i) => (
+              <li
+                key={i}
+                className="flex items-center justify-between gap-2 text-xs text-stone-600"
+              >
+                <span className="truncate">{entry.title}</span>
+                {chosenOptionBadge(entry.chosenOption)}
+              </li>
+            ))}
+          </ul>
+        </div>
       )}
     </div>
   );
