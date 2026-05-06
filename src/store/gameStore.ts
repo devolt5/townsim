@@ -62,6 +62,8 @@ interface GameState {
   messages: Message[];
   /** Keys of triggers that have already been delivered — prevents duplicates after reloads. */
   deliveredTriggerKeys: string[];
+  /** Whether the vote was cast in the current quarter (Phase 3). */
+  hasVotedThisQuarter: boolean;
   /**
    * Runtime building overrides for districts.
    * Format: { [districtId]: { [instanceId]: newDefKey } }
@@ -106,6 +108,9 @@ interface GameState {
 
   /** Draw 3 random petitions from PETITIONS that haven't been used yet this cycle. */
   drawPetitions: () => void;
+
+  /** Mark the vote as completed for the current quarter. */
+  castVote: () => void;
 
   /**
    * Record that one of the pending petitions was resolved with the given option label.
@@ -192,6 +197,7 @@ function buildInitialState() {
     activePetitionId: null,
     messages: structuredClone(INITIAL_MESSAGES),
     deliveredTriggerKeys: [],
+    hasVotedThisQuarter: false,
     globalClickCount: 0,
     districtOverrides: {} as Record<string, Record<string, string>>,
   };
@@ -312,6 +318,9 @@ export const useGameStore = create<GameState>()(
             undefined,
             "drawPetitions",
           ),
+
+        castVote: () =>
+          set({ hasVotedThisQuarter: true }, undefined, "castVote"),
 
         resolvePetition: (petitionId, chosenOption) =>
           set(
@@ -466,6 +475,7 @@ export const useGameStore = create<GameState>()(
                 messages:
                   newMsgs.length > 0 ? [...s.messages, ...newMsgs] : s.messages,
                 activePetitionId: null,
+                hasVotedThisQuarter: false,
               };
             },
             undefined,

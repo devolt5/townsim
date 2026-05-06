@@ -54,7 +54,14 @@ function reactionLabel(delta: number): string {
 }
 
 export function VotingModal({ open, onOpenChange }: VotingModalProps) {
-  const { turn, factions, petitionHistory, activePetitionId } = useGameStore();
+  const {
+    turn,
+    factions,
+    petitionHistory,
+    activePetitionId,
+    castVote,
+    hasVotedThisQuarter,
+  } = useGameStore();
   const [detailsOpen, setDetailsOpen] = useState(false);
   const isPhase3 = turn.phase === 3;
   const isPhase2Or3 = turn.phase >= 2;
@@ -297,10 +304,20 @@ export function VotingModal({ open, onOpenChange }: VotingModalProps) {
 
           {/* Abstimmen button */}
           <Button
-            disabled={!isPhase3}
+            disabled={!isPhase3 || hasVotedThisQuarter}
+            onClick={() => {
+              castVote();
+              // Optional: short delay or auto-close?
+              // For now, let's keep it open or just close it after a brief moment
+              setTimeout(() => onOpenChange(false), 500);
+            }}
             className="w-full bg-amber-600 hover:bg-amber-500 text-white font-bold h-10 border-b-2 border-amber-800 active:border-b-0 active:translate-y-px transition-all disabled:opacity-50 disabled:grayscale disabled:cursor-not-allowed cursor-pointer"
           >
-            {isPhase3 ? "🗳️ Abstimmen" : "Abstimmung nicht möglich"}
+            {hasVotedThisQuarter
+              ? "✓ Abgestimmt"
+              : isPhase3
+                ? "🗳️ Abstimmen"
+                : "Abstimmung nicht möglich"}
           </Button>
         </div>
       </DialogContent>

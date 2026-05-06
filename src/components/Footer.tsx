@@ -25,11 +25,25 @@ export function Footer({
   setFactionOverlay,
   gameRef,
 }: FooterProps) {
-  const { factions, advanceTurn, pendingPetitions } = useGameStore();
+  const { factions, advanceTurn, pendingPetitions, turn, hasVotedThisQuarter } =
+    useGameStore();
   const TOTAL_SEATS = factions.reduce((sum, f) => sum + f.seats, 0);
   const MAJORITY = Math.ceil(TOTAL_SEATS / 2) + 1;
 
-  const canAdvance = pendingPetitions.length === 0;
+  const isPhase3 = turn.phase === 3;
+  // Can only advance if:
+  // 1. Not in Phase 3 yet AND pendingPetitions resolved
+  // 2. OR in Phase 3 AND vote has been cast
+  const canAdvance = isPhase3
+    ? hasVotedThisQuarter
+    : pendingPetitions.length === 0;
+
+  const buttonText = isPhase3
+    ? "Nächstes Quartal"
+    : canAdvance
+      ? "Nächste Phase"
+      : "Entscheidung ausstehend";
+
   const [votingOpen, setVotingOpen] = useState(false);
 
   return (
@@ -88,7 +102,7 @@ export function Footer({
         size="sm"
         className="bg-amber-600 cursor-pointer hover:bg-amber-500 text-white font-bold px-4 h-9 shadow-lg shadow-amber-900/20 border-b-2 border-amber-800 active:border-b-0 active:translate-y-1px transition-all flex gap-2 group disabled:opacity-50 disabled:grayscale disabled:cursor-not-allowed"
       >
-        <span>{canAdvance ? "Nächste Phase" : "Entscheidung ausstehend"}</span>
+        <span>{buttonText}</span>
         <ChevronRight
           size={16}
           className="group-hover:translate-x-0.5 transition-transform"
