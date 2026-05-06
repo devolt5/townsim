@@ -1,8 +1,8 @@
-export type DecisionVariant = "accept" | "reject" | "negotiate";
+export type PetitionVariant = "accept" | "reject" | "negotiate";
 
-export interface DecisionOption {
+export interface PetitionOption {
   label: string;
-  variant: DecisionVariant;
+  variant: PetitionVariant;
 }
 
 /** Trust-delta for one faction, keyed by Faction.short from FACTIONS */
@@ -11,7 +11,7 @@ export interface FactionReaction {
   delta: number;
 }
 
-export interface Decision {
+export interface Petition {
   id: string;
   title: string;
   text: string;
@@ -20,8 +20,8 @@ export interface Decision {
   factionReactions: FactionReaction[];
 }
 
-/** Fixed options available for every decision */
-export const DECISION_OPTIONS: DecisionOption[] = [
+/** Fixed options available for every petition */
+export const PETITION_OPTIONS: PetitionOption[] = [
   { label: "✓ Zustimmen", variant: "accept" },
   { label: "⚖ Verhandeln", variant: "negotiate" },
 ];

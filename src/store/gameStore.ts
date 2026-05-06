@@ -4,8 +4,8 @@ import type {} from "@redux-devtools/extension";
 import { METRICS, FACTIONS, OPEN_PROMISES } from "@/data/gameData";
 import type { Metric, Faction } from "@/data/gameData";
 import type { Promise as GamePromise } from "@/data/gameData";
-import { DECISIONS } from "@/data/decisions";
-import type { Decision } from "@/data/types/decision";
+import { PETITIONS } from "@/data/petitions";
+import type { Petition } from "@/data/types/petition";
 import { messages as INITIAL_MESSAGES, type Message } from "@/data/messages";
 import { TIMED_TRIGGERS } from "@/data/timedMessages";
 import { TUTORIAL_TRIGGERS } from "@/data/tutorialMessages";
@@ -33,8 +33,8 @@ export interface Turn {
   phase: 1 | 2 | 3;
 }
 
-/** Minimal record kept when a decision is resolved. */
-export interface CompletedDecision {
+/** Minimal record kept when a petition is resolved. */
+export interface CompletedPetition {
   turn: Omit<Turn, "phase">;
   title: string;
   chosenOption: string;
@@ -53,10 +53,10 @@ interface GameState {
   /** 0–100 (GDD §6). Starts at 50. */
   politicalCapital: number;
   openPromises: GamePromise[];
-  /** The three decisions offered to the player this quarter. Empty once one has been resolved. */
-  pendingDecisions: Decision[];
-  usedDecisionIds: string[];
-  decisionHistory: CompletedDecision[];
+  /** The three petitions offered to the player this quarter. Empty once one has been resolved. */
+  pendingPetitions: Petition[];
+  usedPetitionIds: string[];
+  petitionHistory: CompletedPetition[];
   messages: Message[];
   /** Keys of triggers that have already been delivered — prevents duplicates after reloads. */
   deliveredTriggerKeys: string[];
@@ -99,17 +99,17 @@ interface GameState {
   /** Remove a promise (e.g. after it was broken or resolved). */
   removePromise: (id: string) => void;
 
-  /** Replace the current pending decisions array. */
-  setPendingDecisions: (decisions: Decision[]) => void;
+  /** Replace the current pending petitions array. */
+  setPendingPetitions: (petitions: Petition[]) => void;
 
-  /** Draw 3 random decisions from DECISIONS that haven't been used yet this cycle. */
-  drawDecisions: () => void;
+  /** Draw 3 random petitions from PETITIONS that haven't been used yet this cycle. */
+  drawPetitions: () => void;
 
   /**
-   * Record that one of the pending decisions was resolved with the given option label.
-   * The other two decisions are returned to the pool (removed from usedDecisionIds).
+   * Record that one of the pending petitions was resolved with the given option label.
+   * The other two petitions are returned to the pool (removed from usedPetitionIds).
    */
-  resolveDecision: (decisionId: string, chosenOption: string) => void;
+  resolvePetition: (petitionId: string, chosenOption: string) => void;
 
   /** Dynamically add a new message to the inbox. */
   addMessage: (msg: Omit<Message, "id" | "timestamp" | "read">) => void;
@@ -153,17 +153,17 @@ const INITIAL_TURN: Turn = { year: 1, quarter: 1, phase: 1 };
 
 const INITIAL_POLITICAL_CAPITAL = 50;
 
-function pickRandomDecisions(
+function pickRandomPetitions(
   usedIds: string[],
   count: number = 3,
-): { decisions: Decision[]; newUsedIds: string[] } {
-  let pool = DECISIONS.filter((d) => !usedIds.includes(d.id));
+): { petitions: Petition[]; newUsedIds: string[] } {
+  let pool = PETITIONS.filter((d) => !usedIds.includes(d.id));
   // If the pool is exhausted, reset it
   if (pool.length === 0) {
-    pool = [...DECISIONS];
+    pool = [...PETITIONS];
     usedIds = [];
   }
-  const picked: Decision[] = [];
+  const picked: Petition[] = [];
   const newUsedIds = [...usedIds];
   const take = Math.min(count, pool.length);
   for (let i = 0; i < take; i++) {
@@ -172,11 +172,11 @@ function pickRandomDecisions(
     newUsedIds.push(pool[idx].id);
     pool = pool.filter((_, j) => j !== idx);
   }
-  return { decisions: picked, newUsedIds };
+  return { petitions: picked, newUsedIds };
 }
 
 function buildInitialState() {
-  const { decisions, newUsedIds } = pickRandomDecisions([]);
+  const { petitions, newUsedIds } = pickRandomPetitions([]);
   return {
     basicData: INITIAL_BASIC_DATA,
     turn: INITIAL_TURN,
@@ -184,9 +184,9 @@ function buildInitialState() {
     factions: structuredClone(FACTIONS),
     politicalCapital: INITIAL_POLITICAL_CAPITAL,
     openPromises: structuredClone(OPEN_PROMISES),
-    pendingDecisions: decisions,
-    usedDecisionIds: newUsedIds,
-    decisionHistory: [] as CompletedDecision[],
+    pendingPetitions: petitions,
+    usedPetitionIds: newUsedIds,
+    petitionHistory: [] as CompletedPetition[],
     messages: structuredClone(INITIAL_MESSAGES),
     deliveredTriggerKeys: [],
     globalClickCount: 0,
@@ -288,55 +288,55 @@ export const useGameStore = create<GameState>()(
             { type: "removePromise", id },
           ),
 
-        setPendingDecisions: (decisions) =>
+        setPendingPetitions: (petitions) =>
           set(
-            { pendingDecisions: decisions },
+            { pendingPetitions: petitions },
             undefined,
-            "setPendingDecisions",
+            "setPendingPetitions",
           ),
 
-        drawDecisions: () =>
+        drawPetitions: () =>
           set(
             (s) => {
-              const { decisions, newUsedIds } = pickRandomDecisions(
-                s.usedDecisionIds,
+              const { petitions, newUsedIds } = pickRandomPetitions(
+                s.usedPetitionIds,
               );
               return {
-                pendingDecisions: decisions,
-                usedDecisionIds: newUsedIds,
+                pendingPetitions: petitions,
+                usedPetitionIds: newUsedIds,
               };
             },
             undefined,
-            "drawDecisions",
+            "drawPetitions",
           ),
 
-        resolveDecision: (decisionId, chosenOption) =>
+        resolvePetition: (petitionId, chosenOption) =>
           set(
             (s) => {
-              const resolved = s.pendingDecisions.find(
-                (d) => d.id === decisionId,
+              const resolved = s.pendingPetitions.find(
+                (d) => d.id === petitionId,
               );
               if (!resolved) return {};
-              const entry: CompletedDecision = {
+              const entry: CompletedPetition = {
                 turn: { year: s.turn.year, quarter: s.turn.quarter },
                 title: resolved.title,
                 chosenOption,
               };
-              // Return the other two decisions to the pool
-              const otherIds = s.pendingDecisions
-                .filter((d) => d.id !== decisionId)
+              // Return the other two petitions to the pool
+              const otherIds = s.pendingPetitions
+                .filter((d) => d.id !== petitionId)
                 .map((d) => d.id);
-              const newUsedIds = s.usedDecisionIds.filter(
+              const newUsedIds = s.usedPetitionIds.filter(
                 (id) => !otherIds.includes(id),
               );
               return {
-                pendingDecisions: [],
-                decisionHistory: [...s.decisionHistory, entry],
-                usedDecisionIds: newUsedIds,
+                pendingPetitions: [],
+                petitionHistory: [...s.petitionHistory, entry],
+                usedPetitionIds: newUsedIds,
               };
             },
             undefined,
-            { type: "resolveDecision", decisionId, chosenOption },
+            { type: "resolvePetition", petitionId, chosenOption },
           ),
 
         addMessage: (msg) =>
@@ -418,13 +418,13 @@ export const useGameStore = create<GameState>()(
                   turn: { year, quarter, phase: (phase + 1) as 1 | 2 | 3 },
                 };
               }
-              // Quarter boundary — draw 3 new decisions
-              const { decisions, newUsedIds } = pickRandomDecisions(
-                s.usedDecisionIds,
+              // Quarter boundary — draw 3 new petitions
+              const { petitions, newUsedIds } = pickRandomPetitions(
+                s.usedPetitionIds,
               );
-              const decisionPatch = {
-                pendingDecisions: decisions,
-                usedDecisionIds: newUsedIds,
+              const petitionPatch = {
+                pendingPetitions: petitions,
+                usedPetitionIds: newUsedIds,
               };
 
               let newTurn: Turn;
@@ -457,7 +457,7 @@ export const useGameStore = create<GameState>()(
 
               return {
                 turn: newTurn,
-                ...decisionPatch,
+                ...petitionPatch,
                 deliveredTriggerKeys: newKeys,
                 messages:
                   newMsgs.length > 0 ? [...s.messages, ...newMsgs] : s.messages,

@@ -7,7 +7,7 @@ import {
   SidebarHeader,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { PendingDecision } from "@/components/PendingDecision";
+import { PendingPetition } from "@/components/PendingPetition";
 import { PromiseTracker } from "@/components/PromiseTracker";
 
 function SidebarToggle() {
@@ -56,7 +56,7 @@ export function RightPanel() {
               value="antrag"
               className="flex-1 overflow-y-auto p-3 mt-0"
             >
-              <PendingDecision />
+              <PendingPetition />
             </TabsContent>
 
             <TabsContent

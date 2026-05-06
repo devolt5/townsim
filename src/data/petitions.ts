@@ -8,9 +8,9 @@ import delegate02 from "@/images/delegate_02_male.jpg";
 // import delegate03 from "@/images/delegate_03_male.jpg";
 // import delegate04 from "@/images/delegate_04_female.jpg";
 // import delegate05 from "@/images/delegate_05_male.jpg";
-import type { Decision } from "./types/decision";
+import type { Petition } from "./types/petition";
 
-export const DECISIONS: Decision[] = [
+export const PETITIONS: Petition[] = [
   {
     id: "radwegenetz",
     title: "Ausbau des Radwegenetzes",

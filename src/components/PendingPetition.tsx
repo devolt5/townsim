@@ -4,8 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { useGameStore } from "@/store/gameStore";
-import { DECISION_OPTIONS } from "@/data/types/decision";
-import type { DecisionVariant } from "@/data/types/decision";
+import { PETITION_OPTIONS } from "@/data/types/petition";
+import type { PetitionVariant } from "@/data/types/petition";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 function reactionLabel(delta: number): string {
@@ -14,7 +14,7 @@ function reactionLabel(delta: number): string {
   return "😐 0";
 }
 
-function buttonClass(variant: DecisionVariant): string {
+function buttonClass(variant: PetitionVariant): string {
   if (variant === "accept")
     return "bg-emerald-600 hover:bg-emerald-700 text-white text-xs h-8";
   return "text-xs h-8 border-stone-400 text-stone-700";
@@ -40,23 +40,23 @@ function chosenOptionBadge(chosenOption: string) {
   );
 }
 
-export function PendingDecision() {
+export function PendingPetition() {
   const turn = useGameStore((s) => s.turn);
-  const decisions = useGameStore((s) => s.pendingDecisions);
+  const petitions = useGameStore((s) => s.pendingPetitions);
   const factions = useGameStore((s) => s.factions);
-  const resolveDecision = useGameStore((s) => s.resolveDecision);
-  const decisionHistory = useGameStore((s) => s.decisionHistory);
+  const resolvePetition = useGameStore((s) => s.resolvePetition);
+  const petitionHistory = useGameStore((s) => s.petitionHistory);
 
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const hasPending = decisions.length > 0;
-  const safeIndex = Math.min(currentIndex, Math.max(0, decisions.length - 1));
-  const decision = decisions[safeIndex];
-  const total = decisions.length;
+  const hasPending = petitions.length > 0;
+  const safeIndex = Math.min(currentIndex, Math.max(0, petitions.length - 1));
+  const petition = petitions[safeIndex];
+  const total = petitions.length;
 
   return (
     <div className="space-y-3">
-      {/* Pending decisions */}
+      {/* Pending petitions */}
       {hasPending ? (
         <>
           <p className="text-md font-bold text-stone-800 text-center">
@@ -89,10 +89,10 @@ export function PendingDecision() {
           <Card className="border-amber-200 bg-amber-50/50">
             <CardHeader className="pb-2 pt-4 px-4">
               <div className="flex items-start gap-3">
-                {decision.image && (
+                {petition.image && (
                   <img
-                    src={decision.image}
-                    alt={decision.imageAlt ?? "Antragsteller"}
+                    src={petition.image}
+                    alt={petition.imageAlt ?? "Antragsteller"}
                     className="w-12 h-12 rounded-full object-cover shrink-0 border-2 border-amber-200 shadow-sm"
                   />
                 )}
@@ -104,13 +104,13 @@ export function PendingDecision() {
                     📋 Antrag
                   </Badge>
                   <CardTitle className="text-sm text-stone-800">
-                    {decision.title}
+                    {petition.title}
                   </CardTitle>
                 </div>
               </div>
             </CardHeader>
             <CardContent className="px-4 pb-4 space-y-4">
-              <p className="text-xs text-stone-600">{decision.text}</p>
+              <p className="text-xs text-stone-600">{petition.text}</p>
 
               <Separator className="bg-amber-200" />
 
@@ -119,7 +119,7 @@ export function PendingDecision() {
                 <p className="text-xs font-semibold text-stone-500 uppercase tracking-wide mb-2">
                   Fraktionsreaktionen
                 </p>
-                {decision.factionReactions.map((r) => {
+                {petition.factionReactions.map((r) => {
                   const faction = factions.find(
                     (f) => f.short === r.factionShort,
                   );
@@ -160,7 +160,7 @@ export function PendingDecision() {
 
               {/* Action buttons */}
               <div className="flex gap-2 flex-wrap">
-                {DECISION_OPTIONS.map((opt) => (
+                {PETITION_OPTIONS.map((opt) => (
                   <Button
                     key={opt.variant}
                     size="sm"
@@ -168,7 +168,7 @@ export function PendingDecision() {
                       opt.variant === "negotiate" ? "outline" : "default"
                     }
                     className={buttonClass(opt.variant) + " cursor-pointer"}
-                    onClick={() => resolveDecision(decision.id, opt.label)}
+                    onClick={() => resolvePetition(petition.id, opt.label)}
                   >
                     {opt.label}
                   </Button>
@@ -186,13 +186,13 @@ export function PendingDecision() {
       )}
 
       {/* History list - only visible if phase is not 1 */}
-      {decisionHistory.length > 0 && turn.phase !== 1 && (
+      {petitionHistory.length > 0 && turn.phase !== 1 && (
         <div className="space-y-2 pt-2">
           <p className="text-xs font-semibold text-stone-500 uppercase tracking-wide">
-            Bearbeitete Anträge ({decisionHistory.length})
+            Bearbeitete Anträge ({petitionHistory.length})
           </p>
           <ul className="space-y-1.5">
-            {decisionHistory.map((entry, i) => (
+            {petitionHistory.map((entry, i) => (
               <li
                 key={i}
                 className="flex items-center justify-between gap-2 text-xs text-stone-600"

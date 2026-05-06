@@ -25,11 +25,11 @@ export function Footer({
   setFactionOverlay,
   gameRef,
 }: FooterProps) {
-  const { factions, advanceTurn, pendingDecisions } = useGameStore();
+  const { factions, advanceTurn, pendingPetitions } = useGameStore();
   const TOTAL_SEATS = factions.reduce((sum, f) => sum + f.seats, 0);
   const MAJORITY = Math.ceil(TOTAL_SEATS / 2) + 1;
 
-  const canAdvance = pendingDecisions.length === 0;
+  const canAdvance = pendingPetitions.length === 0;
   const [votingOpen, setVotingOpen] = useState(false);
 
   return (
@@ -66,6 +66,7 @@ export function Footer({
         <TooltipTrigger>
           <button
             onClick={() => {
+              const next = !factionOverlay;
               setFactionOverlay(next);
               const scene = gameRef.current?.scene.getScene(
                 "ParliamentScene",

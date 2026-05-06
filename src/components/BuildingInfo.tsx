@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { BUILDING_INFO } from "@/data/gameData";
+import { BUILDING_INFO } from "@/data/ui-data";
 
 interface BuildingInfoProps {
   defKey: string | null;
