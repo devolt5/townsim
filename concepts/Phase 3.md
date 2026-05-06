@@ -147,13 +147,13 @@ Antrag: Ausbau des Radwegenetzes (40 Stadtratsmandate, Mehrheit = 21)
 
 | **Fraktion** | **Sitze** | **Antragswert** | **Strukturwert**   | **Aktionswert**  | **Ausgangswert** | **Zufallskorr.** |
 | ------------ | --------- | --------------- | ------------------ | ---------------- | ---------------- | ---------------- |
-| Grüne        | 8         | +7              | +5 (Koalition)     | +3 (Gespräch)    | 15 / 8 mögl.     | ±1 → 7-8         |
-| SPD          | 10        | +3              | +3 (Koalition)     | +5 (Umfrage)     | 13 / 10 mögl.    | ±2 → 6-8         |
-| CDU          | 12        | -2              | -4 (Opposition)    | 0                | −6 / 12 mögl.    | ±3 → 0-3         |
-| FDP          | 6         | -1              | +2 (kl. Koalition) | +3 (Versprechen) | 7 / 6 mögl.      | ±1 → 5-6         |
+| Terra        | 8         | +7              | +5 (Koalition)     | +3 (Gespräch)    | 15 / 8 mögl.     | ±1 → 7-8         |
+| Union        | 10        | +3              | +3 (Koalition)     | +5 (Umfrage)     | 13 / 10 mögl.    | ±2 → 6-8         |
+| Bund         | 12        | -2              | -4 (Opposition)    | 0                | −6 / 12 mögl.    | ±3 → 0-3         |
+| Syndikat     | 6         | -1              | +2 (kl. Koalition) | +3 (Versprechen) | 7 / 6 mögl.      | ±1 → 5-6         |
 |              |           |                 |                    | Σ Ja-Stimmen     | 18-25            | Mehrheit: 21     |
 
-In diesem Beispiel ist der Ausgang offen: Je nach Zufallswerten (bes. bei SPD und CDU) kann der Antrag knapp bestehen oder scheitern. Der Spieler hat durch Gespräch (+3 Grüne) und Versprechen (+3 FDP) den Korridor nach oben verschoben.
+In diesem Beispiel ist der Ausgang offen: Je nach Zufallswerten kann der Antrag knapp bestehen oder scheitern. Der Spieler hat durch Gespräch (+3 Terra) und Versprechen (+3 Syndikat) den Korridor nach oben verschoben.
 
 # **Glossar**
 
