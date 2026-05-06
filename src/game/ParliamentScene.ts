@@ -136,9 +136,9 @@ export class ParliamentScene extends Scene {
   private static readonly DRAG_THRESHOLD = 4;
 
   // Zoom limits
-  private static readonly MIN_ZOOM = 0.4;
-  private static readonly MAX_ZOOM = 4.0;
-  private static readonly ZOOM_STEP = 0.12;
+  // private static readonly MIN_ZOOM = 0.4;
+  // private static readonly MAX_ZOOM = 4.0;
+  // private static readonly ZOOM_STEP = 0.12;
 
   constructor() {
     super({ key: "ParliamentScene" });
