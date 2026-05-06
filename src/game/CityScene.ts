@@ -41,27 +41,11 @@ function polyPath(
 export type { District };
 export { DISTRICTS };
 
-// Minimal structural type for the Phaser pointer — avoids a namespace import
-type PhaserPointer = { x: number; y: number; leftButtonDown(): boolean };
-
 export class CityScene extends Scene {
   private selectCallback: ((district: District | null) => void) | null = null;
   private selectedName: string | null = null;
   private baseGraphics!: GameObjects.Graphics;
   private highlightGraphics!: GameObjects.Graphics;
-
-  // ── Panning state ─────────────────────────────────────────────────
-  private isDragging = false; // true once drag threshold exceeded
-  private panStartX = 0;
-  private panStartY = 0;
-  private panStartScrollX = 0;
-  private panStartScrollY = 0;
-  private static readonly DRAG_THRESHOLD = 4; // px
-
-  // ── Zoom limits ───────────────────────────────────────────────────
-  private static readonly MIN_ZOOM = 0.5;
-  private static readonly MAX_ZOOM = 4.0;
-  private static readonly ZOOM_STEP = 0.12; // per wheel tick
 
   constructor() {
     super({ key: "CityScene" });
@@ -106,8 +90,6 @@ export class CityScene extends Scene {
     this.drawBase();
 
     this.highlightGraphics = this.add.graphics();
-
-    this.setupCameraControls();
 
     DISTRICTS.forEach((d) => {
       // Build a bounding box so the zone rectangle covers the polygon
@@ -168,7 +150,6 @@ export class CityScene extends Scene {
 
       // Selection fires on pointerup so a drag doesn't accidentally select
       zone.on("pointerup", () => {
-        if (this.isDragging) return;
         if (this.selectedName === d.name) {
           this.selectedName = null;
           this.highlightGraphics.clear();
@@ -180,63 +161,6 @@ export class CityScene extends Scene {
           this.selectCallback?.(d);
         }
       });
-    });
-  }
-
-  private setupCameraControls() {
-    const cam = this.cameras.main;
-
-    // ── Zoom toward cursor on mouse wheel ────────────────────────────
-    this.input.on(
-      "wheel",
-      (_p: unknown, _objs: unknown, _dx: number, deltaY: number) => {
-        const factor =
-          deltaY < 0 ? 1 + CityScene.ZOOM_STEP : 1 - CityScene.ZOOM_STEP;
-        const newZoom = Math.max(
-          CityScene.MIN_ZOOM,
-          Math.min(CityScene.MAX_ZOOM, cam.zoom * factor),
-        );
-
-        // Keep the world point under the cursor stationary
-        const ptr = this.input.activePointer;
-        const worldX = cam.scrollX + ptr.x / cam.zoom;
-        const worldY = cam.scrollY + ptr.y / cam.zoom;
-        cam.setZoom(newZoom);
-        cam.scrollX = worldX - ptr.x / newZoom;
-        cam.scrollY = worldY - ptr.y / newZoom;
-      },
-    );
-
-    // ── Pan on left-mouse drag (with threshold to preserve click-to-select) ──
-    this.input.on("pointerdown", (p: PhaserPointer) => {
-      if (!p.leftButtonDown()) return;
-      this.isDragging = false;
-      this.panStartX = p.x;
-      this.panStartY = p.y;
-      this.panStartScrollX = cam.scrollX;
-      this.panStartScrollY = cam.scrollY;
-    });
-
-    this.input.on("pointermove", (p: PhaserPointer) => {
-      if (!p.leftButtonDown()) return;
-      const dx = p.x - this.panStartX;
-      const dy = p.y - this.panStartY;
-      if (!this.isDragging) {
-        if (Math.sqrt(dx * dx + dy * dy) < CityScene.DRAG_THRESHOLD) return;
-        this.isDragging = true;
-        this.input.setDefaultCursor("grabbing");
-      }
-      cam.scrollX = this.panStartScrollX - dx / cam.zoom;
-      cam.scrollY = this.panStartScrollY - dy / cam.zoom;
-    });
-
-    this.input.on("pointerup", (p: PhaserPointer) => {
-      if (this.isDragging) {
-        this.isDragging = false;
-        this.input.setDefaultCursor("default");
-      }
-      // suppress unused-param warning
-      void p;
     });
   }
 

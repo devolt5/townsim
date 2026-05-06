@@ -381,25 +381,36 @@ export class ParliamentScene extends Scene {
   private setupCameraControls() {
     const cam = this.cameras.main;
 
-    this.input.on(
-      "wheel",
-      (_p: unknown, _objs: unknown, _dx: number, deltaY: number) => {
-        const factor =
-          deltaY < 0
-            ? 1 + ParliamentScene.ZOOM_STEP
-            : 1 - ParliamentScene.ZOOM_STEP;
-        const newZoom = Math.max(
-          ParliamentScene.MIN_ZOOM,
-          Math.min(ParliamentScene.MAX_ZOOM, cam.zoom * factor),
-        );
-        const ptr = this.input.activePointer;
-        const worldX = cam.scrollX + ptr.x / cam.zoom;
-        const worldY = cam.scrollY + ptr.y / cam.zoom;
-        cam.setZoom(newZoom);
-        cam.scrollX = worldX - ptr.x / newZoom;
-        cam.scrollY = worldY - ptr.y / newZoom;
-      },
+    // Restrict panning to the parliament image area (+small padding)
+    const imgW = 1365;
+    const imgH = 768;
+    const pad = 40;
+    cam.setBounds(
+      -imgW / 2 - pad,
+      -imgH / 2 - pad,
+      imgW + pad * 2,
+      imgH + pad * 2,
     );
+
+    // this.input.on(
+    //   "wheel",
+    //   (_p: unknown, _objs: unknown, _dx: number, deltaY: number) => {
+    //     const factor =
+    //       deltaY < 0
+    //         ? 1 + ParliamentScene.ZOOM_STEP
+    //         : 1 - ParliamentScene.ZOOM_STEP;
+    //     const newZoom = Math.max(
+    //       ParliamentScene.MIN_ZOOM,
+    //       Math.min(ParliamentScene.MAX_ZOOM, cam.zoom * factor),
+    //     );
+    //     const ptr = this.input.activePointer;
+    //     const worldX = cam.scrollX + ptr.x / cam.zoom;
+    //     const worldY = cam.scrollY + ptr.y / cam.zoom;
+    //     cam.setZoom(newZoom);
+    //     cam.scrollX = worldX - ptr.x / newZoom;
+    //     cam.scrollY = worldY - ptr.y / newZoom;
+    //   },
+    // );
 
     this.input.on("pointerdown", (p: PhaserPointer) => {
       if (!p.leftButtonDown()) return;
