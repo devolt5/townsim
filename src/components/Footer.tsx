@@ -1,4 +1,5 @@
 import type { Game } from "phaser";
+import { useState } from "react";
 import { Separator } from "@/components/ui/separator";
 import { FactionChip } from "@/components/TrustBar";
 import { useGameStore } from "@/store/gameStore";
@@ -9,6 +10,7 @@ import {
   TooltipTrigger,
   TooltipContent,
 } from "@/components/ui/tooltip";
+import { VotingModal } from "@/components/VotingModal";
 
 interface FooterProps {
   activeScene: "city" | "district" | "parliament";
@@ -28,6 +30,7 @@ export function Footer({
   const MAJORITY = Math.ceil(TOTAL_SEATS / 2) + 1;
 
   const canAdvance = pendingDecisions.length === 0;
+  const [votingOpen, setVotingOpen] = useState(false);
 
   return (
     <footer className="bg-stone-800 px-4 py-2 flex items-center gap-4 border-t border-stone-700 shrink-0 min-h-13">
@@ -50,8 +53,19 @@ export function Footer({
       <Tooltip>
         <TooltipTrigger>
           <button
+            onClick={() => setVotingOpen(true)}
+            className="cursor-pointer text-xl hover:scale-110 transition-transform"
+          >
+            🗳️
+          </button>
+        </TooltipTrigger>
+        <TooltipContent side="top">Abstimmung</TooltipContent>
+      </Tooltip>
+      <Separator orientation="vertical" className="h-8 bg-stone-600 shrink-0" />
+      <Tooltip>
+        <TooltipTrigger>
+          <button
             onClick={() => {
-              const next = !factionOverlay;
               setFactionOverlay(next);
               const scene = gameRef.current?.scene.getScene(
                 "ParliamentScene",
@@ -79,6 +93,7 @@ export function Footer({
           className="group-hover:translate-x-0.5 transition-transform"
         />
       </Button>
+      <VotingModal open={votingOpen} onOpenChange={setVotingOpen} />
     </footer>
   );
 }

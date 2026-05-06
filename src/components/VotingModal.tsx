@@ -1,0 +1,175 @@
+import { useGameStore } from "@/store/gameStore";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
+import type { ChartConfig } from "@/components/ui/chart";
+import { Pie, PieChart, Cell } from "recharts";
+
+interface VotingModalProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}
+
+const chartConfig = {
+  dafuer: {
+    label: "Dafür",
+    color: "#22c55e",
+  },
+  unschluessig: {
+    label: "Unschlüssig",
+    color: "#6b7280",
+  },
+  dagegen: {
+    label: "Dagegen",
+    color: "#ef4444",
+  },
+} satisfies ChartConfig;
+
+// Dummy vote distribution — will be replaced by real calculation later
+const DUMMY_VOTES = {
+  dafuer: 18,
+  unschluessig: 7,
+  dagegen: 15,
+};
+
+export function VotingModal({ open, onOpenChange }: VotingModalProps) {
+  const { turn, factions } = useGameStore();
+  const isPhase3 = turn.phase === 3;
+
+  const totalSeats = factions.reduce((sum, f) => sum + f.seats, 0);
+  const majority = Math.ceil(totalSeats / 2) + 1;
+
+  const voteData = [
+    {
+      name: "dafuer",
+      value: DUMMY_VOTES.dafuer,
+      label: "Dafür",
+      color: "#22c55e",
+    },
+    {
+      name: "unschluessig",
+      value: DUMMY_VOTES.unschluessig,
+      label: "Unschlüssig",
+      color: "#6b7280",
+    },
+    {
+      name: "dagegen",
+      value: DUMMY_VOTES.dagegen,
+      label: "Dagegen",
+      color: "#ef4444",
+    },
+  ];
+
+  const dafuerSeats = DUMMY_VOTES.dafuer;
+  const hasMajority = dafuerSeats >= majority;
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-lg bg-white border-stone-200 text-stone-900">
+        <DialogHeader>
+          <DialogTitle className="text-stone-900 flex items-center gap-2 text-lg">
+            <span>🗳️</span> Abstimmung im Stadtrat
+          </DialogTitle>
+        </DialogHeader>
+
+        <div className="space-y-6">
+          {/* Phase hint */}
+          {!isPhase3 && (
+            <div className="bg-stone-100 border border-stone-200 rounded-md px-4 py-3 text-sm text-stone-500">
+              Eine Abstimmung ist nur in{" "}
+              <span className="text-amber-600 font-semibold">Phase 3</span>{" "}
+              möglich. Aktuell: Jahr {turn.year}, Quartal {turn.quarter}, Phase{" "}
+              {turn.phase}.
+            </div>
+          )}
+
+          {/* Pie chart */}
+          <div className="flex flex-col items-center gap-4">
+            <ChartContainer config={chartConfig} className="h-52 w-52">
+              <PieChart>
+                <ChartTooltip
+                  content={
+                    <ChartTooltipContent
+                      nameKey="name"
+                      hideLabel
+                      className="text-black"
+                      formatter={(value, name) => (
+                        <span className="text-black">
+                          {chartConfig[name as keyof typeof chartConfig]
+                            ?.label ?? name}
+                          : <strong>{value} Sitze</strong>
+                        </span>
+                      )}
+                    />
+                  }
+                />
+                <Pie
+                  data={voteData}
+                  dataKey="value"
+                  nameKey="name"
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={55}
+                  outerRadius={90}
+                  strokeWidth={2}
+                  stroke="#ffffff"
+                >
+                  {voteData.map((entry) => (
+                    <Cell key={entry.name} fill={entry.color} />
+                  ))}
+                </Pie>
+              </PieChart>
+            </ChartContainer>
+
+            {/* Legend */}
+            <div className="flex gap-6 text-sm">
+              {voteData.map((entry) => (
+                <div key={entry.name} className="flex items-center gap-1.5">
+                  <span
+                    className="inline-block w-3 h-3 rounded-full shrink-0"
+                    style={{ backgroundColor: entry.color }}
+                  />
+                  <span className="text-stone-600">{entry.label}</span>
+                  <span className="font-bold text-stone-900">
+                    {entry.value}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Majority indicator */}
+          <div className="bg-stone-50 border border-stone-200 rounded-md px-4 py-3 flex items-center justify-between text-sm">
+            <span className="text-stone-500">
+              Erforderliche Mehrheit:{" "}
+              <span className="text-stone-900 font-semibold">{majority}</span> /{" "}
+              {totalSeats} Sitze
+            </span>
+            <span
+              className={`font-bold ${hasMajority ? "text-green-600" : "text-red-600"}`}
+            >
+              {hasMajority ? "✓ Mehrheit vorhanden" : "✗ Keine Mehrheit"}
+            </span>
+          </div>
+
+          {/* Abstimmen button */}
+          <Button
+            disabled={!isPhase3}
+            className="w-full bg-amber-600 hover:bg-amber-500 text-white font-bold h-10 border-b-2 border-amber-800 active:border-b-0 active:translate-y-px transition-all disabled:opacity-50 disabled:grayscale disabled:cursor-not-allowed cursor-pointer"
+          >
+            {isPhase3 ? "🗳️ Abstimmen" : "Abstimmung nicht möglich"}
+          </Button>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
