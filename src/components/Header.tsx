@@ -50,6 +50,21 @@ export function Header({
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger>
+                <button
+                  onClick={handleOpenSettings}
+                  className="cursor-pointer text-stone-400 hover:text-white transition-colors p-1 rounded"
+                >
+                  <Settings size={25} />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Einstellungen</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger>
                 <div className="flex items-center gap-1.5 px-2 py-1 bg-stone-700/50 rounded-md border border-stone-600/50">
                   <span className="text-stone-100 text-[10px] uppercase font-semibold">
                     📅 {turn.year}
@@ -73,21 +88,6 @@ export function Header({
                 <p>
                   Jahr {turn.year}, Quartal {turn.quarter}, Phase {turn.phase}
                 </p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger>
-                <button
-                  onClick={handleOpenSettings}
-                  className="cursor-pointer text-stone-400 hover:text-white transition-colors p-1 rounded"
-                >
-                  <Settings size={25} />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Einstellungen</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
