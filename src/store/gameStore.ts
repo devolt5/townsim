@@ -57,6 +57,8 @@ interface GameState {
   pendingPetitions: Petition[];
   usedPetitionIds: string[];
   petitionHistory: CompletedPetition[];
+  /** The specific petition that was chosen for the current quarter's vote. */
+  activePetitionId: string | null;
   messages: Message[];
   /** Keys of triggers that have already been delivered — prevents duplicates after reloads. */
   deliveredTriggerKeys: string[];
@@ -187,6 +189,7 @@ function buildInitialState() {
     pendingPetitions: petitions,
     usedPetitionIds: newUsedIds,
     petitionHistory: [] as CompletedPetition[],
+    activePetitionId: null,
     messages: structuredClone(INITIAL_MESSAGES),
     deliveredTriggerKeys: [],
     globalClickCount: 0,
@@ -333,6 +336,7 @@ export const useGameStore = create<GameState>()(
                 pendingPetitions: [],
                 petitionHistory: [...s.petitionHistory, entry],
                 usedPetitionIds: newUsedIds,
+                activePetitionId: petitionId,
               };
             },
             undefined,
@@ -461,6 +465,7 @@ export const useGameStore = create<GameState>()(
                 deliveredTriggerKeys: newKeys,
                 messages:
                   newMsgs.length > 0 ? [...s.messages, ...newMsgs] : s.messages,
+                activePetitionId: null,
               };
             },
             undefined,

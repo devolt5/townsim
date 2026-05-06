@@ -1,4 +1,5 @@
 import { useGameStore } from "@/store/gameStore";
+import { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -13,6 +14,11 @@ import {
 } from "@/components/ui/chart";
 import type { ChartConfig } from "@/components/ui/chart";
 import { Pie, PieChart, Cell } from "recharts";
+import { ExternalLink } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { PETITIONS } from "@/data/petitions";
 
 interface VotingModalProps {
   open: boolean;
@@ -41,9 +47,31 @@ const DUMMY_VOTES = {
   dagegen: 15,
 };
 
+function reactionLabel(delta: number): string {
+  if (delta > 0) return `😊 +${delta}`;
+  if (delta < 0) return `😡 −${Math.abs(delta)}`;
+  return "😐 0";
+}
+
 export function VotingModal({ open, onOpenChange }: VotingModalProps) {
-  const { turn, factions } = useGameStore();
+  const { turn, factions, petitionHistory, activePetitionId } = useGameStore();
+  const [detailsOpen, setDetailsOpen] = useState(false);
   const isPhase3 = turn.phase === 3;
+  const isPhase2Or3 = turn.phase >= 2;
+
+  // Find the full petition data from the store's activePetitionId
+  const currentPetition = activePetitionId
+    ? PETITIONS.find((p) => p.id === activePetitionId)
+    : null;
+
+  // For the display, we also check the history entry to show the chosen option
+  const currentPetitionEntry =
+    petitionHistory.length > 0
+      ? petitionHistory[petitionHistory.length - 1]
+      : null;
+  const isCurrentTurnLog =
+    currentPetitionEntry?.turn.year === turn.year &&
+    currentPetitionEntry?.turn.quarter === turn.quarter;
 
   const totalSeats = factions.reduce((sum, f) => sum + f.seats, 0);
   const majority = Math.ceil(totalSeats / 2) + 1;
@@ -79,6 +107,20 @@ export function VotingModal({ open, onOpenChange }: VotingModalProps) {
           <DialogTitle className="text-stone-900 flex items-center gap-2 text-lg">
             <span>🗳️</span> Abstimmung im Stadtrat
           </DialogTitle>
+          {isPhase2Or3 && isCurrentTurnLog && currentPetitionEntry && (
+            <div className="mt-1 flex items-center gap-2">
+              <span className="text-sm text-stone-500 font-medium italic">
+                Antrag: {currentPetitionEntry.title}
+              </span>
+              <button
+                onClick={() => setDetailsOpen(true)}
+                className="text-amber-600 hover:text-amber-700 cursor-pointer flex items-center gap-1 text-xs font-bold"
+              >
+                <ExternalLink size={12} />
+                Details
+              </button>
+            </div>
+          )}
         </DialogHeader>
 
         <div className="space-y-6">
@@ -160,6 +202,98 @@ export function VotingModal({ open, onOpenChange }: VotingModalProps) {
               {hasMajority ? "✓ Mehrheit vorhanden" : "✗ Keine Mehrheit"}
             </span>
           </div>
+
+          {/* Details sub-modal / Dialog */}
+          <Dialog open={detailsOpen} onOpenChange={setDetailsOpen}>
+            <DialogContent className="max-w-md bg-amber-50 border-amber-200">
+              <DialogHeader>
+                <DialogTitle className="text-stone-800">
+                  Antragsdetails
+                </DialogTitle>
+              </DialogHeader>
+              {currentPetition && (
+                <Card className="border-amber-200 bg-white">
+                  <CardHeader className="pb-2 pt-4 px-4">
+                    <div className="flex items-start gap-3">
+                      {currentPetition.image && (
+                        <img
+                          src={currentPetition.image}
+                          alt={currentPetition.imageAlt ?? "Antragsteller"}
+                          className="w-12 h-12 rounded-full object-cover shrink-0 border-2 border-amber-200 shadow-sm"
+                        />
+                      )}
+                      <div className="flex flex-col gap-1 min-w-0">
+                        <Badge
+                          variant="outline"
+                          className="text-amber-700 border-amber-400 bg-amber-100 text-xs w-fit"
+                        >
+                          📋 Aktueller Antrag
+                        </Badge>
+                        <CardTitle className="text-sm text-stone-800">
+                          {currentPetition.title}
+                        </CardTitle>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="px-4 pb-4 space-y-4">
+                    <p className="text-xs text-stone-600">
+                      {currentPetition.text}
+                    </p>
+
+                    <Separator className="bg-amber-100" />
+
+                    <div className="space-y-1">
+                      <p className="text-[10px] font-semibold text-stone-500 uppercase tracking-wide">
+                        Erwartete Reaktionen
+                      </p>
+                      {currentPetition.factionReactions.map((r) => {
+                        const faction = factions.find(
+                          (f) => f.short === r.factionShort,
+                        );
+                        return (
+                          <div
+                            key={r.factionShort}
+                            className="flex items-center justify-between text-[11px]"
+                          >
+                            <span className="flex items-center gap-1 text-stone-600">
+                              {faction?.icon} {r.factionShort}
+                            </span>
+                            <span
+                              className={
+                                r.delta > 0
+                                  ? "text-emerald-600 font-medium"
+                                  : r.delta < 0
+                                    ? "text-red-600 font-medium"
+                                    : "text-stone-400"
+                              }
+                            >
+                              {reactionLabel(r.delta)}
+                            </span>
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    {currentPetitionEntry && (
+                      <>
+                        <Separator className="bg-amber-100" />
+                        <div className="text-xs font-bold text-stone-700">
+                          Deine Vor-Entscheidung:{" "}
+                          {currentPetitionEntry.chosenOption}
+                        </div>
+                      </>
+                    )}
+                  </CardContent>
+                </Card>
+              )}
+              <Button
+                onClick={() => setDetailsOpen(false)}
+                className="mt-4 bg-stone-800 hover:bg-stone-700 text-white cursor-pointer transition-colors"
+              >
+                Schließen
+              </Button>
+            </DialogContent>
+          </Dialog>
 
           {/* Abstimmen button */}
           <Button
