@@ -65,33 +65,29 @@ export function Footer({
       </div>
       <Separator orientation="vertical" className="h-8 bg-stone-600 shrink-0" />
       <Tooltip>
-        <TooltipTrigger>
-          <button
-            onClick={() => setVotingOpen(true)}
-            className="cursor-pointer text-xl hover:scale-110 transition-transform"
-          >
-            🗳️
-          </button>
+        <TooltipTrigger
+          onClick={() => setVotingOpen(true)}
+          className="cursor-pointer text-xl hover:scale-110 transition-transform"
+        >
+          🗳️
         </TooltipTrigger>
         <TooltipContent side="top">Abstimmung</TooltipContent>
       </Tooltip>
       <Separator orientation="vertical" className="h-8 bg-stone-600 shrink-0" />
       <Tooltip>
-        <TooltipTrigger>
-          <button
-            onClick={() => {
-              const next = !factionOverlay;
-              setFactionOverlay(next);
-              const scene = gameRef.current?.scene.getScene(
-                "ParliamentScene",
-              ) as import("@/game/ParliamentScene").ParliamentScene | undefined;
-              scene?.setFactionOverlay(next);
-            }}
-            disabled={activeScene !== "parliament"}
-            className="cursor-pointer text-xl hover:scale-110 transition-transform disabled:opacity-40 disabled:cursor-not-allowed hover:disabled:scale-100"
-          >
-            👥
-          </button>
+        <TooltipTrigger
+          onClick={() => {
+            const next = !factionOverlay;
+            setFactionOverlay(next);
+            const scene = gameRef.current?.scene.getScene("ParliamentScene") as
+              | import("@/game/ParliamentScene").ParliamentScene
+              | undefined;
+            scene?.setFactionOverlay(next);
+          }}
+          disabled={activeScene !== "parliament"}
+          className="cursor-pointer text-xl hover:scale-110 transition-transform disabled:opacity-40 disabled:cursor-not-allowed hover:disabled:scale-100"
+        >
+          👥
         </TooltipTrigger>
         <TooltipContent side="top">Fraktionen ein-/ausblenden</TooltipContent>
       </Tooltip>
