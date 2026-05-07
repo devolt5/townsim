@@ -164,7 +164,11 @@ export function calculateVotePreview(
     const baseUndecided = faction.seats - baseYes - baseNo;
 
     // 2. Promise override — entire faction votes yes
-    const promiseBound = isPromiseBound(faction.short, petitionTags, openPromises);
+    const promiseBound = isPromiseBound(
+      faction.short,
+      petitionTags,
+      openPromises,
+    );
     if (promiseBound) {
       totalYes += faction.seats;
       return {
@@ -191,7 +195,10 @@ export function calculateVotePreview(
 
     // 5. Combine and clamp
     const maxYes = faction.seats - baseNo;
-    const modifiedYes = Math.max(0, Math.min(maxYes, structuralYes + actionTotal));
+    const modifiedYes = Math.max(
+      0,
+      Math.min(maxYes, structuralYes + actionTotal),
+    );
     const modifiedUndecided = faction.seats - modifiedYes - baseNo;
     const modifiedNo = baseNo;
 
@@ -212,7 +219,14 @@ export function calculateVotePreview(
     };
   });
 
-  return { totalSeats, majority, totalYes, totalUndecided, totalNo, factions: factionPreviews };
+  return {
+    totalSeats,
+    majority,
+    totalYes,
+    totalUndecided,
+    totalNo,
+    factions: factionPreviews,
+  };
 }
 
 /**
@@ -232,7 +246,12 @@ export function resolveVote(
   openPromises: GamePromise[],
   reputation: number,
 ): VoteResult {
-  const preview = calculateVotePreview(petition, factions, activeActionModifiers, openPromises);
+  const preview = calculateVotePreview(
+    petition,
+    factions,
+    activeActionModifiers,
+    openPromises,
+  );
 
   let totalYes = 0;
   let totalNo = 0;
@@ -245,7 +264,10 @@ export function resolveVote(
 
     // Dice roll weighted by reputation (§3.4)
     const rawRoll = Math.random() * 100;
-    const adjustedRoll = Math.min(100, rawRoll + reputation * REPUTATION_DICE_FACTOR);
+    const adjustedRoll = Math.min(
+      100,
+      rawRoll + reputation * REPUTATION_DICE_FACTOR,
+    );
     const diceYes = Math.round(fp.modifiedUndecided * (adjustedRoll / 100));
 
     const finalYes = Math.min(fp.seats, fp.modifiedYes + diceYes);
@@ -278,7 +300,9 @@ export function resolveVote(
  *
  * "Knapp" (close loss): yes-votes were within 4 seats of the majority threshold.
  */
-export function computeVoteMetricDeltas(result: VoteResult): Record<string, number> {
+export function computeVoteMetricDeltas(
+  result: VoteResult,
+): Record<string, number> {
   if (result.passed) {
     return { reputation: 2 };
   }

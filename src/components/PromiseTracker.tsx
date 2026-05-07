@@ -73,7 +73,6 @@ export function PromiseTracker() {
                 </li>
               );
             })}
-
           </ul>
         )}
       </CardContent>

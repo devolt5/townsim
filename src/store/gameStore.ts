@@ -2,7 +2,12 @@ import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 import type {} from "@redux-devtools/extension";
 import { METRICS, FACTIONS, OPEN_PROMISES } from "@/data/gameData";
-import type { Metric, Faction, GamePromise, ActionModifier } from "@/data/gameData";
+import type {
+  Metric,
+  Faction,
+  GamePromise,
+  ActionModifier,
+} from "@/data/gameData";
 import { resolveVote, computeVoteMetricDeltas } from "@/game/votingEngine";
 import type { VoteResult } from "@/game/votingEngine";
 import { isOverdue, turnToIndex } from "@/lib/turnUtils";
@@ -341,7 +346,8 @@ export const useGameStore = create<GameState>()(
           const petition = PETITIONS.find((p) => p.id === s.activePetitionId);
           if (!petition) return;
 
-          const reputation = s.metrics.find((m) => m.key === "reputation")?.value ?? 50;
+          const reputation =
+            s.metrics.find((m) => m.key === "reputation")?.value ?? 50;
           const result = resolveVote(
             petition,
             s.factions,
@@ -552,7 +558,12 @@ export const useGameStore = create<GameState>()(
               // Mark overdue promises as broken and collect reputation penalties
               let reputationPenalty = 0;
               const openPromises = s.openPromises.map((p) => {
-                if (!p.fulfilled && !p.broken && p.deadline && isOverdue(p.deadline, newTurn)) {
+                if (
+                  !p.fulfilled &&
+                  !p.broken &&
+                  p.deadline &&
+                  isOverdue(p.deadline, newTurn)
+                ) {
                   reputationPenalty += 5;
                   return { ...p, broken: true };
                 }
@@ -564,7 +575,10 @@ export const useGameStore = create<GameState>()(
                 reputationPenalty > 0
                   ? s.metrics.map((m) =>
                       m.key === "reputation"
-                        ? { ...m, value: Math.max(0, m.value - reputationPenalty) }
+                        ? {
+                            ...m,
+                            value: Math.max(0, m.value - reputationPenalty),
+                          }
                         : m,
                     )
                   : s.metrics;

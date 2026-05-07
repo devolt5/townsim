@@ -67,7 +67,10 @@ export function inOneYear(year: number, quarter: number): TurnPosition {
  * isOverdue({ year: 2, quarter: 2 }, { year: 2, quarter: 2 }) // → false (still on time)
  */
 export function isOverdue(deadline: TurnPosition, now: TurnPosition): boolean {
-  return turnToIndex(now.year, now.quarter) > turnToIndex(deadline.year, deadline.quarter);
+  return (
+    turnToIndex(now.year, now.quarter) >
+    turnToIndex(deadline.year, deadline.quarter)
+  );
 }
 
 /**

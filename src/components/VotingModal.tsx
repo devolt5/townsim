@@ -99,9 +99,14 @@ export function VotingModal({ open, onOpenChange }: VotingModalProps) {
   const displayNo = lastVoteResult?.totalNo ?? preview?.totalNo ?? 0;
 
   const voteData = [
-    { name: "dafuer",       value: displayYes,       label: "Dafür",       color: "#22c55e" },
-    { name: "unschluessig", value: displayUndecided, label: "Unschlüssig", color: "#6b7280" },
-    { name: "dagegen",     value: displayNo,         label: "Dagegen",     color: "#ef4444" },
+    { name: "dafuer", value: displayYes, label: "Dafür", color: "#22c55e" },
+    {
+      name: "unschluessig",
+      value: displayUndecided,
+      label: "Unschlüssig",
+      color: "#6b7280",
+    },
+    { name: "dagegen", value: displayNo, label: "Dagegen", color: "#ef4444" },
   ];
 
   const hasMajority = displayYes >= majority;
