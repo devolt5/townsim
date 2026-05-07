@@ -1,4 +1,4 @@
-import { useGameStore, useFactions } from "@/store/gameStore";
+import { useFactions } from "@/store/gameStore";
 import {
   Dialog,
   DialogContent,

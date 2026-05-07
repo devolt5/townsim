@@ -40,12 +40,22 @@ export function Footer({
     : pendingPetitionIds.length === 0;
 
   const buttonText = isPhase3
-    ? "Nächstes Quartal"
+    ? hasVotedThisQuarter
+      ? "Nächstes Quartal"
+      : "Abstimmung"
     : canAdvance
       ? "Nächste Phase"
       : "Entscheidung ausstehend";
 
   const [votingOpen, setVotingOpen] = useState(false);
+
+  const handleButtonClick = () => {
+    if (isPhase3 && !hasVotedThisQuarter) {
+      setVotingOpen(true);
+    } else {
+      advanceTurn();
+    }
+  };
 
   return (
     <footer className="bg-stone-800 px-4 py-2 flex items-center gap-4 border-t border-stone-700 shrink-0 min-h-13">
@@ -67,16 +77,6 @@ export function Footer({
       <Separator orientation="vertical" className="h-8 bg-stone-600 shrink-0" />
       <Tooltip>
         <TooltipTrigger
-          onClick={() => setVotingOpen(true)}
-          className="cursor-pointer text-xl hover:scale-110 transition-transform"
-        >
-          🗳️
-        </TooltipTrigger>
-        <TooltipContent side="top">Abstimmung</TooltipContent>
-      </Tooltip>
-      <Separator orientation="vertical" className="h-8 bg-stone-600 shrink-0" />
-      <Tooltip>
-        <TooltipTrigger
           onClick={() => {
             const next = !factionOverlay;
             setFactionOverlay(next);
@@ -94,8 +94,8 @@ export function Footer({
       </Tooltip>
       <Separator orientation="vertical" className="h-8 bg-stone-600 shrink-0" />
       <Button
-        onClick={advanceTurn}
-        disabled={!canAdvance}
+        onClick={handleButtonClick}
+        disabled={!canAdvance && !(isPhase3 && !hasVotedThisQuarter)}
         size="sm"
         className="bg-amber-600 cursor-pointer hover:bg-amber-500 text-white font-bold px-4 h-9 shadow-lg shadow-amber-900/20 border-b-2 border-amber-800 active:border-b-0 active:translate-y-1px transition-all flex gap-2 group disabled:opacity-50 disabled:grayscale disabled:cursor-not-allowed"
       >

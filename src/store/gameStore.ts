@@ -609,19 +609,6 @@ export const useGameStore = create<GameState>()(
     {
       name: "TownSim",
       maxAge: 15,
-      stateSanitizer: (state: GameState) => ({
-        ...state,
-        messages: `[${state.messages.length} messages]`,
-        lastVoteResult: state.lastVoteResult
-          ? {
-              passed: state.lastVoteResult.passed,
-              totalYes: state.lastVoteResult.totalYes,
-              totalNo: state.lastVoteResult.totalNo,
-            }
-          : null,
-        petitionHistory: `[${state.petitionHistory.length} entries]`,
-        deliveredTriggerKeys: `[${state.deliveredTriggerKeys.length} keys]`,
-      }),
     },
   ),
 );
