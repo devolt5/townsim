@@ -11,17 +11,16 @@ import { Button } from "@/components/ui/button";
 import type { DialogData } from "@/data/dialogs";
 import { dialogsBySender } from "@/data/dialogs";
 import { useGameStore } from "@/store/gameStore";
-import guideImage from "@/images/guide.jpg";
-import delegate01Image from "@/images/delegate_01_female.jpg";
 
 /** Maps a sender name to the avatar image shown in the chat dialog. */
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 const SENDER_AVATAR: Record<string, string> = {
-  Stadtberaterin: guideImage,
-  Stadtredakteur: delegate01Image,
+  Stadtberaterin: `${base}/images/guide.jpg`,
+  Stadtredakteur: `${base}/images/delegate_01_female.jpg`,
 };
 
 function senderAvatar(sender: string): string {
-  return SENDER_AVATAR[sender] ?? guideImage;
+  return SENDER_AVATAR[sender] ?? `${base}/images/guide.jpg`;
 }
 
 interface GameDialogProps {

@@ -1,12 +1,6 @@
 import { Scene, GameObjects, Geom } from "phaser";
 import { DELEGATES } from "@/data/delegates";
 import type { Delegate } from "@/data/types/delegate";
-import parliamentUrl from "@/images/parliament.jpg";
-import delegate01Url from "@/images/delegate_01_female.jpg";
-import delegate02Url from "@/images/delegate_02_male.jpg";
-import delegate03Url from "@/images/delegate_03_male.jpg";
-import delegate04Url from "@/images/delegate_04_female.jpg";
-import delegate05Url from "@/images/delegate_05_male.jpg";
 
 // ── Geometry ─────────────────────────────────────────────────────────────────
 
@@ -149,13 +143,13 @@ export class ParliamentScene extends Scene {
   }
 
   preload() {
-    this.load.image("parliament", parliamentUrl);
-    // Preload all delegate avatars so they're available in the modal
-    this.load.image("delegate_01", delegate01Url);
-    this.load.image("delegate_02", delegate02Url);
-    this.load.image("delegate_03", delegate03Url);
-    this.load.image("delegate_04", delegate04Url);
-    this.load.image("delegate_05", delegate05Url);
+    const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+    this.load.image("parliament", `${base}/images/parliament.jpg`);
+    this.load.image("delegate_01", `${base}/images/delegate_01_female.jpg`);
+    this.load.image("delegate_02", `${base}/images/delegate_02_male.jpg`);
+    this.load.image("delegate_03", `${base}/images/delegate_03_male.jpg`);
+    this.load.image("delegate_04", `${base}/images/delegate_04_female.jpg`);
+    this.load.image("delegate_05", `${base}/images/delegate_05_male.jpg`);
   }
 
   create() {

@@ -3,7 +3,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { useGameStore } from "@/store/gameStore";
+import {
+  useGameStore,
+  useFactions,
+  usePendingPetitions,
+} from "@/store/gameStore";
 import { PETITION_OPTIONS } from "@/data/types/petition";
 import type { PetitionVariant } from "@/data/types/petition";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -42,8 +46,8 @@ function chosenOptionBadge(chosenOption: string) {
 
 export function PendingPetition() {
   const turn = useGameStore((s) => s.turn);
-  const petitions = useGameStore((s) => s.pendingPetitions);
-  const factions = useGameStore((s) => s.factions);
+  const petitions = usePendingPetitions();
+  const factions = useFactions();
   const resolvePetition = useGameStore((s) => s.resolvePetition);
   const petitionHistory = useGameStore((s) => s.petitionHistory);
 

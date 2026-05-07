@@ -1,21 +1,22 @@
-import citizen01 from "@/images/citizen_01.jpg";
-import citizen02 from "@/images/citizen_02.jpg";
-import citizen03 from "@/images/citizen_03.jpg";
-// import citizen04 from "@/images/citizen_04.jpg";
-import citizen05 from "@/images/citizen_05.jpg";
-import delegate01 from "@/images/delegate_01_female.jpg";
-import delegate02 from "@/images/delegate_02_male.jpg";
-// import delegate03 from "@/images/delegate_03_male.jpg";
-// import delegate04 from "@/images/delegate_04_female.jpg";
-// import delegate05 from "@/images/delegate_05_male.jpg";
 import type { Petition } from "./types/petition";
+
+// Plain URL paths served from /public/images — no build processing, no binary blobs.
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const IMG = {
+  citizen01: `${base}/images/citizen_01.jpg`,
+  citizen02: `${base}/images/citizen_02.jpg`,
+  citizen03: `${base}/images/citizen_03.jpg`,
+  citizen05: `${base}/images/citizen_05.jpg`,
+  delegate01: `${base}/images/delegate_01_female.jpg`,
+  delegate02: `${base}/images/delegate_02_male.jpg`,
+} as const;
 
 export const PETITIONS: Petition[] = [
   {
     id: "radwegenetz",
     title: "Ausbau des Radwegenetzes",
     text: "Die Grüne Liste beantragt den Bau von 15 km neuer Radwege. Kosten: 2,4 Mio €. Betroffen sind Innenstadt und beide Wohngebiete.",
-    image: citizen02,
+    image: IMG.citizen02,
     imageAlt: "Bürger",
     tags: ["infrastruktur", "umwelt"],
     factionReactions: [
@@ -30,7 +31,7 @@ export const PETITIONS: Petition[] = [
     id: "industrie_ansiedlung",
     title: "Erweiterung Industriegebiet Ost",
     text: "Ein Logistikkonzern will eine neue Halle bauen. Verspricht 200 Arbeitsplätze, erfordert aber Rodung von Wald.",
-    image: delegate01,
+    image: IMG.delegate01,
     imageAlt: "Manager",
     tags: ["wirtschaft", "umwelt"],
     factionReactions: [
@@ -45,7 +46,7 @@ export const PETITIONS: Petition[] = [
     id: "kita_gebuehren",
     title: "Abschaffung der Kita-Gebühren",
     text: "Elternbeiräte fordern die komplette Kostenübernahme durch die Stadt. Haushaltsloch: 1,2 Mio € jährlich.",
-    image: citizen01,
+    image: IMG.citizen01,
     imageAlt: "Mutter",
     tags: ["sozial", "finanzen"],
     factionReactions: [
@@ -60,7 +61,7 @@ export const PETITIONS: Petition[] = [
     id: "stadion_neubau",
     title: "Sanierung des Sportstadions",
     text: "Der lokale Sportverein fordert eine Modernisierung der Tribünen. Die Kosten sind hoch, aber der Verein ist wichtig für die Jugend.",
-    image: citizen03,
+    image: IMG.citizen03,
     imageAlt: "Trainer",
     tags: ["kultur", "infrastruktur"],
     factionReactions: [
@@ -75,7 +76,7 @@ export const PETITIONS: Petition[] = [
     id: "ueberwachungskameras",
     title: "Kameras am Marktplatz",
     text: "Nach Sachbeschädigungen fordert 'Die Nation' eine Videoüberwachung. Datenschützer wehren sich.",
-    image: citizen05,
+    image: IMG.citizen05,
     imageAlt: "Sicherheitsbeauftragter",
     tags: ["sicherheit"],
     factionReactions: [
@@ -90,7 +91,7 @@ export const PETITIONS: Petition[] = [
     id: "nachtfahrverbot",
     title: "Nachtfahrverbot für LKW",
     text: "Anwohner in der Hauptstraße leiden unter Lärm. Die Logistikgilde befürchtet massive Lieferverzögerungen.",
-    image: citizen02,
+    image: IMG.citizen02,
     imageAlt: "Anwohner",
     tags: ["wirtschaft", "umwelt"],
     factionReactions: [
@@ -105,7 +106,7 @@ export const PETITIONS: Petition[] = [
     id: "mietpreisbremse",
     title: "Verschärfte Mietpreisbremse",
     text: "Wohnen wird unbezahlbar. Das Bürgerforum will neue Kappungsgrenzen für Bestandsmieten.",
-    image: citizen01,
+    image: IMG.citizen01,
     imageAlt: "Studentin",
     tags: ["sozial", "finanzen"],
     factionReactions: [
@@ -120,7 +121,7 @@ export const PETITIONS: Petition[] = [
     id: "parkhaus_abriss",
     title: "Abriss Parkhaus Mitte",
     text: "Anstelle des Betonklotzes soll ein urbaner Garten entstehen. Die lokalen Händler laufen Sturm.",
-    image: citizen02,
+    image: IMG.citizen02,
     imageAlt: "Umweltaktivist",
     tags: ["umwelt", "infrastruktur"],
     factionReactions: [
@@ -135,7 +136,7 @@ export const PETITIONS: Petition[] = [
     id: "kulturerbe_fest",
     title: "Förderung des Heimatfests",
     text: "Ein Brauchtumsverein bittet um Zuschüsse für das 500-jährige Jubiläum. 'Überflüssig' sagen die Sparer, 'Wichtig' die Konservativen.",
-    image: citizen03,
+    image: IMG.citizen03,
     imageAlt: "Vereinsvorsitzender",
     tags: ["kultur"],
     factionReactions: [
@@ -150,7 +151,7 @@ export const PETITIONS: Petition[] = [
     id: "solarpflicht",
     title: "Solar-Pflicht für Gewerbe",
     text: "Alle Neubauten im Gewerbegebiet müssen künftig PV-Anlagen installieren. Investoren warnen vor Kostentreiber.",
-    image: delegate02,
+    image: IMG.delegate02,
     imageAlt: "Solar-Ingenieur",
     tags: ["umwelt", "wirtschaft"],
     factionReactions: [

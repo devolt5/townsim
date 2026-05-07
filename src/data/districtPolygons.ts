@@ -1,9 +1,4 @@
-import districtNorth from "@/images/districts/north.jpg";
-import districtTownCenter from "@/images/districts/town_center.jpg";
-import districtBusiness from "@/images/districts/business_district.jpg";
-import districtSouth from "@/images/districts/south.jpg";
-import districtIndustrial from "@/images/districts/industrial.jpg";
-import districtGreen from "@/images/districts/green_district.jpg";
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 
 export interface District {
   name: string;
@@ -19,7 +14,7 @@ export const DISTRICTS: District[] = [
     name: "Wohngebiet Nord",
     description:
       "Mehrfamilienhäuser, Schulen und Spielplätze. Hohe Bevölkerungsdichte.",
-    image: districtNorth,
+    image: `${base}/images/districts/north.jpg`,
     color: 0x8bc48a,
     // 10 points (doubled from 5). Shared intermediates:
     //   {38,-119}→{62,-257}: {68,-185}  (with Gewerbegebiet)
@@ -42,7 +37,7 @@ export const DISTRICTS: District[] = [
     name: "Innenstadt",
     description:
       "Haupteinkaufszone, Rathaus und öffentliche Plätze. Herzstück der Stadt.",
-    image: districtTownCenter,
+    image: `${base}/images/districts/town_center.jpg`,
     color: 0xd4a853,
     // 12 points (doubled from 6). All edges are shared borders.
     points: [
@@ -64,7 +59,7 @@ export const DISTRICTS: District[] = [
     name: "Gewerbegebiet",
     description:
       "Büros, Einzelhandel und Logistik. Größter Arbeitgeber der Stadt.",
-    image: districtBusiness,
+    image: `${base}/images/districts/business_district.jpg`,
     color: 0x7a9cc4,
     // 12 points (doubled from 6). Shared intermediates:
     //   {62,6}→{175,31}: {120,35}  (with Industriegebiet)
@@ -89,7 +84,7 @@ export const DISTRICTS: District[] = [
     name: "Industriegebiet",
     description:
       "Produktion, Handwerksbetriebe und Lagerung. Wirtschaftsmotor der Region.",
-    image: districtIndustrial,
+    image: `${base}/images/districts/industrial.jpg`,
     color: 0xb08060,
     // 12 points (doubled from 6). Shared intermediates:
     //   {12,81}→{62,143}: {25,120}  (with Süd)
@@ -115,7 +110,7 @@ export const DISTRICTS: District[] = [
     name: "Wohngebiet Süd",
     description:
       "Einfamilienhäuser und ruhige Wohnlage. Beliebtes Familienquartier.",
-    image: districtSouth,
+    image: `${base}/images/districts/south.jpg`,
     color: 0xa8d4a0,
     // 16 points (doubled from 8). Shared intermediates:
     //   {-50,56}→{-125,131}: {-82,100}  (with Grünviertel)
@@ -144,7 +139,7 @@ export const DISTRICTS: District[] = [
   {
     name: "Grünviertel",
     description: "Parks, Kleingärten und Naturschutzgebiet. Lunge der Stadt.",
-    image: districtGreen,
+    image: `${base}/images/districts/green_district.jpg`,
     color: 0x5a9e5a,
     // 16 points (doubled from 8). Shared intermediates:
     //   {-62,-107}→{-100,-257}: {-95,-175}  (with Nord)

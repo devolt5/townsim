@@ -1,4 +1,4 @@
-import { useGameStore } from "@/store/gameStore";
+import { useGameStore, useFactions } from "@/store/gameStore";
 import { useMemo, useState } from "react";
 import {
   Dialog,
@@ -50,7 +50,6 @@ function reactionLabel(support: number): string {
 export function VotingModal({ open, onOpenChange }: VotingModalProps) {
   const {
     turn,
-    factions,
     petitionHistory,
     activePetitionId,
     castVote,
@@ -59,6 +58,7 @@ export function VotingModal({ open, onOpenChange }: VotingModalProps) {
     openPromises,
     lastVoteResult,
   } = useGameStore();
+  const factions = useFactions();
   const [detailsOpen, setDetailsOpen] = useState(false);
   const isPhase3 = turn.phase === 3;
   const isPhase2Or3 = turn.phase >= 2;

@@ -1,6 +1,5 @@
 import { Scene, GameObjects, Geom } from "phaser";
 import { type District, DISTRICTS } from "@/data/districtPolygons";
-import backgroundUrl from "@/images/background.png";
 
 // ── Geometry helpers ──────────────────────────────────────────────────────────
 function centroid(pts: { x: number; y: number }[]): { x: number; y: number } {
@@ -56,7 +55,8 @@ export class CityScene extends Scene {
   }
 
   preload() {
-    this.load.image("background", backgroundUrl);
+    const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+    this.load.image("background", `${base}/images/background.png`);
   }
 
   create() {

@@ -1,8 +1,12 @@
-import factionGreen from "@/images/factions/green.jpg";
-import factionBusiness from "@/images/factions/business.jpg";
-import factionCitizens from "@/images/factions/citizens.jpg";
-import factionWorkers from "@/images/factions/workers.jpg";
-import factionConservatives from "@/images/factions/conservatives.jpg";
+// Faction images served as static assets from /public/images/factions/
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const FACTION_IMG = {
+  green: `${base}/images/factions/green.jpg`,
+  business: `${base}/images/factions/business.jpg`,
+  citizens: `${base}/images/factions/citizens.jpg`,
+  workers: `${base}/images/factions/workers.jpg`,
+  conservatives: `${base}/images/factions/conservatives.jpg`,
+} as const;
 
 export interface Metric {
   key: string;
@@ -97,7 +101,7 @@ export const FACTIONS: Faction[] = [
   {
     short: "Terra",
     icon: "🌿",
-    image: factionGreen,
+    image: FACTION_IMG.green,
     trust: 62,
     seats: 13,
     role: "coalition" as FactionRole,
@@ -107,7 +111,7 @@ export const FACTIONS: Faction[] = [
   {
     short: "Syndikat",
     icon: "💼",
-    image: factionBusiness,
+    image: FACTION_IMG.business,
     trust: 45,
     seats: 8,
     role: "neutral" as FactionRole,
@@ -117,7 +121,7 @@ export const FACTIONS: Faction[] = [
   {
     short: "Bürger",
     icon: "🏘️",
-    image: factionCitizens,
+    image: FACTION_IMG.citizens,
     trust: 71,
     seats: 10,
     role: "coalition" as FactionRole,
@@ -127,7 +131,7 @@ export const FACTIONS: Faction[] = [
   {
     short: "Union der Gilden",
     icon: "🔧",
-    image: factionWorkers,
+    image: FACTION_IMG.workers,
     trust: 38,
     seats: 11,
     role: "neutral" as FactionRole,
@@ -137,7 +141,7 @@ export const FACTIONS: Faction[] = [
   {
     short: "Der Bund",
     icon: "🏛️",
-    image: factionConservatives,
+    image: FACTION_IMG.conservatives,
     trust: 29,
     seats: 18,
     role: "opposition" as FactionRole,

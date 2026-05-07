@@ -12,7 +12,6 @@ import type { DialogData } from "@/data/dialogs";
 import type { District } from "@/game/CityScene";
 import type { Delegate } from "@/data/types/delegate";
 import { useGameStore } from "@/store/gameStore";
-import phonePng from "@/images/phone.png";
 
 interface LeftPanelProps {
   selectedDistrict: District | null;
@@ -25,6 +24,7 @@ interface LeftPanelProps {
 
 /** Active "app" shown on the phone screen */
 type PhoneApp = "nachrichten" | "stadtbild" | "bilanz";
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 
 export function LeftPanel({
   selectedDistrict,
@@ -73,7 +73,7 @@ export function LeftPanel({
             className="relative h-full"
             style={{
               width: "17rem",
-              backgroundImage: `url(${phonePng})`,
+              backgroundImage: `url(${base}/images/phone.png)`,
               backgroundSize: "100% auto",
               backgroundRepeat: "no-repeat",
               backgroundPosition: "top left",

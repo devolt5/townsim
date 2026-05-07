@@ -261,33 +261,25 @@ function generateTS(
   usedBuildingKeys: Set<string>,
   usedGroundKeys: Set<string>,
 ): string {
-  const buildingImports = [...usedBuildingKeys]
-    .map(
-      (key) =>
-        `import ${assetImportVar(key)} from "@/${config.buildings[key].assetPath.replace(/^src\//, "")}";`,
-    )
-    .join("\n");
-
-  const groundImports = [...usedGroundKeys]
-    .map(
-      (key) =>
-        `import ${assetImportVar(key)} from "@/${config.grounds[key].assetPath.replace(/^src\//, "")}";`,
-    )
-    .join("\n");
+  // Convert "public/images/buildings/4x4/building1.png" → "/images/buildings/4x4/building1.png"
+  function toPublicPath(assetPath: string): string {
+    return assetPath.replace(/^public/, "");
+  }
 
   const buildingDefs = [...usedBuildingKeys]
     .map((key) => {
       const cfg = config.buildings[key];
       const [fw, fh] = cfg.footprint;
-      return `  ${key}: { id: "${key}", textureKey: "${key}", footprint: [${fw}, ${fh}] as [number, number], assetUrl: ${assetImportVar(key)} },`;
+      const path = toPublicPath(cfg.assetPath);
+      return `  ${key}: { id: "${key}", textureKey: "${key}", footprint: [${fw}, ${fh}] as [number, number], assetUrl: \`\${base}${path}\` },`;
     })
     .join("\n");
 
   const groundDefs = [...usedGroundKeys]
-    .map(
-      (key) =>
-        `  ${key}: { textureKey: "${key}", assetUrl: ${assetImportVar(key)} },`,
-    )
+    .map((key) => {
+      const path = toPublicPath(config.grounds[key].assetPath);
+      return `  ${key}: { textureKey: "${key}", assetUrl: \`\${base}${path}\` },`;
+    })
     .join("\n");
 
   // Render map as compact rows
@@ -301,8 +293,8 @@ function generateTS(
 // Re-generate via: pnpm district:gen ${config.id}
 
 import type { DistrictData } from "@/data/types/district";
-${buildingImports}
-${groundImports}
+
+const base = import.meta.env.BASE_URL.replace(/\\/$/, "");
 
 export const ${config.id}District: DistrictData = {
   id: "${config.id}",

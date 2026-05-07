@@ -2,7 +2,7 @@ import type { Game } from "phaser";
 import { useState } from "react";
 import { Separator } from "@/components/ui/separator";
 import { FactionChip } from "@/components/TrustBar";
-import { useGameStore } from "@/store/gameStore";
+import { useGameStore, useFactions } from "@/store/gameStore";
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
 import {
@@ -25,8 +25,9 @@ export function Footer({
   setFactionOverlay,
   gameRef,
 }: FooterProps) {
-  const { factions, advanceTurn, pendingPetitions, turn, hasVotedThisQuarter } =
+  const { advanceTurn, pendingPetitionIds, turn, hasVotedThisQuarter } =
     useGameStore();
+  const factions = useFactions();
   const TOTAL_SEATS = factions.reduce((sum, f) => sum + f.seats, 0);
   const MAJORITY = Math.ceil(TOTAL_SEATS / 2) + 1;
 
@@ -36,7 +37,7 @@ export function Footer({
   // 2. OR in Phase 3 AND vote has been cast
   const canAdvance = isPhase3
     ? hasVotedThisQuarter
-    : pendingPetitions.length === 0;
+    : pendingPetitionIds.length === 0;
 
   const buttonText = isPhase3
     ? "Nächstes Quartal"

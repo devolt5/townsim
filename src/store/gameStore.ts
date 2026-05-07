@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 import type {} from "@redux-devtools/extension";
@@ -51,17 +52,18 @@ export interface CompletedPetition {
 // State + Actions
 // ---------------------------------------------------------------------------
 
-interface GameState {
+export interface GameState {
   // ── Data ──────────────────────────────────────────────────────────────────
   basicData: BasicGameData;
   turn: Turn;
   metrics: Metric[];
-  factions: Faction[];
+  /** Mutable trust values keyed by faction short name. Static data lives in FACTIONS (gameData.ts). */
+  factionTrusts: Record<string, number>;
   /** 0–100 (GDD §6). Starts at 50. */
   politicalCapital: number;
   openPromises: GamePromise[];
-  /** The three petitions offered to the player this quarter. Empty once one has been resolved. */
-  pendingPetitions: Petition[];
+  /** IDs of petitions offered to the player this quarter. Resolve to full Petition via selectPendingPetitions. */
+  pendingPetitionIds: string[];
   usedPetitionIds: string[];
   petitionHistory: CompletedPetition[];
   /** The specific petition that was chosen for the current quarter's vote. */
@@ -114,8 +116,8 @@ interface GameState {
   /** Remove a promise (e.g. after it was broken or resolved). */
   removePromise: (id: string) => void;
 
-  /** Replace the current pending petitions array. */
-  setPendingPetitions: (petitions: Petition[]) => void;
+  /** Replace the pending petition ID list. */
+  setPendingPetitionIds: (ids: string[]) => void;
 
   /** Draw 3 random petitions from PETITIONS that haven't been used yet this cycle. */
   drawPetitions: () => void;
@@ -183,35 +185,35 @@ const INITIAL_POLITICAL_CAPITAL = 50;
 function pickRandomPetitions(
   usedIds: string[],
   count: number = 3,
-): { petitions: Petition[]; newUsedIds: string[] } {
+): { petitionIds: string[]; newUsedIds: string[] } {
   let pool = PETITIONS.filter((d) => !usedIds.includes(d.id));
   // If the pool is exhausted, reset it
   if (pool.length === 0) {
     pool = [...PETITIONS];
     usedIds = [];
   }
-  const picked: Petition[] = [];
+  const picked: string[] = [];
   const newUsedIds = [...usedIds];
   const take = Math.min(count, pool.length);
   for (let i = 0; i < take; i++) {
     const idx = Math.floor(Math.random() * pool.length);
-    picked.push(pool[idx]);
+    picked.push(pool[idx].id);
     newUsedIds.push(pool[idx].id);
     pool = pool.filter((_, j) => j !== idx);
   }
-  return { petitions: picked, newUsedIds };
+  return { petitionIds: picked, newUsedIds };
 }
 
 function buildInitialState() {
-  const { petitions, newUsedIds } = pickRandomPetitions([]);
+  const { petitionIds, newUsedIds } = pickRandomPetitions([]);
   return {
     basicData: INITIAL_BASIC_DATA,
     turn: INITIAL_TURN,
     metrics: structuredClone(METRICS),
-    factions: structuredClone(FACTIONS),
+    factionTrusts: Object.fromEntries(FACTIONS.map((f) => [f.short, f.trust])),
     politicalCapital: INITIAL_POLITICAL_CAPITAL,
     openPromises: structuredClone(OPEN_PROMISES),
-    pendingPetitions: petitions,
+    pendingPetitionIds: petitionIds,
     usedPetitionIds: newUsedIds,
     petitionHistory: [] as CompletedPetition[],
     activePetitionId: null,
@@ -264,20 +266,19 @@ export const useGameStore = create<GameState>()(
         setFactionTrust: (short, trust) =>
           set(
             (s) => ({
-              factions: s.factions.map((f) =>
-                f.short === short
-                  ? { ...f, trust: Math.max(0, Math.min(100, trust)) }
-                  : f,
-              ),
+              factionTrusts: {
+                ...s.factionTrusts,
+                [short]: Math.max(0, Math.min(100, trust)),
+              },
             }),
             undefined,
             { type: "setFactionTrust", short, trust },
           ),
 
         applyFactionTrustDelta: (short, delta) => {
-          const { setFactionTrust, factions } = get();
-          const faction = factions.find((f) => f.short === short);
-          if (faction) setFactionTrust(short, faction.trust + delta);
+          const { setFactionTrust, factionTrusts } = get();
+          const current = factionTrusts[short];
+          if (current !== undefined) setFactionTrust(short, current + delta);
         },
 
         applyPoliticalCapitalDelta: (delta) =>
@@ -319,21 +320,17 @@ export const useGameStore = create<GameState>()(
             { type: "removePromise", id },
           ),
 
-        setPendingPetitions: (petitions) =>
-          set(
-            { pendingPetitions: petitions },
-            undefined,
-            "setPendingPetitions",
-          ),
+        setPendingPetitionIds: (ids) =>
+          set({ pendingPetitionIds: ids }, undefined, "setPendingPetitionIds"),
 
         drawPetitions: () =>
           set(
             (s) => {
-              const { petitions, newUsedIds } = pickRandomPetitions(
+              const { petitionIds, newUsedIds } = pickRandomPetitions(
                 s.usedPetitionIds,
               );
               return {
-                pendingPetitions: petitions,
+                pendingPetitionIds: petitionIds,
                 usedPetitionIds: newUsedIds,
               };
             },
@@ -350,7 +347,10 @@ export const useGameStore = create<GameState>()(
             s.metrics.find((m) => m.key === "reputation")?.value ?? 50;
           const result = resolveVote(
             petition,
-            s.factions,
+            FACTIONS.map((f) => ({
+              ...f,
+              trust: s.factionTrusts[f.short] ?? f.trust,
+            })),
             s.activeActionModifiers,
             s.openPromises,
             reputation,
@@ -405,24 +405,22 @@ export const useGameStore = create<GameState>()(
         resolvePetition: (petitionId, chosenOption) =>
           set(
             (s) => {
-              const resolved = s.pendingPetitions.find(
-                (d) => d.id === petitionId,
-              );
+              const resolved = PETITIONS.find((d) => d.id === petitionId);
               if (!resolved) return {};
               const entry: CompletedPetition = {
                 turn: { year: s.turn.year, quarter: s.turn.quarter },
                 title: resolved.title,
                 chosenOption,
               };
-              // Return the other two petitions to the pool
-              const otherIds = s.pendingPetitions
-                .filter((d) => d.id !== petitionId)
-                .map((d) => d.id);
+              // Return the other two petition IDs to the pool
+              const otherIds = s.pendingPetitionIds.filter(
+                (id) => id !== petitionId,
+              );
               const newUsedIds = s.usedPetitionIds.filter(
                 (id) => !otherIds.includes(id),
               );
               return {
-                pendingPetitions: [],
+                pendingPetitionIds: [],
                 petitionHistory: [...s.petitionHistory, entry],
                 usedPetitionIds: newUsedIds,
                 activePetitionId: petitionId,
@@ -512,11 +510,11 @@ export const useGameStore = create<GameState>()(
                 };
               }
               // Quarter boundary — draw 3 new petitions
-              const { petitions, newUsedIds } = pickRandomPetitions(
+              const { petitionIds, newUsedIds } = pickRandomPetitions(
                 s.usedPetitionIds,
               );
               const petitionPatch = {
-                pendingPetitions: petitions,
+                pendingPetitionIds: petitionIds,
                 usedPetitionIds: newUsedIds,
               };
 
@@ -610,6 +608,60 @@ export const useGameStore = create<GameState>()(
     ),
     {
       name: "TownSim",
+      maxAge: 15,
+      stateSanitizer: (state: GameState) => ({
+        ...state,
+        messages: `[${state.messages.length} messages]`,
+        lastVoteResult: state.lastVoteResult
+          ? {
+              passed: state.lastVoteResult.passed,
+              totalYes: state.lastVoteResult.totalYes,
+              totalNo: state.lastVoteResult.totalNo,
+            }
+          : null,
+        petitionHistory: `[${state.petitionHistory.length} entries]`,
+        deliveredTriggerKeys: `[${state.deliveredTriggerKeys.length} keys]`,
+      }),
     },
   ),
 );
+
+// ---------------------------------------------------------------------------
+// Selectors — merge static data with runtime mutable state.
+// Usage in components:  useGameStore(selectFactions)
+// ---------------------------------------------------------------------------
+
+export function selectFactions(state: GameState): Faction[] {
+  return FACTIONS.map((f) => ({
+    ...f,
+    trust: state.factionTrusts[f.short] ?? f.trust,
+  }));
+}
+
+export function selectPendingPetitions(state: GameState): Petition[] {
+  return state.pendingPetitionIds
+    .map((id) => PETITIONS.find((p) => p.id === id))
+    .filter((p): p is Petition => p !== undefined);
+}
+
+// Memoized React hooks — use these in components to avoid infinite re-render
+// caused by new array references on every getSnapshot call.
+export function useFactions(): Faction[] {
+  const factionTrusts = useGameStore((s) => s.factionTrusts);
+  return useMemo(
+    () =>
+      FACTIONS.map((f) => ({ ...f, trust: factionTrusts[f.short] ?? f.trust })),
+    [factionTrusts],
+  );
+}
+
+export function usePendingPetitions(): Petition[] {
+  const pendingPetitionIds = useGameStore((s) => s.pendingPetitionIds);
+  return useMemo(
+    () =>
+      pendingPetitionIds
+        .map((id) => PETITIONS.find((p) => p.id === id))
+        .filter((p): p is Petition => p !== undefined),
+    [pendingPetitionIds],
+  );
+}

@@ -1,4 +1,4 @@
-import { useGameStore } from "@/store/gameStore";
+import { useGameStore, useFactions } from "@/store/gameStore";
 import {
   Dialog,
   DialogContent,
@@ -19,7 +19,7 @@ export function FactionWindow({
   open,
   onOpenChange,
 }: FactionWindowProps) {
-  const factions = useGameStore((state) => state.factions);
+  const factions = useFactions();
   const faction = factionShort
     ? factions.find((f) => f.short === factionShort)
     : null;

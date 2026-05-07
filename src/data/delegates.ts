@@ -1,16 +1,12 @@
 import type { Delegate, DelegateFaction } from "@/data/types/delegate";
-import delegate01 from "@/images/delegate_01_female.jpg";
-import delegate02 from "@/images/delegate_02_male.jpg";
-import delegate03 from "@/images/delegate_03_male.jpg";
-import delegate04 from "@/images/delegate_04_female.jpg";
-import delegate05 from "@/images/delegate_05_male.jpg";
 
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 const AVATAR_POOL = [
-  { image: delegate01, gender: "female" as const },
-  { image: delegate02, gender: "male" as const },
-  { image: delegate03, gender: "male" as const },
-  { image: delegate04, gender: "female" as const },
-  { image: delegate05, gender: "male" as const },
+  { image: `${base}/images/delegate_01_female.jpg`, gender: "female" as const },
+  { image: `${base}/images/delegate_02_male.jpg`, gender: "male" as const },
+  { image: `${base}/images/delegate_03_male.jpg`, gender: "male" as const },
+  { image: `${base}/images/delegate_04_female.jpg`, gender: "female" as const },
+  { image: `${base}/images/delegate_05_male.jpg`, gender: "male" as const },
 ];
 
 // ── Segment layout configuration (mirrors ParliamentScene ROWS) ─────────────
