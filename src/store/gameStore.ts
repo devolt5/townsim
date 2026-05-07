@@ -2,8 +2,10 @@ import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 import type {} from "@redux-devtools/extension";
 import { METRICS, FACTIONS, OPEN_PROMISES } from "@/data/gameData";
-import type { Metric, Faction } from "@/data/gameData";
-import type { Promise as GamePromise } from "@/data/gameData";
+import type { Metric, Faction, GamePromise, ActionModifier } from "@/data/gameData";
+import { resolveVote, computeVoteMetricDeltas } from "@/game/votingEngine";
+import type { VoteResult } from "@/game/votingEngine";
+import { isOverdue, turnToIndex } from "@/lib/turnUtils";
 import { PETITIONS } from "@/data/petitions";
 import type { Petition } from "@/data/types/petition";
 import { messages as INITIAL_MESSAGES, type Message } from "@/data/messages";
@@ -64,6 +66,10 @@ interface GameState {
   deliveredTriggerKeys: string[];
   /** Whether the vote was cast in the current quarter (Phase 3). */
   hasVotedThisQuarter: boolean;
+  /** Result of the last council vote. Reset to null at every quarter boundary. */
+  lastVoteResult: VoteResult | null;
+  /** Active action modifiers produced by player actions this quarter (§3.3). */
+  activeActionModifiers: ActionModifier[];
   /**
    * Runtime building overrides for districts.
    * Format: { [districtId]: { [instanceId]: newDefKey } }
@@ -109,8 +115,17 @@ interface GameState {
   /** Draw 3 random petitions from PETITIONS that haven't been used yet this cycle. */
   drawPetitions: () => void;
 
-  /** Mark the vote as completed for the current quarter. */
+  /**
+   * Run the Phase 3 council vote. Calls the voting engine, stores the result,
+   * applies reputation metric effects, and auto-fulfills matching promises.
+   */
   castVote: () => void;
+
+  /**
+   * Register an action modifier for the current quarter.
+   * An id is generated automatically.
+   */
+  addActionModifier: (mod: Omit<ActionModifier, "id">) => void;
 
   /**
    * Record that one of the pending petitions was resolved with the given option label.
@@ -198,6 +213,8 @@ function buildInitialState() {
     messages: structuredClone(INITIAL_MESSAGES),
     deliveredTriggerKeys: [],
     hasVotedThisQuarter: false,
+    lastVoteResult: null as VoteResult | null,
+    activeActionModifiers: [] as ActionModifier[],
     globalClickCount: 0,
     districtOverrides: {} as Record<string, Record<string, string>>,
   };
@@ -319,8 +336,65 @@ export const useGameStore = create<GameState>()(
             "drawPetitions",
           ),
 
-        castVote: () =>
-          set({ hasVotedThisQuarter: true }, undefined, "castVote"),
+        castVote: () => {
+          const s = get();
+          const petition = PETITIONS.find((p) => p.id === s.activePetitionId);
+          if (!petition) return;
+
+          const reputation = s.metrics.find((m) => m.key === "reputation")?.value ?? 50;
+          const result = resolveVote(
+            petition,
+            s.factions,
+            s.activeActionModifiers,
+            s.openPromises,
+            reputation,
+          );
+          const metricDeltas = computeVoteMetricDeltas(result);
+
+          // Auto-fulfill promises whose tag matches this petition and the vote passed
+          const petitionTags = petition.tags ?? [];
+          const fulfilledIds = result.passed
+            ? s.openPromises
+                .filter(
+                  (p) =>
+                    !p.fulfilled &&
+                    !p.broken &&
+                    p.tagCondition !== undefined &&
+                    petitionTags.includes(p.tagCondition),
+                )
+                .map((p) => p.id)
+            : [];
+
+          set(
+            (state) => ({
+              hasVotedThisQuarter: true,
+              lastVoteResult: result,
+              metrics: state.metrics.map((m) => {
+                const delta = metricDeltas[m.key] ?? 0;
+                return delta
+                  ? { ...m, value: Math.max(0, Math.min(100, m.value + delta)) }
+                  : m;
+              }),
+              openPromises: state.openPromises.map((p) =>
+                fulfilledIds.includes(p.id) ? { ...p, fulfilled: true } : p,
+              ),
+            }),
+            undefined,
+            "castVote",
+          );
+        },
+
+        addActionModifier: (mod) =>
+          set(
+            (s) => ({
+              activeActionModifiers: [
+                ...s.activeActionModifiers,
+                { ...mod, id: `mod_${Date.now()}` },
+              ],
+            }),
+            undefined,
+            { type: "addActionModifier", label: mod.label },
+          ),
 
         resolvePetition: (petitionId, chosenOption) =>
           set(
@@ -468,6 +542,33 @@ export const useGameStore = create<GameState>()(
                 }
               }
 
+              // Expire action modifiers whose deadline is before the new turn
+              const activeActionModifiers = s.activeActionModifiers.filter(
+                (mod) =>
+                  turnToIndex(mod.expires.year, mod.expires.quarter) >=
+                  turnToIndex(newTurn.year, newTurn.quarter),
+              );
+
+              // Mark overdue promises as broken and collect reputation penalties
+              let reputationPenalty = 0;
+              const openPromises = s.openPromises.map((p) => {
+                if (!p.fulfilled && !p.broken && p.deadline && isOverdue(p.deadline, newTurn)) {
+                  reputationPenalty += 5;
+                  return { ...p, broken: true };
+                }
+                return p;
+              });
+
+              // Apply broken-promise reputation penalties
+              const metricsAfterPenalty =
+                reputationPenalty > 0
+                  ? s.metrics.map((m) =>
+                      m.key === "reputation"
+                        ? { ...m, value: Math.max(0, m.value - reputationPenalty) }
+                        : m,
+                    )
+                  : s.metrics;
+
               return {
                 turn: newTurn,
                 ...petitionPatch,
@@ -476,6 +577,10 @@ export const useGameStore = create<GameState>()(
                   newMsgs.length > 0 ? [...s.messages, ...newMsgs] : s.messages,
                 activePetitionId: null,
                 hasVotedThisQuarter: false,
+                lastVoteResult: null,
+                activeActionModifiers,
+                openPromises,
+                metrics: metricsAfterPenalty,
               };
             },
             undefined,
@@ -486,7 +591,7 @@ export const useGameStore = create<GameState>()(
       }),
       {
         name: "townsim-save",
-        version: 4,
+        version: 5,
       },
     ),
     {

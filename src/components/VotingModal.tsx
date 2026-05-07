@@ -1,5 +1,5 @@
 import { useGameStore } from "@/store/gameStore";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -19,6 +19,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { PETITIONS } from "@/data/petitions";
+import { calculateVotePreview } from "@/game/votingEngine";
 
 interface VotingModalProps {
   open: boolean;
@@ -40,13 +41,6 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-// Dummy vote distribution — will be replaced by real calculation later
-const DUMMY_VOTES = {
-  dafuer: 18,
-  unschluessig: 7,
-  dagegen: 15,
-};
-
 function reactionLabel(support: number): string {
   if (support > 0) return `😊 +${support}`;
   if (support < 0) return `😡 −${Math.abs(support)}`;
@@ -61,6 +55,9 @@ export function VotingModal({ open, onOpenChange }: VotingModalProps) {
     activePetitionId,
     castVote,
     hasVotedThisQuarter,
+    activeActionModifiers,
+    openPromises,
+    lastVoteResult,
   } = useGameStore();
   const [detailsOpen, setDetailsOpen] = useState(false);
   const isPhase3 = turn.phase === 3;
@@ -81,31 +78,33 @@ export function VotingModal({ open, onOpenChange }: VotingModalProps) {
     currentPetitionEntry?.turn.quarter === turn.quarter;
 
   const totalSeats = factions.reduce((sum, f) => sum + f.seats, 0);
-  const majority = Math.ceil(totalSeats / 2) + 1;
+  const majority = Math.floor(totalSeats / 2) + 1;
+
+  // Deterministic preview (no dice). Recomputed when petition or modifiers change.
+  const preview = useMemo(() => {
+    if (!currentPetition) return null;
+    return calculateVotePreview(
+      currentPetition,
+      factions,
+      activeActionModifiers,
+      openPromises,
+    );
+  }, [currentPetition, factions, activeActionModifiers, openPromises]);
+
+  // After the vote, show actual result; before the vote, show the deterministic preview.
+  const displayYes = lastVoteResult?.totalYes ?? preview?.totalYes ?? 0;
+  const displayUndecided = lastVoteResult
+    ? 0 // dice already resolved all undecided
+    : (preview?.totalUndecided ?? 0);
+  const displayNo = lastVoteResult?.totalNo ?? preview?.totalNo ?? 0;
 
   const voteData = [
-    {
-      name: "dafuer",
-      value: DUMMY_VOTES.dafuer,
-      label: "Dafür",
-      color: "#22c55e",
-    },
-    {
-      name: "unschluessig",
-      value: DUMMY_VOTES.unschluessig,
-      label: "Unschlüssig",
-      color: "#6b7280",
-    },
-    {
-      name: "dagegen",
-      value: DUMMY_VOTES.dagegen,
-      label: "Dagegen",
-      color: "#ef4444",
-    },
+    { name: "dafuer",       value: displayYes,       label: "Dafür",       color: "#22c55e" },
+    { name: "unschluessig", value: displayUndecided, label: "Unschlüssig", color: "#6b7280" },
+    { name: "dagegen",     value: displayNo,         label: "Dagegen",     color: "#ef4444" },
   ];
 
-  const dafuerSeats = DUMMY_VOTES.dafuer;
-  const hasMajority = dafuerSeats >= majority;
+  const hasMajority = displayYes >= majority;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

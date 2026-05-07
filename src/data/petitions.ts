@@ -17,6 +17,7 @@ export const PETITIONS: Petition[] = [
     text: "Die Grüne Liste beantragt den Bau von 15 km neuer Radwege. Kosten: 2,4 Mio €. Betroffen sind Innenstadt und beide Wohngebiete.",
     image: citizen02,
     imageAlt: "Bürger",
+    tags: ["infrastruktur", "umwelt"],
     factionReactions: [
       { factionShort: "Terra", support: 9 },
       { factionShort: "Syndikat", support: -6 },
@@ -31,6 +32,7 @@ export const PETITIONS: Petition[] = [
     text: "Ein Logistikkonzern will eine neue Halle bauen. Verspricht 200 Arbeitsplätze, erfordert aber Rodung von Wald.",
     image: delegate01,
     imageAlt: "Manager",
+    tags: ["wirtschaft", "umwelt"],
     factionReactions: [
       { factionShort: "Terra", support: -10 },
       { factionShort: "Syndikat", support: 10 },
@@ -45,6 +47,7 @@ export const PETITIONS: Petition[] = [
     text: "Elternbeiräte fordern die komplette Kostenübernahme durch die Stadt. Haushaltsloch: 1,2 Mio € jährlich.",
     image: citizen01,
     imageAlt: "Mutter",
+    tags: ["sozial", "finanzen"],
     factionReactions: [
       { factionShort: "Terra", support: 5 },
       { factionShort: "Syndikat", support: -3 },
@@ -59,6 +62,7 @@ export const PETITIONS: Petition[] = [
     text: "Der lokale Sportverein fordert eine Modernisierung der Tribünen. Die Kosten sind hoch, aber der Verein ist wichtig für die Jugend.",
     image: citizen03,
     imageAlt: "Trainer",
+    tags: ["kultur", "infrastruktur"],
     factionReactions: [
       { factionShort: "Terra", support: 1 },
       { factionShort: "Syndikat", support: 3 },
@@ -73,6 +77,7 @@ export const PETITIONS: Petition[] = [
     text: "Nach Sachbeschädigungen fordert 'Die Nation' eine Videoüberwachung. Datenschützer wehren sich.",
     image: citizen05,
     imageAlt: "Sicherheitsbeauftragter",
+    tags: ["sicherheit"],
     factionReactions: [
       { factionShort: "Terra", support: -7 },
       { factionShort: "Syndikat", support: 4 },
@@ -87,6 +92,7 @@ export const PETITIONS: Petition[] = [
     text: "Anwohner in der Hauptstraße leiden unter Lärm. Die Logistikgilde befürchtet massive Lieferverzögerungen.",
     image: citizen02,
     imageAlt: "Anwohner",
+    tags: ["wirtschaft", "umwelt"],
     factionReactions: [
       { factionShort: "Terra", support: 6 },
       { factionShort: "Syndikat", support: -9 },
@@ -101,6 +107,7 @@ export const PETITIONS: Petition[] = [
     text: "Wohnen wird unbezahlbar. Das Bürgerforum will neue Kappungsgrenzen für Bestandsmieten.",
     image: citizen01,
     imageAlt: "Studentin",
+    tags: ["sozial", "finanzen"],
     factionReactions: [
       { factionShort: "Terra", support: 7 },
       { factionShort: "Syndikat", support: -10 },
@@ -115,6 +122,7 @@ export const PETITIONS: Petition[] = [
     text: "Anstelle des Betonklotzes soll ein urbaner Garten entstehen. Die lokalen Händler laufen Sturm.",
     image: citizen02,
     imageAlt: "Umweltaktivist",
+    tags: ["umwelt", "infrastruktur"],
     factionReactions: [
       { factionShort: "Terra", support: 10 },
       { factionShort: "Syndikat", support: -10 },
@@ -129,6 +137,7 @@ export const PETITIONS: Petition[] = [
     text: "Ein Brauchtumsverein bittet um Zuschüsse für das 500-jährige Jubiläum. 'Überflüssig' sagen die Sparer, 'Wichtig' die Konservativen.",
     image: citizen03,
     imageAlt: "Vereinsvorsitzender",
+    tags: ["kultur"],
     factionReactions: [
       { factionShort: "Terra", support: -3 },
       { factionShort: "Syndikat", support: 5 },
@@ -143,6 +152,7 @@ export const PETITIONS: Petition[] = [
     text: "Alle Neubauten im Gewerbegebiet müssen künftig PV-Anlagen installieren. Investoren warnen vor Kostentreiber.",
     image: delegate02,
     imageAlt: "Solar-Ingenieur",
+    tags: ["umwelt", "wirtschaft"],
     factionReactions: [
       { factionShort: "Terra", support: 10 },
       { factionShort: "Syndikat", support: -7 },

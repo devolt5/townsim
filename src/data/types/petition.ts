@@ -18,6 +18,11 @@ export interface Petition {
   image?: string;
   imageAlt?: string;
   factionReactions: FactionReaction[];
+  /**
+   * Thematic tags used for promise matching (§4.2).
+   * Examples: "wirtschaft", "umwelt", "sozial", "infrastruktur", "kultur", "sicherheit", "finanzen"
+   */
+  tags?: string[];
 }
 
 /** Fixed options available for every petition */
