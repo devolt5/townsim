@@ -8,9 +8,9 @@ import { PETITION_OPTIONS } from "@/data/types/petition";
 import type { PetitionVariant } from "@/data/types/petition";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-function reactionLabel(delta: number): string {
-  if (delta > 0) return `😊 +${delta}`;
-  if (delta < 0) return `😡 −${Math.abs(delta)}`;
+function reactionLabel(support: number): string {
+  if (support > 0) return `😊 +${support}`;
+  if (support < 0) return `😡 −${Math.abs(support)}`;
   return "😐 0";
 }
 
@@ -142,14 +142,14 @@ export function PendingPetition() {
                       </span>
                       <span
                         className={
-                          r.delta > 0
+                          r.support > 0
                             ? "text-emerald-600 font-medium"
-                            : r.delta < 0
+                            : r.support < 0
                               ? "text-red-600 font-medium"
                               : "text-stone-400"
                         }
                       >
-                        {reactionLabel(r.delta)}
+                        {reactionLabel(r.support)}
                       </span>
                     </div>
                   );

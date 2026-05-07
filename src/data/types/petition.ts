@@ -5,10 +5,10 @@ export interface PetitionOption {
   variant: PetitionVariant;
 }
 
-/** Trust-delta for one faction, keyed by Faction.short from FACTIONS */
+/** Support for the given Petition ranges from -10 to 10 */
 export interface FactionReaction {
   factionShort: string;
-  delta: number;
+  support: number;
 }
 
 export interface Petition {
