@@ -1,4 +1,5 @@
 # TownSim
+
 **Regelwerk – Phase 3: Abstimmung**
 _Design-Dokument v0.3_
 
@@ -87,6 +88,7 @@ Der Strukturwert beschreibt die politische Grundhaltung einer Fraktion gegenübe
 
 **Beispiel für Extremfall (volle Ablehnung):**
 Fraktion A mit 10 Sitzen, Antragswert −10 → 0 Ja-Stimmen (Basiswert)
+
 - Modifikator Koalition (+50 % auf 0) → rechnerisch 0, aber **Mindestregel: +1 Stimme**
 - Modifikator Pressekonferenz (+25 % auf 0) → rechnerisch 0, aber **Mindestregel: +1 Stimme**
 - Ergebnis: **2 Ja-Stimmen** trotz vollständiger inhaltlicher Ablehnung
@@ -116,6 +118,7 @@ Aktionswerte sind dynamische Modifikatoren, die durch Spieleraktionen in Phase 2
 Nach Anwendung aller Modifikatoren verbleiben Abgeordnete, die sich bis zuletzt nicht festgelegt haben. Diese werden gemeinsam gewürfelt.
 
 **Ablauf:**
+
 1. Unentschlossene Stimmen einer Fraktion werden summiert (z. B. 5 von 10 Sitzen)
 2. Ein Zufallswert zwischen 0 % und 100 % wird gewürfelt (z. B. Ergebnis: 30 %)
 3. Dieser Basiswürfelwert wird durch den **Reputationsmodifikator** angepasst
@@ -125,6 +128,7 @@ Nach Anwendung aller Modifikatoren verbleiben Abgeordnete, die sich bis zuletzt 
 Der Reputationswert (0–100) fließt als Modifikator in das Würfelergebnis ein, aber nicht direkt 1:1 – ein zu starker Einfluss würde bedeuten, dass Unentschlossene fast immer überzeugt werden. Der genaue Faktor wird noch kalibriert (Kandidaten: Faktor 0,2 oder 0,5).
 
 **Beispiel (Faktor 0,5):**
+
 - 5 unentschlossene Stimmen
 - Würfelergebnis: 30 %
 - Reputation: 55 von 100
@@ -143,6 +147,7 @@ In Phase 2 stehen dem Spieler verschiedene Aktionen zur Verfügung, die Aktionsw
 Versprechen sind das stärkste Instrument des Bürgermeisters. Sie sind **kein Modifikator**, sondern eine direkte Einigung mit einer Fraktion: Die Fraktion stimmt geschlossen zu – unabhängig von Antragswert, Struktur- oder Aktionswert.
 
 **Spielablauf:**
+
 1. Der Spieler klickt auf „Verhandeln" bei einem Antrag
 2. Er wählt eine Fraktion aus und bietet ein konkretes Versprechen an
    - Beispiele: _„Den nächsten Wirtschaftsantrag annehmen"_, _„Grundsteuersenkungen unterstützen"_
@@ -151,6 +156,7 @@ Versprechen sind das stärkste Instrument des Bürgermeisters. Sie sind **kein M
 5. Das Versprechen wird auf die **Liste offener Versprechen** gesetzt
 
 **Regeln:**
+
 - Versprechen sind bindend und können nicht einseitig zurückgezogen werden
 - Der Spieler sieht die Warteschlange der kommenden Anträge und weiß, was er zusagt
 - Anträge werden mit Tags versehen (z. B. „Wirtschaftsantrag"), damit Versprechen eindeutig zugeordnet werden können

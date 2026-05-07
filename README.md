@@ -12,7 +12,7 @@ TownSim is a browser-based political simulation and **Serious Game** that puts y
 ## 🎮 What to Expect
 
 * **⚖️ Tough Choices:** Navigate decision cards where no perfect solution exists. Every "Yes" for one group is a "No" for another.
-* **📊 Dynamic Metrics:** Balance four core pillars: **Stadthaushalt** (Budget), **Bürgerzufriedenheit** (Satisfaction), **Nachhaltigkeit** (Sustainability), and **Wirtschaft** (Economy).
+* **📊 Dynamic Metrics:** Balance four core pillars: **Stadthaushalt** (Budget), **Bürgerzufriedenheit** (Reputation), **Nachhaltigkeit** (Sustainability), and **Wirtschaft** (Economy).
 * **🤝 Faction Management:** Work with 5 distinct political factions—from the Green List to the Business Forum. Organize majorities and manage your "Political Capital."
 * **📜 Promises & Trust:** The game remembers what you promised. Keeping your word builds trust; breaking it leads to political isolation.
 
