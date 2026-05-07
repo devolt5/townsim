@@ -49,13 +49,11 @@ export function Header({
           <span className="text-lg font-bold">🏬 {basicData.cityName}</span>
           <TooltipProvider>
             <Tooltip>
-              <TooltipTrigger>
-                <button
-                  onClick={handleOpenSettings}
-                  className="cursor-pointer text-stone-400 hover:text-white transition-colors p-1 rounded"
-                >
-                  <Settings size={25} />
-                </button>
+              <TooltipTrigger
+                onClick={handleOpenSettings}
+                className="cursor-pointer text-stone-400 hover:text-white transition-colors p-1 rounded"
+              >
+                <Settings size={25} />
               </TooltipTrigger>
               <TooltipContent>
                 <p>Einstellungen</p>
@@ -94,13 +92,11 @@ export function Header({
           <TooltipProvider>
             {onCityOverview && (
               <Tooltip>
-                <TooltipTrigger>
-                  <button
-                    onClick={onCityOverview}
-                    className="cursor-pointer text-stone-400 hover:text-white transition-colors p-1 rounded"
-                  >
-                    <Map size={25} />
-                  </button>
+                <TooltipTrigger
+                  onClick={onCityOverview}
+                  className="cursor-pointer text-stone-400 hover:text-white transition-colors p-1 rounded"
+                >
+                  <Map size={25} />
                 </TooltipTrigger>
                 <TooltipContent>
                   <p>Stadtübersicht</p>
@@ -109,13 +105,11 @@ export function Header({
             )}
             {onParliament && (
               <Tooltip>
-                <TooltipTrigger>
-                  <button
-                    onClick={onParliament}
-                    className="cursor-pointer text-stone-400 hover:text-white transition-colors p-1 rounded"
-                  >
-                    <Building2 size={25} />
-                  </button>
+                <TooltipTrigger
+                  onClick={onParliament}
+                  className="cursor-pointer text-stone-400 hover:text-white transition-colors p-1 rounded"
+                >
+                  <Building2 size={25} />
                 </TooltipTrigger>
                 <TooltipContent>
                   <p>Stadtrat</p>
