@@ -26,12 +26,12 @@ import { petitionMetrics } from "@/data/petitionMetrics";
  * Factor applied to the reputation value (0–100) before adding to the
  * raw dice roll percentage. Calibrated at 0.5 as per §3.4 candidate values.
  */
-export const REPUTATION_DICE_FACTOR = 0.2;
+export const REPUTATION_DICE_FACTOR = 0.1;
 
 const STRUCTURAL_MULTIPLIER: Record<string, number> = {
-  coalition: 1.1,
-  neutral: 1.0,
-  opposition: 0.5,
+  coalition: 0.9,
+  neutral: 0.5,
+  opposition: 0.2,
 };
 
 // ─── Internal helpers ─────────────────────────────────────────────────────────
@@ -308,4 +308,42 @@ export function computeVoteMetricDeltas(
   }
   const margin = result.majority - result.totalYes;
   return { reputation: margin <= 4 ? -1 : -3 };
+}
+
+/**
+ * Multiplier applied to faction trust deltas. Adjust to fine-tune how
+ * strongly vote outcomes affect faction relationships.
+ */
+export const TRUST_DELTA_MULTIPLIER = 1.0;
+
+/**
+ * Computes per-faction trust deltas after a council vote.
+ *
+ * Formula: delta = support × direction × TRUST_DELTA_MULTIPLIER
+ *   direction = +1 when the outcome matches the faction's preference
+ *             = -1 when the outcome goes against the faction's preference
+ *
+ * Matching means: support ≥ 0 and petition passed, OR support ≤ 0 and petition rejected.
+ * This simplifies to: direction = passed ? +1 : -1 applied to the signed support value.
+ *
+ * Examples:
+ *   support +5, passed  → delta = +5  (faction wanted it, got it)
+ *   support +5, failed  → delta = -5  (faction wanted it, lost)
+ *   support -5, failed  → delta = +5  (faction opposed it, succeeded)
+ *   support -5, passed  → delta = -5  (faction opposed it, was overruled)
+ *
+ * @returns Map of factionShort → trust delta (unrounded, caller should clamp to 0–100)
+ */
+export function computeTrustDeltas(
+  result: VoteResult,
+  petition: Petition,
+): Record<string, number> {
+  const direction = result.passed ? 1 : -1;
+  const deltas: Record<string, number> = {};
+  for (const reaction of petition.factionReactions) {
+    deltas[reaction.factionShort] = Math.round(
+      reaction.support * direction * TRUST_DELTA_MULTIPLIER,
+    );
+  }
+  return deltas;
 }

@@ -107,7 +107,7 @@ export const FACTIONS: Faction[] = [
     short: "Terra",
     icon: "🌿",
     image: FACTION_IMG.green,
-    trust: 62,
+    trust: 50,
     seats: 13,
     role: "coalition" as FactionRole,
     description:
@@ -117,7 +117,7 @@ export const FACTIONS: Faction[] = [
     short: "Syndikat",
     icon: "💼",
     image: FACTION_IMG.business,
-    trust: 45,
+    trust: 50,
     seats: 8,
     role: "neutral" as FactionRole,
     description:
@@ -127,7 +127,7 @@ export const FACTIONS: Faction[] = [
     short: "Bürger",
     icon: "🏘️",
     image: FACTION_IMG.citizens,
-    trust: 71,
+    trust: 50,
     seats: 10,
     role: "coalition" as FactionRole,
     description:
@@ -137,7 +137,7 @@ export const FACTIONS: Faction[] = [
     short: "Union der Gilden",
     icon: "🔧",
     image: FACTION_IMG.workers,
-    trust: 38,
+    trust: 50,
     seats: 11,
     role: "neutral" as FactionRole,
     description:
@@ -147,7 +147,7 @@ export const FACTIONS: Faction[] = [
     short: "Der Bund",
     icon: "🏛️",
     image: FACTION_IMG.conservatives,
-    trust: 29,
+    trust: 50,
     seats: 18,
     role: "opposition" as FactionRole,
     description:

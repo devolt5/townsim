@@ -8,20 +8,21 @@ interface TrustBarProps {
 
 export function TrustBar({ trust }: TrustBarProps) {
   const color =
-    trust >= 60
+    trust >= 75
       ? "bg-emerald-400"
-      : trust >= 40
+      : trust >= 25
         ? "bg-amber-400"
-        : trust >= 20
-          ? "bg-orange-400"
-          : "bg-red-500";
+        : "bg-red-500";
 
   return (
-    <div className="h-1 bg-stone-600 rounded-full overflow-hidden w-16 mt-0.5">
-      <div
-        className={`h-full rounded-full ${color}`}
-        style={{ width: `${trust}%` }}
-      />
+    <div className="flex items-center gap-1.5">
+      <div className="h-1 bg-stone-600 rounded-full overflow-hidden w-16 mt-0.5">
+        <div
+          className={`h-full rounded-full ${color}`}
+          style={{ width: `${trust}%` }}
+        />
+      </div>
+      <span className="text-stone-400 text-xs mt-0.5">{trust}%</span>
     </div>
   );
 }

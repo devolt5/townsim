@@ -9,7 +9,11 @@ import type {
   GamePromise,
   ActionModifier,
 } from "@/data/gameData";
-import { resolveVote, computeVoteMetricDeltas } from "@/game/votingEngine";
+import {
+  resolveVote,
+  computeVoteMetricDeltas,
+  computeTrustDeltas,
+} from "@/game/votingEngine";
 import type { VoteResult } from "@/game/votingEngine";
 import { isOverdue, turnToIndex } from "@/lib/turnUtils";
 import { PETITIONS } from "@/data/petitions";
@@ -371,6 +375,8 @@ export const useGameStore = create<GameState>()(
                 .map((p) => p.id)
             : [];
 
+          const trustDeltas = computeTrustDeltas(result, petition);
+
           set(
             (state) => ({
               hasVotedThisQuarter: true,
@@ -381,6 +387,12 @@ export const useGameStore = create<GameState>()(
                   ? { ...m, value: Math.max(0, Math.min(100, m.value + delta)) }
                   : m;
               }),
+              factionTrusts: Object.fromEntries(
+                Object.entries(state.factionTrusts).map(([short, current]) => {
+                  const delta = trustDeltas[short] ?? 0;
+                  return [short, Math.max(0, Math.min(100, current + delta))];
+                }),
+              ),
               openPromises: state.openPromises.map((p) =>
                 fulfilledIds.includes(p.id) ? { ...p, fulfilled: true } : p,
               ),

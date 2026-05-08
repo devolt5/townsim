@@ -33,14 +33,15 @@
  *   Dann hier nach jeder bestandenen Abstimmung die Deltas auf Budget,
  *   Nachhaltigkeit und Wirtschaftskraft anwenden.
  *
- * TODO [Fraktionsvertrauen]: Fraktionsvertrauen nach Abstimmungsergebnissen
- *   anpassen (z.B. +2 wenn Fraktion zugestimmt hat und Antrag passt, -1 bei
- *   Vertrauensbruch). Dann trust als dynamischen Wert in SimState führen.
  * ─────────────────────────────────────────────────────────────────────────────
  */
 
 import { writeFileSync } from "node:fs";
-import { resolveVote, computeVoteMetricDeltas } from "../src/game/votingEngine";
+import {
+  resolveVote,
+  computeVoteMetricDeltas,
+  computeTrustDeltas,
+} from "../src/game/votingEngine";
 import { FACTIONS, METRICS } from "../src/data/gameData";
 import { PETITIONS } from "../src/data/petitions";
 import type { Faction, Metric } from "../src/data/gameData";
@@ -75,6 +76,8 @@ for (let i = 0; i < args.length; i += 2) {
 
 interface SimState {
   metrics: Record<string, number>;
+  /** Mutable trust values keyed by faction short name (0–100) */
+  factionTrusts: Record<string, number>;
   /** Jahr → Quartal → Reputation (für Jahresend-Snapshot) */
   reputationByQuarter: number[][];
   votesWon: number;
@@ -88,6 +91,8 @@ interface RunResult {
   reputationEndOfYear: number[];
   /** Endwerte aller Metriken */
   finalMetrics: Record<string, number>;
+  /** Trust am Spielende, pro Fraktion */
+  finalTrusts: Record<string, number>;
   votesWon: number;
   votesLost: number;
   totalVotes: number;
@@ -146,6 +151,7 @@ function toVoteFaction(f: Faction): Faction {
 function runSimulation(): RunResult {
   const state: SimState = {
     metrics: Object.fromEntries(METRICS.map((m) => [m.key, m.value])),
+    factionTrusts: Object.fromEntries(FACTIONS.map((f) => [f.short, 50])),
     reputationByQuarter: [],
     votesWon: 0,
     votesLost: 0,
@@ -154,7 +160,6 @@ function runSimulation(): RunResult {
   };
 
   const reputationEndOfYear: number[] = [];
-  const factions = FACTIONS.map(toVoteFaction);
 
   for (let year = 1; year <= CONFIG.years; year++) {
     state.reputationByQuarter.push([]);
@@ -168,9 +173,13 @@ function runSimulation(): RunResult {
 
       // ── Phase 3: Abstimmung ──
       const reputation = state.metrics["reputation"] ?? CONFIG.reputationStart;
+      const currentFactions = FACTIONS.map((f) => ({
+        ...toVoteFaction(f),
+        trust: state.factionTrusts[f.short] ?? 50,
+      }));
       const result = resolveVote(
         toVotePetition(chosen),
-        factions,
+        currentFactions,
         [], // TODO [Aktionen §3.3]: activeActionModifiers hier befüllen
         [], // TODO [Versprechen §4.2]: openPromises hier befüllen
         reputation,
@@ -182,6 +191,14 @@ function runSimulation(): RunResult {
         state.metrics[key] = clamp((state.metrics[key] ?? 0) + delta);
       }
       // TODO [Metrik-Effekte §future]: chosen.metricEffects?.forEach(e => ...)
+
+      // Fraktionsvertrauen anpassen
+      const trustDeltas = computeTrustDeltas(result, chosen);
+      for (const [short, delta] of Object.entries(trustDeltas)) {
+        state.factionTrusts[short] = clamp(
+          (state.factionTrusts[short] ?? 50) + delta,
+        );
+      }
 
       if (result.passed) state.votesWon++;
       else state.votesLost++;
@@ -197,6 +214,7 @@ function runSimulation(): RunResult {
   return {
     reputationEndOfYear,
     finalMetrics: { ...state.metrics },
+    finalTrusts: { ...state.factionTrusts },
     votesWon: state.votesWon,
     votesLost: state.votesLost,
     totalVotes: CONFIG.years * CONFIG.quartersPerYear,
@@ -254,6 +272,13 @@ for (const metric of METRICS) {
   console.log(`  ${metric.label.padEnd(24)}: ${fmtStats(stats(values))}`);
 }
 
+// ── Fraktionsvertrauen am Spielende ─────────────────────────────────────────
+console.log("\n── Fraktionsvertrauen am Spielende ───────────────────────");
+for (const faction of FACTIONS) {
+  const values = results.map((r) => r.finalTrusts[faction.short] ?? 50);
+  console.log(`  ${faction.short.padEnd(20)}: ${fmtStats(stats(values))}`);
+}
+
 // ── Abstimmungsstatistik ─────────────────────────────────────────────────────
 console.log("\n── Abstimmungen ──────────────────────────────────────────");
 const wonValues = results.map((r) => r.votesWon);
@@ -276,10 +301,14 @@ if (CONFIG.csvOutput) {
     (_, i) => `rep_y${i + 1}`,
   );
   const metricHeaders = METRICS.map((m) => `final_${m.key}`);
+  const trustHeaders = FACTIONS.map(
+    (f) => `trust_${f.short.replace(/\s/g, "_")}`,
+  );
   const headers = [
     "run",
     ...yearHeaders,
     ...metricHeaders,
+    ...trustHeaders,
     "votes_won",
     "votes_lost",
   ];
@@ -288,6 +317,7 @@ if (CONFIG.csvOutput) {
     i + 1,
     ...r.reputationEndOfYear,
     ...METRICS.map((m) => Math.round(r.finalMetrics[m.key] ?? 0)),
+    ...FACTIONS.map((f) => Math.round(r.finalTrusts[f.short] ?? 50)),
     r.votesWon,
     r.votesLost,
   ]);
