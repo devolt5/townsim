@@ -1,3 +1,13 @@
+// TWEAKABLE CONSTANTS
+
+export const REPUTATION_DICE_FACTOR = 0.1;
+export const STRUCTURAL_MULTIPLIER: Record<string, number> = {
+  coalition: 0.9,
+  neutral: 0.5,
+  opposition: 0.2,
+};
+export const TRUST_DELTA_MULTIPLIER = 2.0;
+
 // Faction images served as static assets from /public/images/factions/
 // Node-safe check for Vite's import.meta.env
 const baseUrl =
@@ -34,14 +44,6 @@ export interface Faction {
   description?: string;
 }
 
-export interface PendingPetition {
-  title: string;
-  text: string;
-  image?: string;
-  imageAlt?: string;
-  options: { label: string; variant: "accept" | "reject" | "negotiate" }[];
-}
-
 export interface GamePromise {
   id: string;
   text: string;
@@ -71,6 +73,10 @@ export interface ActionModifier {
   expires: { year: number; quarter: number };
 }
 
+/**
+ * Basic game metrics that are displayed in the UI and influence gameplay. Initial values are placeholders and will be adjusted during development.
+ */
+
 export const METRICS: Metric[] = [
   {
     key: "budget",
@@ -83,7 +89,7 @@ export const METRICS: Metric[] = [
     key: "reputation",
     label: "Bürgerzufriedenheit",
     icon: "😊",
-    value: 55,
+    value: 50,
     color: "bg-sky-500",
   },
   {
@@ -101,6 +107,11 @@ export const METRICS: Metric[] = [
     color: "bg-violet-500",
   },
 ];
+
+/**
+ * Starting values for the factions. The trust value (0–100) is a key gameplay element that influences voting outcomes and can be modified by player actions and events.
+ * The description field provides flavor text for each faction and can be expanded with more detailed lore as needed.
+ */
 
 export const FACTIONS: Faction[] = [
   {

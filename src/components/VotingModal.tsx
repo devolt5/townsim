@@ -12,6 +12,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { PETITIONS } from "@/data/petitions";
+import { VOTE_COUNTING_DURATION } from "@/data/ui-data";
 import { calculateVotePreview } from "@/game/votingEngine";
 import { VoteChart } from "@/components/VoteChart";
 
@@ -293,7 +294,7 @@ export function VotingModal({ open, onOpenChange }: VotingModalProps) {
                 setVotePhase("counting");
                 countingTimerRef.current = setTimeout(
                   () => setVotePhase("result"),
-                  5000,
+                  VOTE_COUNTING_DURATION,
                 );
               }}
               className="w-full bg-amber-600 hover:bg-amber-500 text-white font-bold h-10 border-b-2 border-amber-800 active:border-b-0 active:translate-y-px transition-all disabled:opacity-50 disabled:grayscale disabled:cursor-not-allowed cursor-pointer"

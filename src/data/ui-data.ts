@@ -1,3 +1,8 @@
+// User Interface CONSTANTS and TYPES
+
+/** Duration of the "counting votes" animation in milliseconds */
+export const VOTE_COUNTING_DURATION = 1000;
+
 // ---------------------------------------------------------------------------
 // Building info — keyed by defKey (matches districts.config.json)
 // ---------------------------------------------------------------------------

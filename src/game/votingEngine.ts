@@ -19,20 +19,9 @@
 import type { Faction, GamePromise, ActionModifier } from "@/data/gameData";
 import type { Petition } from "@/data/types/petition";
 import { petitionMetrics } from "@/data/petitionMetrics";
-
-// ─── Constants ───────────────────────────────────────────────────────────────
-
-/**
- * Factor applied to the reputation value (0–100) before adding to the
- * raw dice roll percentage. Calibrated at 0.5 as per §3.4 candidate values.
- */
-export const REPUTATION_DICE_FACTOR = 0.1;
-
-const STRUCTURAL_MULTIPLIER: Record<string, number> = {
-  coalition: 0.9,
-  neutral: 0.5,
-  opposition: 0.2,
-};
+import { REPUTATION_DICE_FACTOR } from "@/data/gameData";
+import { STRUCTURAL_MULTIPLIER } from "@/data/gameData";
+import { TRUST_DELTA_MULTIPLIER } from "@/data/gameData";
 
 // ─── Internal helpers ─────────────────────────────────────────────────────────
 
@@ -309,12 +298,6 @@ export function computeVoteMetricDeltas(
   const margin = result.majority - result.totalYes;
   return { reputation: margin <= 4 ? -1 : -3 };
 }
-
-/**
- * Multiplier applied to faction trust deltas. Adjust to fine-tune how
- * strongly vote outcomes affect faction relationships.
- */
-export const TRUST_DELTA_MULTIPLIER = 1.0;
 
 /**
  * Computes per-faction trust deltas after a council vote.

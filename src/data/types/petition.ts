@@ -30,3 +30,11 @@ export const PETITION_OPTIONS: PetitionOption[] = [
   { label: "✓ Zustimmen", variant: "accept" },
   { label: "⚖ Verhandeln", variant: "negotiate" },
 ];
+
+export interface PendingPetition {
+  title: string;
+  text: string;
+  image?: string;
+  imageAlt?: string;
+  options: { label: string; variant: "accept" | "reject" | "negotiate" }[];
+}
