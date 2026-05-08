@@ -6,7 +6,7 @@ export const STRUCTURAL_MULTIPLIER: Record<string, number> = {
   neutral: 0.5,
   opposition: 0.2,
 };
-export const TRUST_DELTA_MULTIPLIER = 2.0;
+export const TRUST_DELTA_MULTIPLIER = 4.0;
 
 // Faction images served as static assets from /public/images/factions/
 // Node-safe check for Vite's import.meta.env

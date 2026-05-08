@@ -61,7 +61,7 @@ const CONFIG = {
   /** Anträge pro Quartal zur Auswahl */
   petitionsPerDraw: 3,
   /** CSV-Ausgabedatei (leer = kein CSV) */
-  csvOutput: "scripts/sim-output.csv",
+  csvOutput: "",
 };
 
 // CLI-Argumente überschreiben CONFIG

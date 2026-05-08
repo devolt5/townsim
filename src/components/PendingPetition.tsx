@@ -19,19 +19,25 @@ function reactionLabel(support: number): string {
 }
 
 function buttonClass(variant: PetitionVariant): string {
-  if (variant === "accept")
+  if (variant === "accept" || variant === "granted")
     return "bg-emerald-600 hover:bg-emerald-700 text-white text-xs h-8";
+  if (variant === "negotiate")
+    return "bg-sky-600 hover:bg-sky-700 text-white text-xs h-8";
   return "text-xs h-8 border-stone-400 text-stone-700";
 }
 
 function chosenOptionBadge(chosenOption: string) {
-  if (chosenOption.includes("Zustimmen"))
+  if (
+    chosenOption.includes("Annehmen") ||
+    chosenOption.includes("granted") ||
+    chosenOption === "Angenommen"
+  )
     return (
       <Badge className="text-[10px] bg-emerald-100 text-emerald-700 border-emerald-300 hover:bg-emerald-100">
-        ✓ Genehmigt
+        ✓ Angenommen
       </Badge>
     );
-  if (chosenOption.includes("Verhandeln"))
+  if (chosenOption.includes("Verhandeln") || chosenOption === "Verhandlung")
     return (
       <Badge className="text-[10px] bg-sky-100 text-sky-700 border-sky-300 hover:bg-sky-100">
         ⚖ Verhandelt

@@ -377,10 +377,18 @@ export const useGameStore = create<GameState>()(
 
           const trustDeltas = computeTrustDeltas(result, petition);
 
+          const finalOption =
+            result.status === "granted" ? "Angenommen" : "Abgelehnt";
+
           set(
             (state) => ({
               hasVotedThisQuarter: true,
               lastVoteResult: result,
+              petitionHistory: state.petitionHistory.map((h, i) =>
+                i === state.petitionHistory.length - 1
+                  ? { ...h, chosenOption: finalOption }
+                  : h,
+              ),
               metrics: state.metrics.map((m) => {
                 const delta = metricDeltas[m.key] ?? 0;
                 return delta
@@ -419,11 +427,27 @@ export const useGameStore = create<GameState>()(
             (s) => {
               const resolved = PETITIONS.find((d) => d.id === petitionId);
               if (!resolved) return {};
+
+              let finalOption = chosenOption;
+              if (chosenOption === "accept") {
+                finalOption = "Angenommen";
+              } else if (chosenOption === "negotiate") {
+                finalOption = "Verhandeln";
+              } else if (chosenOption === "reject") {
+                finalOption = "Abgelehnt";
+              }
+
               const entry: CompletedPetition = {
                 turn: { year: s.turn.year, quarter: s.turn.quarter },
                 title: resolved.title,
-                chosenOption,
+                chosenOption: finalOption,
               };
+
+              // If it's negotiated, we might add a special modifier or just mark it
+              if (chosenOption === "negotiate") {
+                // For now, negotiation just proceeds like acceptance but with potential for future modifiers
+              }
+
               // Return the other two petition IDs to the pool
               const otherIds = s.pendingPetitionIds.filter(
                 (id) => id !== petitionId,

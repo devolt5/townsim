@@ -1,4 +1,9 @@
-export type PetitionVariant = "accept" | "reject" | "negotiate";
+export type PetitionVariant =
+  | "accept"
+  | "reject"
+  | "negotiate"
+  | "granted"
+  | "declined";
 
 export interface PetitionOption {
   label: string;
@@ -27,7 +32,7 @@ export interface Petition {
 
 /** Fixed options available for every petition */
 export const PETITION_OPTIONS: PetitionOption[] = [
-  { label: "✓ Zustimmen", variant: "accept" },
+  { label: "✓ Annehmen", variant: "accept" },
   { label: "⚖ Verhandeln", variant: "negotiate" },
 ];
 

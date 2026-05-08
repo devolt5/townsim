@@ -98,6 +98,8 @@ export interface VoteResult {
   /** Undecided remaining before the dice roll (informational). */
   totalUndecidedBeforeDice: number;
   passed: boolean;
+  /** Whether the petition was granted, declined, or still pending/negotiating */
+  status: "granted" | "declined" | "pending";
   factions: FactionVoteBreakdown[];
 }
 
@@ -269,6 +271,7 @@ export function resolveVote(
   });
 
   const majority = preview.majority;
+  const passed = totalYes >= majority;
 
   return {
     totalSeats: preview.totalSeats,
@@ -276,7 +279,8 @@ export function resolveVote(
     totalYes,
     totalNo,
     totalUndecidedBeforeDice: preview.totalUndecided,
-    passed: totalYes >= majority,
+    passed,
+    status: passed ? "granted" : "declined",
     factions: factionResults,
   };
 }
