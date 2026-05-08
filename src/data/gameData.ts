@@ -1,11 +1,15 @@
 // Faction images served as static assets from /public/images/factions/
-const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+// Node-safe check for Vite's import.meta.env
+const baseUrl = typeof import.meta.env !== 'undefined' 
+  ? import.meta.env.BASE_URL.replace(/\/$/, "") 
+  : "";
+
 const FACTION_IMG = {
-  green: `${base}/images/factions/green.jpg`,
-  business: `${base}/images/factions/business.jpg`,
-  citizens: `${base}/images/factions/citizens.jpg`,
-  workers: `${base}/images/factions/workers.jpg`,
-  conservatives: `${base}/images/factions/conservatives.jpg`,
+  green: `${baseUrl}/images/factions/green.jpg`,
+  business: `${baseUrl}/images/factions/business.jpg`,
+  citizens: `${baseUrl}/images/factions/citizens.jpg`,
+  workers: `${baseUrl}/images/factions/workers.jpg`,
+  conservatives: `${baseUrl}/images/factions/conservatives.jpg`,
 } as const;
 
 export interface Metric {

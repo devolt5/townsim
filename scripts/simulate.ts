@@ -41,9 +41,10 @@
 
 import { writeFileSync } from "node:fs";
 import { resolveVote, computeVoteMetricDeltas } from "../src/game/votingEngine";
-import { SIM_FACTIONS, SIM_METRICS, SIM_PETITIONS } from "./sim-data";
-import type { SimPetition } from "./sim-data";
-import type { Faction } from "../src/data/gameData";
+import { FACTIONS, METRICS } from "../src/data/gameData";
+import { PETITIONS } from "../src/data/petitions";
+import type { Faction, Metric } from "../src/data/gameData";
+import type { Petition } from "../src/data/types/petition";
 
 // ─── Konfiguration ────────────────────────────────────────────────────────────
 
@@ -95,25 +96,25 @@ interface RunResult {
 // ─── Hilfsfunktionen ─────────────────────────────────────────────────────────
 
 /** Zieht `count` zufällige Anträge aus dem Pool. Erschöpfter Pool wird zurückgesetzt. */
-function drawPetitions(state: SimState, count: number): SimPetition[] {
+function drawPetitions(state: SimState, count: number): Petition[] {
   if (state.petitionPool.length < count) {
     // Pool erschöpft: alle bisher nicht aktiven Anträge wieder einfügen
-    state.petitionPool = SIM_PETITIONS.map((p) => p.id).filter(
+    state.petitionPool = PETITIONS.map((p) => p.id).filter(
       (id) => !state.usedPetitionIds.includes(id),
     );
     // Falls immer noch zu wenig (weniger Anträge als count), Pool komplett öffnen
     if (state.petitionPool.length < count) {
-      state.petitionPool = SIM_PETITIONS.map((p) => p.id);
+      state.petitionPool = PETITIONS.map((p) => p.id);
       state.usedPetitionIds = [];
     }
   }
 
-  const drawn: SimPetition[] = [];
+  const drawn: Petition[] = [];
   for (let i = 0; i < count; i++) {
     const idx = Math.floor(Math.random() * state.petitionPool.length);
     const id = state.petitionPool.splice(idx, 1)[0];
     state.usedPetitionIds.push(id);
-    const petition = SIM_PETITIONS.find((p) => p.id === id)!;
+    const petition = PETITIONS.find((p) => p.id === id)!;
     drawn.push(petition);
   }
   return drawn;
@@ -125,25 +126,18 @@ function clamp(value: number): number {
 }
 
 /** Konvertiert SimPetition in das Format, das resolveVote() erwartet */
-function toVotePetition(p: SimPetition) {
+function toVotePetition(p: Petition) {
   return {
-    id: p.id,
-    title: p.title,
-    tags: p.tags,
-    factionReactions: p.factionReactions,
-    text: "",
+    ...p,
+    text: p.text || "",
   };
 }
 
 /** Konvertiert SimFaction in das Format, das resolveVote() erwartet */
-function toVoteFaction(f: (typeof SIM_FACTIONS)[0]): Faction {
+function toVoteFaction(f: Faction): Faction {
   return {
-    short: f.short,
-    role: f.role,
-    seats: f.seats,
-    trust: f.trustStart,
-    icon: "",
-    image: "",
+    ...f,
+    trust: f.trust,
   };
 }
 
@@ -151,16 +145,16 @@ function toVoteFaction(f: (typeof SIM_FACTIONS)[0]): Faction {
 
 function runSimulation(): RunResult {
   const state: SimState = {
-    metrics: Object.fromEntries(SIM_METRICS.map((m) => [m.key, m.startValue])),
+    metrics: Object.fromEntries(METRICS.map((m) => [m.key, m.value])),
     reputationByQuarter: [],
     votesWon: 0,
     votesLost: 0,
-    petitionPool: SIM_PETITIONS.map((p) => p.id),
+    petitionPool: PETITIONS.map((p) => p.id),
     usedPetitionIds: [],
   };
 
   const reputationEndOfYear: number[] = [];
-  const factions = SIM_FACTIONS.map(toVoteFaction);
+  const factions = FACTIONS.map(toVoteFaction);
 
   for (let year = 1; year <= CONFIG.years; year++) {
     state.reputationByQuarter.push([]);
@@ -255,7 +249,7 @@ for (let y = 0; y < CONFIG.years; y++) {
 
 // ── Endwerte aller Metriken ──────────────────────────────────────────────────
 console.log("\n── Metriken am Spielende (nach Jahr 5) ───────────────────");
-for (const metric of SIM_METRICS) {
+for (const metric of METRICS) {
   const values = results.map((r) => r.finalMetrics[metric.key] ?? 0);
   console.log(`  ${metric.label.padEnd(24)}: ${fmtStats(stats(values))}`);
 }
@@ -281,7 +275,7 @@ if (CONFIG.csvOutput) {
     { length: CONFIG.years },
     (_, i) => `rep_y${i + 1}`,
   );
-  const metricHeaders = SIM_METRICS.map((m) => `final_${m.key}`);
+  const metricHeaders = METRICS.map((m) => `final_${m.key}`);
   const headers = [
     "run",
     ...yearHeaders,
@@ -293,7 +287,7 @@ if (CONFIG.csvOutput) {
   const rows = results.map((r, i) => [
     i + 1,
     ...r.reputationEndOfYear,
-    ...SIM_METRICS.map((m) => Math.round(r.finalMetrics[m.key] ?? 0)),
+    ...METRICS.map((m) => Math.round(r.finalMetrics[m.key] ?? 0)),
     r.votesWon,
     r.votesLost,
   ]);

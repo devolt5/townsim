@@ -1,14 +1,19 @@
 import type { Petition } from "./types/petition";
 
 // Plain URL paths served from /public/images — no build processing, no binary blobs.
-const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+// Node-safe check for Vite's import.meta.env
+const baseUrl =
+  typeof import.meta.env !== "undefined"
+    ? import.meta.env.BASE_URL.replace(/\/$/, "")
+    : "";
+
 const IMG = {
-  citizen01: `${base}/images/citizen_01.jpg`,
-  citizen02: `${base}/images/citizen_02.jpg`,
-  citizen03: `${base}/images/citizen_03.jpg`,
-  citizen05: `${base}/images/citizen_05.jpg`,
-  delegate01: `${base}/images/delegate_01_female.jpg`,
-  delegate02: `${base}/images/delegate_02_male.jpg`,
+  citizen01: `${baseUrl}/images/citizen_01.jpg`,
+  citizen02: `${baseUrl}/images/citizen_02.jpg`,
+  citizen03: `${baseUrl}/images/citizen_03.jpg`,
+  citizen05: `${baseUrl}/images/citizen_05.jpg`,
+  delegate01: `${baseUrl}/images/delegate_01_female.jpg`,
+  delegate02: `${baseUrl}/images/delegate_02_male.jpg`,
 } as const;
 
 export const PETITIONS: Petition[] = [
