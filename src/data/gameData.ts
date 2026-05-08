@@ -1,8 +1,9 @@
 // Faction images served as static assets from /public/images/factions/
 // Node-safe check for Vite's import.meta.env
-const baseUrl = typeof import.meta.env !== 'undefined' 
-  ? import.meta.env.BASE_URL.replace(/\/$/, "") 
-  : "";
+const baseUrl =
+  typeof import.meta.env !== "undefined"
+    ? import.meta.env.BASE_URL.replace(/\/$/, "")
+    : "";
 
 const FACTION_IMG = {
   green: `${baseUrl}/images/factions/green.jpg`,

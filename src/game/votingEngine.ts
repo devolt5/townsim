@@ -26,10 +26,10 @@ import { petitionMetrics } from "@/data/petitionMetrics";
  * Factor applied to the reputation value (0–100) before adding to the
  * raw dice roll percentage. Calibrated at 0.5 as per §3.4 candidate values.
  */
-export const REPUTATION_DICE_FACTOR = 0.5;
+export const REPUTATION_DICE_FACTOR = 0.2;
 
 const STRUCTURAL_MULTIPLIER: Record<string, number> = {
-  coalition: 1.5,
+  coalition: 1.1,
   neutral: 1.0,
   opposition: 0.5,
 };
