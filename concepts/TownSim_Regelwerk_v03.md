@@ -183,6 +183,37 @@ Der Reputationswert (Bürgerzufriedenheit) des Bürgermeisters ist ein globaler 
 
 ---
 
+## 6. Fraktionsvertrauen (Trust)
+
+Das Vertrauen einer Fraktion in den Bürgermeister ist ein dynamischer Wert (0–100), der widerspiegelt, wie sehr die politischen Entscheidungen (Abstimmungsergebnisse) den Interessen der jeweiligen Fraktion entsprechen.
+
+### 6.1 Dynamik & Berechnung
+
+Jede Fraktion startet mit einem Basisvertrauen von **50 Punkten**. Nach jeder Abstimmung in Phase 3 wird das Vertrauen basierend auf dem **Antragswert (support)** und dem **Ausgang der Wahl** angepasst.
+
+**Die Vertrauens-Formel:**
+`Vertrauens-Delta = Antragswert × Richtung`
+
+- **Richtung = +1:** Das Ergebnis entspricht dem Wunsch der Fraktion (Antrag angenommen + support > 0 ODER Antrag abgelehnt + support < 0).
+- **Richtung = -1:** Das Ergebnis widerspricht dem Wunsch der Fraktion (Antrag angenommen + support < 0 ODER Antrag abgelehnt + support > 0).
+
+**Beispiele (Multiplikator 1.0):**
+
+- Fraktion ist dafür (+5) und Antrag wird angenommen: **+5 Vertrauen**
+- Fraktion ist dagegen (-5) und Antrag wird abgelehnt: **+5 Vertrauen**
+- Fraktion ist dafür (+8) und Antrag wird abgelehnt: **-8 Vertrauen**
+- Fraktion ist neutral (0): **Keine Änderung**
+
+### 6.2 Visualisierung
+
+Der Spieler sieht das aktuelle Vertrauen direkt in der Benutzeroberfläche über farbige Trust-Bars:
+
+- **0–25 % (Kritisch):** Rot
+- **25–75 % (Neutral/Stabil):** Orange
+- **75–100 % (Sehr hoch):** Grün
+
+---
+
 ## Glossar
 
 | Begriff | Bedeutung |
@@ -194,5 +225,6 @@ Der Reputationswert (Bürgerzufriedenheit) des Bürgermeisters ist ein globaler 
 | Unentschlossene | Abgeordnete, die nach Tabelle noch nicht festgelegt sind; werden gemeinsam gewürfelt |
 | Versprechen / Junktim | Bindende Zusage des BM; bewirkt vollständige Zustimmung einer Fraktion |
 | Reputation | Globaler BM-Wert (Bürgerzufriedenheit); beeinflusst den Würfelausgang |
+| Fraktionsvertrauen | Bindung einer Fraktion an den BM (0–100); sinkt bei politischer Niederlage, steigt bei Erfolg |
 | Azyklische Wahl | BM-Wahl unabhängig vom Zeitpunkt der Stadtratswahl |
 | Kohabitation | BM-Partei ist in der Minderheit im Stadtrat |
